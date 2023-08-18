@@ -1,9 +1,9 @@
 export class ResponseParser {
     static parse<T>(obj: any) {
-        const res: T[] = [];
-        Object.keys(obj).forEach(key => {
-            res.push({id: key, ...obj[key]})
-        });
+        const res = []
+        obj.forEach((snap)=>{
+            res.push(snap.val())
+        })
         return res;
     }
 }

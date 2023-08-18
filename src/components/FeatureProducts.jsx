@@ -1,8 +1,10 @@
 import React from "react";
 import Image from "next/image";
 import Carousel from "react-multi-carousel";
+import { useRouter } from "next/router";
+import { Card } from "./card";
 import "react-multi-carousel/lib/styles.css";
-const FeatureProducts = () => {
+const FeatureProducts = ({ products }) => {
     const responsive = {
         superLargeDesktop: {
             // the naming can be any, depends on you.
@@ -23,6 +25,13 @@ const FeatureProducts = () => {
         },
     };
 
+    const router = useRouter();
+
+    //   const renderProductList = () => {
+    //     const content =
+    //     return ;
+    //   };
+
     return (
         <section className="section-margin welcome-section">
             <div className="container">
@@ -31,7 +40,7 @@ const FeatureProducts = () => {
                         <div className="welcome-content">
                             <div className="section-title">
                                 <h2>Featured Products</h2>
-                                <Carousel
+                                {/* <Carousel
                                     swipeable={false}
                                     draggable={false}
                                     showDots={true}
@@ -45,12 +54,28 @@ const FeatureProducts = () => {
                                     transitionDuration={500}
                                     containerClass="carousel-container"
                                     removeArrowOnDeviceType={["tablet", "mobile"]}
-                                    // deviceType={this.props.deviceType}
+                                    deviceType={"desktop"}
                                     dotListClass="custom-dot-list-style"
                                     itemClass="carousel-item-padding-40-px"
-                                >
-
-                                </Carousel>
+                                > */}
+                                <div className="shop-product-wrap grid with-pagination row space-db--30">
+                                    {products.map((p) => (
+                                        <Card key={p.productId}
+                                            content={{
+                                                category: p.productCategory,
+                                                subCategory: p.productSubCategory,
+                                                name: p.productName,
+                                                priceNew: p.productPrice,
+                                                priceOld: p.productPriceOld,
+                                                image: p.productImage[0],
+                                            }}
+                                            handleClick={(id) => {
+                                                router.push(`/products/${id}`);
+                                            }}
+                                        />
+                                    ))}
+                                    </div>
+                                {/* </Carousel> */}
                             </div>
                         </div>
                     </div>
