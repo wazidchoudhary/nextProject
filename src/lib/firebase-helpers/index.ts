@@ -10,7 +10,7 @@ export class FirebaseHelper {
     static async syncAllProducts(): Promise<Product[]> {
         const snapshot = await sync('product');
          let projects = ResponseParser.parse<Product>(snapshot);
-     
+        
         return projects
     }
 }

@@ -66,8 +66,8 @@ const FeatureProducts = ({ products }) => {
                                                 subCategory: p.productSubCategory,
                                                 name: p.productName,
                                                 priceNew: p.productPrice,
-                                                priceOld: p.productPriceOld,
-                                                image: p.productImage[0],
+                                                priceOld: p.productOldPrice,
+                                                image: p.productImage,
                                             }}
                                             handleClick={(id) => {
                                                 router.push(`/products/${id}`);
