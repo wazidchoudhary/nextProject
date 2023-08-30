@@ -1,0 +1,53 @@
+.cardButton{
+    width: 100%;
+    padding: 10px;
+    background-color: transparent;
+    transition: .4s;
+    color: #24bbdb;
+    border: 1px solid #24bbdb;
+    margin-top: 5px;
+}
+
+.cardButton:hover{
+    transition: .4s;
+    background-color: #24bbdb;
+    color: white;
+
+}
+
+.site-header,.mobile-header{
+    background-color: rgba(0, 0, 0, 0.700);
+    padding: 0px;
+    transition: .4s;
+}
+
+.site-header:hover,.mobile-header:hover{
+    background-color: black;
+    transition: .4s;
+}
+.site-header.ha-header-1 .main-navigation{
+    margin: 10px;
+}
+.site-header.ha-header-1{
+    padding: 0px;
+}
+.header-top-widget{
+    margin: 10px;
+}
+
+.ql-clipboard,.ql-tooltip{
+    display: none;
+}
+
+.splide__track ,.splide__track--slide ,.splide__track--ltr .splide__track--draggable{
+    height: 100%;
+}
+
+.aboutArticle p{
+    font-size: 15px;
+}
+
+aboutArticle h5{
+    color: black;
+}
+

@@ -12,6 +12,7 @@ import { FirebaseHelper } from '@/lib/firebase-helpers'
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({products}) {
+
   return (
     <>
     <MetaHead title="AS International – Manufacturer and wholesale supplier of all type of handicraft Products." description="AS International is a company of the people who are perfect craftsmen and genuine manufacturer of so many products made of buffalo and sheep horn, camel and buffalo bone and also of different variety wood" />
@@ -23,9 +24,7 @@ export default function Home({products}) {
 }
 
 export const getServerSideProps = async (context) => {
-  console.log(context, ' @@@context');
   const products = await FirebaseHelper.syncAllProducts()
-  console.log(products)
   return {
     props: {
       products: products

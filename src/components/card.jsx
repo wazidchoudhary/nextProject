@@ -1,25 +1,28 @@
 import React from "react";
 import Image from "next/image";
 import { priceHelper } from "@/lib/price-helper";
-export const Card = ({ content, handleClick }) => {
-    const { category, subCategory, name, priceOld, priceNew, image } = content;
+export const Card = ({ content, handleClick = () => {} }) => {
+    const { id,category, subCategory, name, priceOld, priceNew, image } = content;
     const [image1,image2] = image;
 
     const showHoverImage = () =>{
-        return image2 ? (<a href="product-details.html" className="hover-image" style={{ height: "200px" }}>
-        <img src={image2}  style={{ width: "100%", height: "100%", objectFit: "cover" }}  />
-        </a>) : ''
+        return image2 ? (<div className="hover-image" style={{ height: "200px" }}>
+            <Image src={image2} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }}  />
+        </div>) : ''
         
     }
-    const price =
-        typeof priceNew === "string"
-            ? `$${priceNew}`
-            : `$${priceHelper.lowestHighestPrice(priceNew).lowest} - $${priceHelper.lowestHighestPrice(priceNew).highest}`;
+    
+
+    const getDiscountPercent = () =>{
+        console.log(Number(priceNew))
+        return (isNaN(Number(priceNew))) ? '' : (<span className="product-badge-2">-{parseInt(((Number(priceOld)-Number(priceNew))/Number(priceOld))*100)}%</span>) 
+    }
+    
     return (
         <div className="col-lg-3 col-sm-6 mb--30">
-            <div className="product-card" style={{textAlign:"left"}}>
+            <div className="product-card" style={{textAlign:"left"}} onClick={()=> handleClick(id)}>
                 <div className="image" style={{ height: "200px" }}>
-                    <img src={image1} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <Image src={image1} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     <div className="hover-content" style={{height:"100%"}}>
                     { showHoverImage() }
                         
@@ -35,8 +38,8 @@ export const Card = ({ content, handleClick }) => {
                             </a>
                         </div> */}
                     </div>
-
-                    <span className="product-badge-2">-5%</span>
+                        {getDiscountPercent()}
+                    
                 </div>
                 <div className="description-block">
                     <div className="description-header">
@@ -45,14 +48,16 @@ export const Card = ({ content, handleClick }) => {
                         </h5>
                     </div>
                     <h3 className="post-title">
-                        <a href="product-details.html">{name}</a>
+                        {name}
                     </h3>
                     <p className="mb-0 price">
-                        <del className="price-old">{priceOld}</del>
-                        <span className="price-new" style={{marginLeft:"5px"}}>{price}</span>
+                        <del className="price-old">${priceOld}</del>
+                        <span className="price-new" style={{marginLeft:"5px"}}>{priceHelper.getPrice(priceNew)}</span>
                     </p>
                 </div>
+
             </div>
+            <button type="button" className="cardButton">ADD TO CART</button>
         </div>
     );
 };

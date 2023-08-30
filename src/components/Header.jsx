@@ -141,7 +141,7 @@ const Header = () => {
                   <div className="inner-single-block">
                     <div className="cart-product">
                       <div className="icon">
-                        <img src="image/products/home-1/cart-product-1.jpg" />
+                        {/* <img src="image/products/home-1/cart-product-1.jpg" /> */}
                         <div className="product-badge-3">1x</div>
                       </div>
                       <div className="description">
@@ -226,7 +226,7 @@ const Header = () => {
       <div className="row align-items-end">
         <div className="col-md-4 col-7">
           <a href="index.html" className="site-brand">
-            <img src="image/main-logo-white.png" />
+            {/* <img src="image/main-logo-white.png" /> */}
           </a>
         </div>
         <div className="col-md-8 col-5 text-end">

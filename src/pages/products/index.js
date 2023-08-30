@@ -2,7 +2,7 @@ import HeroSlider from "@/components/HeroSlider";
 import MetaHead from "@/components/MetaHead";
 import styles from "./Product.module.css"
 
-export default function Product() {
+export default function() {
     return <>
 <MetaHead title="Products" description="best products" />
 <HeroSlider />

@@ -22,6 +22,13 @@ export class priceHelper {
     
         return { lowest, highest };
     }
+
+    static getPrice = (priceNew:any) : string =>{
+        const price = typeof priceNew === "string"
+        ? `$${priceNew}`
+        : `$${this.lowestHighestPrice(priceNew).lowest} - $${this.lowestHighestPrice(priceNew).highest}`;
+        return price;
+    }
 }
 
 
