@@ -11,7 +11,7 @@ import { FirebaseHelper } from '@/lib/firebase-helpers'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home({products}) {
+export default function({products}) {
 
   return (
     <>

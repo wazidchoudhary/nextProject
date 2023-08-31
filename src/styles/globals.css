@@ -1,3 +1,4 @@
+@import "~react-image-gallery/styles/css/image-gallery.css";
 .cardButton{
     width: 100%;
     padding: 10px;
@@ -47,7 +48,21 @@
     font-size: 15px;
 }
 
-aboutArticle h5{
+.aboutArticle h5{
     color: black;
 }
+
+.hasCustomSelect{
+    padding: 5px;
+
+}
+.variations tr{
+    margin: 10px !important;
+    padding: 5px;
+}
+
+.variations td,th {
+    padding: 5px;
+}
+
 

@@ -7,7 +7,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
 
     const showHoverImage = () =>{
         return image2 ? (<div className="hover-image" style={{ height: "200px" }}>
-            <Image src={image2} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }}  />
+            <Image src={image2} width={500} quality={100} loading="lazy" height={200} style={{ width: "100%", height: "100%", objectFit: "contain" }}  />
         </div>) : ''
         
     }
@@ -22,7 +22,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
         <div className="col-lg-3 col-sm-6 mb--30">
             <div className="product-card" style={{textAlign:"left"}} onClick={()=> handleClick(id)}>
                 <div className="image" style={{ height: "200px" }}>
-                    <Image src={image1} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                    <Image src={image1} width={200} height={200} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                     <div className="hover-content" style={{height:"100%"}}>
                     { showHoverImage() }
                         
@@ -51,7 +51,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
                         {name}
                     </h3>
                     <p className="mb-0 price">
-                        <del className="price-old">${priceOld}</del>
+                        <del className="price-old">{priceOld ? '$'+priceOld : ''}</del>
                         <span className="price-new" style={{marginLeft:"5px"}}>{priceHelper.getPrice(priceNew)}</span>
                     </p>
                 </div>

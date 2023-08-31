@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { priceHelper } from "@/lib/price-helper";
-import { Splide, SplideTrack, SplideSlide } from "@splidejs/react-splide";
-import "@splidejs/react-splide/css/skyblue";
+// import { Splide, SplideTrack, SplideSlide } from "@splidejs/react-splide";
+// import "@splidejs/react-splide/css/skyblue";
+import ImageGallery from "react-image-gallery";
 
 const ProductDetail = ({ product }) => {
     const {
@@ -22,37 +23,66 @@ const ProductDetail = ({ product }) => {
     } = product;
 
     const setProductImages = () => {
-        return productImage.map((image) => {
-            return (
-                <SplideSlide style={{height:'100%'}}>
-                    <Image src={image} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }} alt={productName} />
-                 </SplideSlide>
-            );
+        const images = [];
+       
+        productImage.map((image) => {
+            images.push({
+                original: image,
+                thumbnail: image,
+            });
         });
+        return (productImage.length > 1) ? <ImageGallery thumbnailPosition="left" items={images} /> :  <Image src={productImage[0]} width={500} height={500} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> ;
     };
+
+    const setColor = () =>{
+        return productColor.split(',').map((color)=>{
+            return <option key={color} value={color}>{color}</option>; 
+        })
+
+    }
 
     return (
         <main className="inner-page-sec-padding pb-0">
             <div className="container">
                 <div className="row pb--50">
-                    <div className="col-lg-5 mb--30">
-                        <Splide style={{height:'400px'}}>{setProductImages()}</Splide>
-                    </div>
+                    <div className="col-lg-5 mb--30">{setProductImages()}</div>
 
                     <div className="col-lg-7">
                         <div className="product-details-description pl-lg--30 ">
                             <h3 className="title">{productName}</h3>
-                            <div className="widget-block">
-                                <div className="rating-block">
-                                  {productCategory.category} - {productSubCategory}
-                                </div>
+
+                            <div className="price-block" style={{ fontSize: "18px" }}>
+                                <del className="price-old">{productOldPrice ? '$'+productOldPrice : ''}</del>
+                                <span className="price-new">&nbsp;&nbsp;{priceHelper.getPrice(productPrice)}</span>
                             </div>
-                            <div className="price-block" style={{fontSize:"18px"}}>
-                                <del className="price-old">${productOldPrice}</del>
-                                <span className="price-new">{priceHelper.getPrice(productPrice)}</span>
-                            </div>
-                            
-                          
+                            <hr />
+                            <table className="variations" cellSpacing={0} role="presentation">
+                                <tbody>
+                                    <tr>
+                                        <th className="label">
+                                            <label htmlFor="pa_color">Color</label>
+                                        </th>
+                                        <td className="value">
+                                            <select id="pa_color" className="hasCustomSelect">
+                                                <option value="">Choose an option</option>
+                                                {setColor()}
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th className="label">
+                                            <label htmlFor="pa_dimension">Dimension</label>
+                                        </th>
+                                        <td className="value">
+                                        <select id="dimension" className="hasCustomSelect">
+                                                <option value="">Choose an option</option>
+                                        </select>
+                                         
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
                             <div className="widget-block-3">
                                 <span className="widget-label">Quantity</span>
                                 <div className="widgets">
@@ -122,9 +152,7 @@ const ProductDetail = ({ product }) => {
                     </ul>
                     <div className="tab-content space-db--20" id="myTabContent">
                         <div className="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="description">
-                            <article className="review-article" dangerouslySetInnerHTML={{ __html: productDescription }}>
-                                
-                            </article>
+                            <article className="review-article" dangerouslySetInnerHTML={{ __html: productDescription }}></article>
                         </div>
                     </div>
                 </div>
