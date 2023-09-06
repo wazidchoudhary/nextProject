@@ -33,7 +33,7 @@ const Header = () => {
                 <header className="site-header ha-header-1 absolute-header sticky-init fixed-header d-lg-block d-none">
                     <div className="container-fluid">
                         <div className="row align-items-center">
-                            <div className="col-lg-6">
+                            <div className="col-lg-7">
                                 <div className="main-navigation">
                                     <ul className="main-menu @@menuColor">
                                         <li>
@@ -51,10 +51,16 @@ const Header = () => {
                                         </li>
                                         {/* Shop */}
                                         <li className="menu-item has-children mega-menu">
-                                            <a>Knife Handles</a>
+                                            <Link href={'/products?knife-handles'}>Knife Handles</Link>
                                             <ul className="sub-menu four-column">
                                                 {createDynamicMenu(knifeHandles)}
                                             
+                                            </ul>
+                                        </li>
+                                        <li className="menu-item has-children mega-menu">
+                                            <Link href={'/products?knife-handles'}>More Products</Link>
+                                            <ul className="sub-menu four-column">
+                                                {createDynamicMenu(products)}
                                             </ul>
                                         </li>
                                         {/* Pages */}
@@ -64,66 +70,7 @@ const Header = () => {
                                         <li className="menu-item has-children">
                                             <Link href="/contact">Contact Us</Link>
                                         </li>
-                                        {/* Blog */}
-                                        <li className="menu-item has-children mega-menu">
-                                            <a>Blog</a>
-                                            <ul className="sub-menu three-column">
-                                                <li className="cus-col-33">
-                                                    <h3 className="menu-title">
-                                                        <a href="index.html#">Blog Grid</a>
-                                                    </h3>
-                                                    <ul className="mega-single-block">
-                                                        <li>
-                                                            <a href="blog.html">Full Widh (Default)</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-left-sidebar.html">left Sidebar</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-right-sidebar.html">Right Sidebar</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li className="cus-col-33">
-                                                    <h3 className="menu-title">
-                                                        <a href="index.html#">Blog List </a>
-                                                    </h3>
-                                                    <ul className="mega-single-block">
-                                                        <li>
-                                                            <a href="blog-list.html">Full Widh (Default)</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-list-left-sidebar.html">left Sidebar</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-list-right-sidebar.html">Right Sidebar</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                                <li className="cus-col-33">
-                                                    <h3 className="menu-title">
-                                                        <a href="index.html#">Blog Details</a>
-                                                    </h3>
-                                                    <ul className="mega-single-block">
-                                                        <li>
-                                                            <a href="blog-details.html">Image Format (Default)</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-details-gallery.html">Gallery Format</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-details-audio.html">Audio Format</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-details-video.html">Video Format</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="blog-details-left-sidebar.html">left Sidebar</a>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
+                                        
                                     </ul>
                                 </div>
                             </div>
@@ -132,7 +79,7 @@ const Header = () => {
                                     <a href="index.html">{/* <img src="assets/image/IMG_20230720_114137-removebg-preview.png" /> */}</a>
                                 </div>
                             </div>
-                            <div className="col-lg-3 col-xl-4">
+                            <div className="col-lg-3 col-xl-3">
                                 <div className="header-top-widget">
                                     <ul className="header-links">
                                         <li className="sin-link">
