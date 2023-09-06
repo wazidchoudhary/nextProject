@@ -2,7 +2,7 @@ import MetaHead from "@/components/MetaHead";
 import { FirebaseHelper } from "@/lib/firebase-helpers";
 import ProductDetail from "@/components/ProductDetail";
 export default function (props) {
-    // console.log(props,'props working')
+
     return (
         <>
             <MetaHead title={props.product.productName} description={props.product.productCategory.category} />

@@ -14,7 +14,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
     
 
     const getDiscountPercent = () =>{
-        console.log(Number(priceNew))
+   
         return (isNaN(Number(priceNew))) ? '' : (<span className="product-badge-2">-{parseInt(((Number(priceOld)-Number(priceNew))/Number(priceOld))*100)}%</span>) 
     }
     
