@@ -4,6 +4,9 @@ import { priceHelper } from "@/lib/price-helper";
 // import { Splide, SplideTrack, SplideSlide } from "@splidejs/react-splide";
 // import "@splidejs/react-splide/css/skyblue";
 import ImageGallery from "react-image-gallery";
+import store from "@/lib/store/store";
+import useDispatch from "@/hooks/useDispatch";
+import useSelector from "@/hooks/useSelector";
 
 const ProductDetail = ({ product }) => {
     const {
@@ -22,6 +25,24 @@ const ProductDetail = ({ product }) => {
         productSize,
     } = product;
 
+    const cartData = useSelector('cart') || [];
+    const dispatch = useDispatch();
+
+    const handleAddToCart = () => {
+        store.dispatch({
+            cart: [
+                ...cartData,
+                {productName, id: productId, price: productPrice, quantity: 1}
+            ]
+        })
+    }
+
+    useEffect(() => {
+        store.subscribe(({cart}) => {
+            console.log(cart, ' @@@updated from product detail')
+        })
+    }, [])
+
     const setProductImages = () => {
         const images = [];
        
@@ -31,7 +52,7 @@ const ProductDetail = ({ product }) => {
                 thumbnail: image,
             });
         });
-        return (productImage.length > 1) ? <ImageGallery thumbnailPosition="left" items={images} /> :  <Image src={productImage[0]} width={500} height={500} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> ;
+        return (productImage.length > 1) ? <ImageGallery thumbnailPosition="left" items={images} /> :  <Image src={productImage[0]} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> ;
     };
 
     const setColor = () =>{
@@ -98,7 +119,7 @@ const ProductDetail = ({ product }) => {
                                         </div>
                                     </div>
                                     <div className="add-cart-btn">
-                                        <a href className="btn btn-outlined--primary">
+                                        <a href className="btn btn-outlined--primary" onClick={() => handleAddToCart(product)}>
                                             <i className="ion-bag" />
                                             Add to Cart
                                         </a>

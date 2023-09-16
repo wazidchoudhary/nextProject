@@ -24,7 +24,7 @@ export default function({products}) {
 }
 
 export const getServerSideProps = async (context) => {
-  const products = await FirebaseHelper.syncAllProducts()
+  const products = await FirebaseHelper.fetchFeaturedProduct()
   return {
     props: {
       products: products

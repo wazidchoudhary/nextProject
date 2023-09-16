@@ -44,7 +44,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
                 <div className="description-block">
                     <div className="description-header">
                         <h5 className="description-tag">
-                            <a>{category.category}</a>
+                            <a>{category}</a>
                         </h5>
                     </div>
                     <h3 className="post-title">

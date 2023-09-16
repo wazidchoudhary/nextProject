@@ -15,9 +15,16 @@ export class FirebaseHelper {
     }
 
     static async fetchFeaturedProduct(): Promise<Product[]>{
-       const featuredProduct =  await get(query(ref(database, `product/`), ...[orderByChild('productName'),equalTo('LARGE TEFLON BONE FOLDER')]));
+       const featuredProduct =  await get(query(ref(database, `product/`), ...[orderByChild('featured'),equalTo(true)]));
        const projects = ResponseParser.parse<Product>(featuredProduct);
-        console.log(projects)
+        
+       return projects
+    }
+
+    static async fetchProductByCategory(category:string) : Promise<Product[]>{
+        const featuredProduct =  await get(query(ref(database, `product/`), ...[orderByChild('productCategory'),equalTo(category)]));
+        const projects = ResponseParser.parse<Product>(featuredProduct);
+       
        return projects
     }
 

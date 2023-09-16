@@ -1,23 +1,27 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { knifeHandles, products } from "@/constants/navbar";
+import StrUtils from "@/utils/str-utils";
+import store from "@/lib/store/store";
+import useSelector from "@/hooks/useSelector";
 const Header = () => {
+    const {cart = []} = useSelector('*');
+    const cartData = useSelector('cart');
 
-
-    const createDynamicMenu = (prop) => {
+    const createDynamicMenu = (prop,pageName) => {
         const keys = Object.keys(prop);
         return keys.map((menuTitle) => {
             return (
                 <li className="cus-col-25" style={{border:'none'}}>
                     <h3 className="menu-title" style={{fontSize:"14px"}}>
-                        <Link href={`/products?${menuTitle.replace(/ /g,"-")}`}>{menuTitle}</Link>
+                        <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`}>{menuTitle}</Link>
                     </h3>
                     <ul className="mega-single-block" style={{marginBottom:"10px"}}>
                         {prop[menuTitle].map((name) => {
                             return (
                                 <li>
-                                    <Link href={`/products?${menuTitle.replace(/ /g,"-")}/${name.replace(/ /g,"-")}`}>{name}</Link>
+                                    <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}/${StrUtils.normalToSnake(name)}`}>{name}</Link>
                                 </li>
                             );
                         })}
@@ -51,16 +55,16 @@ const Header = () => {
                                         </li>
                                         {/* Shop */}
                                         <li className="menu-item has-children mega-menu">
-                                            <Link href={'/products?knife-handles'}>Knife Handles</Link>
+                                            <Link href={'/knifeHandles'}>Knife Handles</Link>
                                             <ul className="sub-menu four-column">
-                                                {createDynamicMenu(knifeHandles)}
+                                                {createDynamicMenu(knifeHandles,'knifeHandles')}
                                             
                                             </ul>
                                         </li>
                                         <li className="menu-item has-children mega-menu">
                                             <Link href={'/products?knife-handles'}>More Products</Link>
                                             <ul className="sub-menu four-column">
-                                                {createDynamicMenu(products)}
+                                                {createDynamicMenu(products,'moreProducts')}
                                             </ul>
                                         </li>
                                         {/* Pages */}
@@ -136,6 +140,11 @@ const Header = () => {
                                                         Checkout
                                                     </a>
                                                 </div>
+                                                <ul >
+                                                    {cart.map((cart) => {
+                                                       return <li>{cart.productName} - {cart.quantity}</li>
+                                                    })}
+                                                </ul>
                                             </div>
                                         </li>
                                         <li className="sin-link">

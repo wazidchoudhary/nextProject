@@ -10,7 +10,6 @@ export default function (props) {
                 <h2 className="sr-only">Site Breadcrumb</h2>
                 <div className="container" style={{ height: "150px" }}></div>
             </section>
-
             <ProductDetail product={props.product} />
         </>
     );
