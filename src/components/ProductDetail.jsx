@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { priceHelper } from "@/lib/price-helper";
 // import { Splide, SplideTrack, SplideSlide } from "@splidejs/react-splide";
@@ -24,43 +24,47 @@ const ProductDetail = ({ product }) => {
         productQty,
         productSize,
     } = product;
-
-    const cartData = useSelector('cart') || [];
+    console.log(product)
+    const cartData = useSelector("cart") || [];
     const dispatch = useDispatch();
-
+    const [descriptionView,setDescriptionView] = useState(true)
     const handleAddToCart = () => {
         store.dispatch({
-            cart: [
-                ...cartData,
-                {productName, id: productId, price: productPrice, quantity: 1}
-            ]
-        })
-    }
+            cart: [...cartData, { productName, id: productId, price: productPrice, quantity: 1 }],
+        });
+    };
 
     useEffect(() => {
-        store.subscribe(({cart}) => {
-            console.log(cart, ' @@@updated from product detail')
-        })
-    }, [])
+        store.subscribe(({ cart }) => {
+            console.log(cart, " @@@updated from product detail");
+        });
+    }, []);
 
     const setProductImages = () => {
         const images = [];
-       
+
         productImage.map((image) => {
             images.push({
                 original: image,
                 thumbnail: image,
             });
         });
-        return (productImage.length > 1) ? <ImageGallery thumbnailPosition="left" items={images} /> :  <Image src={productImage[0]} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }} /> ;
+        return productImage.length > 1 ? (
+            <ImageGallery thumbnailPosition="left" items={images} />
+        ) : (
+            <Image src={productImage[0]} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        );
     };
 
-    const setColor = () =>{
-        return productColor.split(',').map((color)=>{
-            return <option key={color} value={color}>{color}</option>; 
-        })
-
-    }
+    const setColor = () => {
+        return productColor.split(",").map((color) => {
+            return (
+                <option key={color} value={color}>
+                    {color}
+                </option>
+            );
+        });
+    };
 
     return (
         <main className="inner-page-sec-padding pb-0">
@@ -73,7 +77,7 @@ const ProductDetail = ({ product }) => {
                             <h3 className="title">{productName}</h3>
 
                             <div className="price-block" style={{ fontSize: "18px" }}>
-                                <del className="price-old">{productOldPrice ? '$'+productOldPrice : ''}</del>
+                                <del className="price-old">{productOldPrice ? "$" + productOldPrice : ""}</del>
                                 <span className="price-new">&nbsp;&nbsp;{priceHelper.getPrice(productPrice)}</span>
                             </div>
                             <hr />
@@ -95,10 +99,9 @@ const ProductDetail = ({ product }) => {
                                             <label htmlFor="pa_dimension">Dimension</label>
                                         </th>
                                         <td className="value">
-                                        <select id="dimension" className="hasCustomSelect">
+                                            <select id="dimension" className="hasCustomSelect">
                                                 <option value="">Choose an option</option>
-                                        </select>
-                                         
+                                            </select>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -164,17 +167,28 @@ const ProductDetail = ({ product }) => {
                     </div>
                 </div>
                 <div className="review-tab pt--55 border-top border-bottom section-margin section-padding">
-                    <ul className="nav nav-tabs" id="myTab" role="tablist">
-                        <li className="nav-item" role="presentation">
-                            <div className="nav-link active" id="description">
+                    <ul className="nav nav-tabs" id="myTab" role="tablist" style={{cursor:"pointer"}}>
+                        <li className="nav-item" role="presentation" onClick={()=>{setDescriptionView(true)}}>
+                            <div className="nav-link active">
                                 Description
+                            </div>
+                        </li>
+                        <li className="nav-item" role="presentation" onClick={()=>{setDescriptionView(false)}}>
+                            <div className="nav-link">
+                                Additional Information
                             </div>
                         </li>
                     </ul>
                     <div className="tab-content space-db--20" id="myTabContent">
-                        <div className="tab-pane fade show active" id="tab-1" role="tabpanel" aria-labelledby="description">
-                            <article className="review-article" dangerouslySetInnerHTML={{ __html: productDescription }}></article>
-                        </div>
+                        {descriptionView === true ? (
+                            <div className="tab-pane fade">
+                                <article className="review-article" dangerouslySetInnerHTML={{ __html: productDescription }}></article>
+                            </div>
+                        ) : (
+                            <div className="tab-pane fade">
+                                <article className="review-article">wazidfalkdfas;lfdkj</article>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

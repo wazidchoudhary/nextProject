@@ -1,31 +1,84 @@
 {
   "polyfillFiles": [
-    "static/chunks/polyfills.js"
+    "static/chunks/polyfills-78c92fac7aa8fdd8.js"
   ],
-  "devFiles": [
-    "static/chunks/react-refresh.js"
-  ],
+  "devFiles": [],
   "ampDevFiles": [],
   "lowPriorityFiles": [
-    "static/development/_buildManifest.js",
-    "static/development/_ssgManifest.js"
+    "static/gD4_VYUFBcvLcdJCRUsFa/_buildManifest.js",
+    "static/gD4_VYUFBcvLcdJCRUsFa/_ssgManifest.js"
   ],
   "rootMainFiles": [],
   "pages": {
+    "/": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/a198fdd9-ca2653aee863e9cc.js",
+      "static/chunks/91-29f064174f04892b.js",
+      "static/chunks/pages/index-8e2ab9c5ef77dc0f.js"
+    ],
     "/_app": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/_app.js"
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/css/94b0e5ad1f0b806f.css",
+      "static/chunks/pages/_app-76824432c8c6c538.js"
     ],
     "/_error": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/_error.js"
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/_error-54de1933a164a1ff.js"
+    ],
+    "/about": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/about-56d7a261460b5444.js"
+    ],
+    "/contact": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/contact-1d50c78ac249249f.js"
+    ],
+    "/knifeHandles": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/knifeHandles-0b73c0f7a5c56a7d.js"
+    ],
+    "/knifeHandles/[...id]": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/knifeHandles/[...id]-ade090a3b371c73f.js"
+    ],
+    "/moreProducts": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/moreProducts-23f1719852b0b3d3.js"
+    ],
+    "/moreProducts/[...id]": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/moreProducts/[...id]-c4ccdb60b990b79a.js"
     ],
     "/products": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/products.js"
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/pages/products-a573984c4eaaa0d2.js"
+    ],
+    "/products/[id]": [
+      "static/chunks/webpack-59c5c889f52620d6.js",
+      "static/chunks/framework-7a7e500878b44665.js",
+      "static/chunks/main-31a3515003ac0f70.js",
+      "static/chunks/811-d80c9d0f660d5621.js",
+      "static/chunks/pages/products/[id]-24274f125005f3ef.js"
     ]
   },
   "ampFirstPages": []
