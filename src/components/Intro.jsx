@@ -12,7 +12,7 @@ const Intro = () => {
                                 <h2>Welcome To As International</h2>
                                 <div className="title-sep">
                                     <Image
-                                        src={"/assets/image/IMG_20230720_114137-removebg-preview.png"}
+                                        src={"/assets/image/logo.png"}
                                         alt={`logo`}
                                         height={70}
                                         width={100}

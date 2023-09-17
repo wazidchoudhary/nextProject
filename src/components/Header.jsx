@@ -42,7 +42,7 @@ const Header = () => {
                                     <ul className="main-menu @@menuColor">
                                         <li>
                                             <Image
-                                                src={"/assets/image/IMG_20230720_114137-removebg-preview.png"}
+                                                src={"/assets/image/logo.png"}
                                                 alt={`logo`}
                                                 height={70}
                                                 width={100}
