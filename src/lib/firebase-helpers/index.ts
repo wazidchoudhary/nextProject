@@ -9,23 +9,30 @@ const sync = (entity: string) => get(child(dbRef, `${entity}/`));
 export class FirebaseHelper {
     static async syncAllProducts(): Promise<Product[]> {
         const snapshot = await sync('product');
-        const projects = ResponseParser.parse<Product>(snapshot);
+        const product = ResponseParser.parse<Product>(snapshot);
         
-        return projects
+        return product
     }
 
     static async fetchFeaturedProduct(): Promise<Product[]>{
        const featuredProduct =  await get(query(ref(database, `product/`), ...[orderByChild('featured'),equalTo(true)]));
-       const projects = ResponseParser.parse<Product>(featuredProduct);
+       const product = ResponseParser.parse<Product>(featuredProduct);
         
-       return projects
+       return product
+    }
+
+    static async fetchProductByKey(key:string,keyValue:string): Promise<Product[]>{
+        const productList =  await get(query(ref(database, `product/`), ...[orderByChild(key),equalTo(keyValue)]));
+        const product = ResponseParser.parse<Product>(productList);
+       
+       return product
     }
 
     static async fetchProductByCategory(category:string) : Promise<Product[]>{
         const featuredProduct =  await get(query(ref(database, `product/`), ...[orderByChild('productCategory'),equalTo(category)]));
-        const projects = ResponseParser.parse<Product>(featuredProduct);
+        const product = ResponseParser.parse<Product>(featuredProduct);
        
-       return projects
+       return product
     }
 
     static async fetchProductByCategoryLimit(category:string,numberOfProducts:number) : Promise<Product[]>{
@@ -33,6 +40,7 @@ export class FirebaseHelper {
         const products = ResponseParser.parse<Product>(featuredProduct);
         return products
     }
+
 
     static async fetchSingleProduct(id:any) : Promise<Product>{
         const snapshot = await get(child(dbRef, `product/${id}`))
