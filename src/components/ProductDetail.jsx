@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { priceHelper } from "@/lib/price-helper";
-// import { Splide, SplideTrack, SplideSlide } from "@splidejs/react-splide";
-// import "@splidejs/react-splide/css/skyblue";
 import ImageGallery from "react-image-gallery";
 import store from "@/lib/store/store";
 import useDispatch from "@/hooks/useDispatch";
 import useSelector from "@/hooks/useSelector";
 
-const ProductDetail = ({ product }) => {
+const ProductDetail = ({ product,categoryProducts }) => {
     const {
         productImage,
         productId,
         productName,
+        priceCategory,
         productDescription,
         productCategory,
         productSubCategory,
         productPrice,
         productOldPrice,
         productType,
-        productPriceType,
         productColor,
         productQty,
         productSize,
     } = product;
-    console.log(product)
     const cartData = useSelector("cart") || [];
     const dispatch = useDispatch();
-    const [descriptionView,setDescriptionView] = useState(true)
+    const [descriptionView, setDescriptionView] = useState(true);
+    const [quantity, setQuantity] = useState(1);
+    const multiPrice = typeof productPrice !== 'string';
+    
+
+    const setInitialPrice = () =>{
+       const initialPrice =  multiPrice ? priceHelper.lowestHighestPrice(productPrice).lowest : productPrice
+       return initialPrice
+    }
+    const [price,setPrice] = useState(setInitialPrice())
+    
     const handleAddToCart = () => {
         store.dispatch({
             cart: [...cartData, { productName, id: productId, price: productPrice, quantity: 1 }],
@@ -47,12 +54,16 @@ const ProductDetail = ({ product }) => {
             images.push({
                 original: image,
                 thumbnail: image,
+                originalHeight: "400",
+                originalWidth: "100",
+                originalAlt: productName,
+                thumbnailLoading: "eager",
             });
         });
         return productImage.length > 1 ? (
-            <ImageGallery thumbnailPosition="left" items={images} />
+            <ImageGallery thumbnailPosition="bottom" items={images} autoPlay={true} />
         ) : (
-            <Image src={productImage[0]} width={100} height={100} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <Image src={productImage[0]} width={100} alt={productName} height={100} style={{ width: "100%", height: "100%", objectFit: "contain" }} />
         );
     };
 
@@ -66,11 +77,25 @@ const ProductDetail = ({ product }) => {
         });
     };
 
+    const setDimensions = () =>{
+        return productPrice.map((res)=>{
+            return <option key={res.price} value={`${res.price}-${res.type}`}>{res.type + ` ${priceCategory.name}`}</option>
+
+        })
+    }
+
+    const isClassActive = (view) => {
+        return view ? "active" : "";
+    };
+    console.log(price)
+
     return (
-        <main className="inner-page-sec-padding pb-0">
-            <div className="container">
+        
+            <div className="container-lg">
                 <div className="row pb--50">
-                    <div className="col-lg-5 mb--30">{setProductImages()}</div>
+                    <div className="col-lg-5 mb--30" style={{ height: "400px" }}>
+                        {setProductImages()}
+                    </div>
 
                     <div className="col-lg-7">
                         <div className="product-details-description pl-lg--30 ">
@@ -80,52 +105,92 @@ const ProductDetail = ({ product }) => {
                                 <del className="price-old">{productOldPrice ? "$" + productOldPrice : ""}</del>
                                 <span className="price-new">&nbsp;&nbsp;{priceHelper.getPrice(productPrice)}</span>
                             </div>
+                            {multiPrice ? (
+                                <>
+                                    <hr />
+                                    <table className="variations" cellSpacing={0} role="presentation">
+                                        <tbody>
+                                            <tr>
+                                                <th className="label">
+                                                    <label htmlFor="pa_color">Color</label>
+                                                </th>
+                                                <td className="value">
+                                                    <select id="pa_color" className="hasCustomSelect">
+                                                        <option value="">Choose an option</option>
+                                                        {setColor()}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th className="label">
+                                                    <label htmlFor="pa_dimension">Dimension</label>
+                                                </th>
+                                                <td className="value">
+                                                    <select id="dimension" className="hasCustomSelect" onChange={(event)=>{setPrice(event.target.value.split('-')[0])}}>
+                                                        <option value="">Choose an option</option>
+                                                        {setDimensions()}
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </>
+                            ) : (
+                                ""
+                            )}
+
                             <hr />
-                            <table className="variations" cellSpacing={0} role="presentation">
-                                <tbody>
-                                    <tr>
-                                        <th className="label">
-                                            <label htmlFor="pa_color">Color</label>
-                                        </th>
-                                        <td className="value">
-                                            <select id="pa_color" className="hasCustomSelect">
-                                                <option value="">Choose an option</option>
-                                                {setColor()}
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th className="label">
-                                            <label htmlFor="pa_dimension">Dimension</label>
-                                        </th>
-                                        <td className="value">
-                                            <select id="dimension" className="hasCustomSelect">
-                                                <option value="">Choose an option</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
 
                             <div className="widget-block-3">
                                 <span className="widget-label">Quantity</span>
-                                <div className="widgets">
+                                {multiPrice ? <div className="multiPrice">${price}</div> : ''}
+                                <div className="widgets" style={{position:'relative'}}>
+                                    
+                
                                     <div className="count-input-block">
-                                        <input type="number" className="form-control text-center" defaultValue={1} />
-                                        <div className="count-input-btns">
-                                            <button className="inc-ammount count-btn">
-                                                <i className="zmdi zmdi-chevron-up" />
+                                    
+                                    
+                                        <div className="quantity" >
+                                        
+                                            <button
+                                                className="minus"
+                                                onClick={() => {
+                                                    if (quantity > 1) {
+                                                        setQuantity(quantity - 1);
+                                                    }
+                                                }}
+                                            >
+                                                -
                                             </button>
-                                            <button className="dec-ammount count-btn">
-                                                <i className="zmdi zmdi-chevron-up" />
+                                            
+                                            <input
+                                                type="number"
+                                                id="quantity"
+                                                className="qty"
+                                                name="quantity"
+                                                title="Qty"
+                                                size={2}
+                                                min={1}
+                                                value={quantity}
+                                                step={1}
+                                                disabled={true}
+                                                autoComplete="off"
+                                            />
+                                            <button
+                                                className="plus"
+                                                onClick={() => {
+                                                    setQuantity(quantity + 1);
+                                                }}
+                                            >
+                                                +
                                             </button>
                                         </div>
                                     </div>
                                     <div className="add-cart-btn">
-                                        <a href className="btn btn-outlined--primary" onClick={() => handleAddToCart(product)}>
+                                        <button className="btn btn-outlined--primary" onClick={() => handleAddToCart(product)}>
                                             <i className="ion-bag" />
                                             Add to Cart
-                                        </a>
+                                        </button>
                                     </div>
                                     <div className="product-status">
                                         <p>
@@ -134,22 +199,11 @@ const ProductDetail = ({ product }) => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="widget-social-share">
-                                <span className="widget-label">Share</span>
-                                <div className="social-share rounded-icons transparent-bg text-start">
-                                    <a href="product-details.html#" className="single-icon">
-                                        <i className="fab fa-facebook-f" />
-                                    </a>
-                                    <a href="product-details.html#" className="single-icon">
-                                        <i className="fab fa-twitter" />
-                                    </a>
-                                    <a href="product-details.html#" className="single-icon">
-                                        <i className="fab fa-youtube" />
-                                    </a>
-                                    <a href="product-details.html#" className="single-icon">
-                                        <i className="fab fa-google-plus-g" />
-                                    </a>
-                                </div>
+                            <hr />
+                            <div className="product_meta">
+                                <b>Sold By</b> : AS International
+                                <br />
+                                <b>Categories</b> : {productCategory}, {productSubCategory}
                             </div>
                             <div className="policy-block">
                                 <ul className="policy-list">
@@ -166,33 +220,69 @@ const ProductDetail = ({ product }) => {
                         </div>
                     </div>
                 </div>
-                <div className="review-tab pt--55 border-top border-bottom section-margin section-padding">
-                    <ul className="nav nav-tabs" id="myTab" role="tablist" style={{cursor:"pointer"}}>
-                        <li className="nav-item" role="presentation" onClick={()=>{setDescriptionView(true)}}>
-                            <div className="nav-link active">
-                                Description
-                            </div>
+                <div className="review-tab pt--55 mb--10 border-top border-bottom section-padding">
+                    <ul className="nav nav-tabs" id="myTab" role="tablist" style={{ cursor: "pointer" }}>
+                        <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                                setDescriptionView(true);
+                            }}
+                        >
+                            <div className={`nav-link ${isClassActive(descriptionView)}`}>Description</div>
                         </li>
-                        <li className="nav-item" role="presentation" onClick={()=>{setDescriptionView(false)}}>
-                            <div className="nav-link">
-                                Additional Information
-                            </div>
+                        <li
+                            className="nav-item"
+                            role="presentation"
+                            onClick={() => {
+                                setDescriptionView(false);
+                            }}
+                        >
+                            <div className={`nav-link ${isClassActive(!descriptionView)}`}>Additional Information</div>
                         </li>
                     </ul>
                     <div className="tab-content space-db--20" id="myTabContent">
                         {descriptionView === true ? (
-                            <div className="tab-pane fade">
-                                <article className="review-article" dangerouslySetInnerHTML={{ __html: productDescription }}></article>
+                            <div className="">
+                                
+                                <article className="review-article mt-3" dangerouslySetInnerHTML={{ __html: productDescription }}></article>
                             </div>
                         ) : (
-                            <div className="tab-pane fade">
-                                <article className="review-article">wazidfalkdfas;lfdkj</article>
+                            <div className="">
+                                <h5>Additional Information</h5>
+                                <table className="additionalDetail-table mt-3">
+                                    <tbody>
+                                        <tr>
+                                            <th>COLOR</th>
+                                            <td>{productColor}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>DIMENSIONS</th>
+                                            <td>{multiPrice ? productPrice.map((priceType) => `${priceType.type} ${priceCategory.name}, `) : productSize}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>SIZE</th>
+                                            <td>{productSize}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>TYPE</th>
+                                            <td>{productType}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>CATEGORY</th>
+                                            <td>{productCategory}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>SUBCATEGORY</th>
+                                            <td>{productSubCategory}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         )}
                     </div>
                 </div>
             </div>
-        </main>
     );
 };
 

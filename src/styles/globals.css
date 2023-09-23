@@ -17,7 +17,7 @@
 }
 
 .site-header,.mobile-header{
-    background-color: rgba(0, 0, 0, 0.700);
+    background-color: rgba(0, 0, 0, 1);
     padding: 0px;
     transition: .4s;
 }
@@ -65,4 +65,82 @@
     padding: 5px;
 }
 
+.plus, .minus ,.qty{
+    display: block;
+    float: left;
+    width: 36px !important;
+    height: 36px !important;
+    background-color: rgba(0,0,0,0);
+    border: 1px solid #e4e4e4;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 12px;
+    color: #777;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    border-radius: 0;
+    transition: .3s;
+}
+
+.plus:hover, .minus:hover{
+    transition: .3s;
+    border: 1px solid #24bbdb;
+    color:#24bbdb;
+}
+
+.additionalDetail-table{
+    width: 100%;
+    border-top: 1px solid #e4e4e4;
+    text-align:left;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.additionalDetail-table th{
+    text-align: left;
+    border-right: 1px solid #e4e4e4;
+    border-bottom: 1px solid #e4e4e4;
+    padding: 7px 15px;
+    text-align: left;
+    margin: 0;
+}
+.additionalDetail-table td {
+    border-bottom: 1px solid #e4e4e4;
+    padding: 7px 15px;
+    text-align: left;
+    margin: 0;
+}
+
+.multiPrice{
+    color: #24bbdb;
+    font-size: 16px;
+    width: 30px;
+    height: 20px;
+    margin-left: 30px;    
+}
+
+.second{
+
+   position: relative;
+   
+}
+
+#top-bar-wrap, #top-bar-content strong {
+    color: #ffffff;
+}
+#top-bar-wrap, .oceanwp-top-bar-sticky {
+    background-color: #24bbdb;
+}
+
+#top-bar-wrap {
+    position: relative;
+    background-color: #fff;
+    font-size: 12px;
+    border-bottom: 1px solid #f1f1f1;
+    z-index: 101;
+}
 

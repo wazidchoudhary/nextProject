@@ -3,7 +3,9 @@ import MetaHead from "@/components/MetaHead";
 import styles from "./Product.module.css";
 import { FirebaseHelper } from "@/lib/firebase-helpers";
 import { Card } from "@/components/card";
+import { useRouter } from "next/router";
 export default function ({ products }) {
+    const router = useRouter()
     return (
         <>
             <MetaHead title="Products" description="best products" />

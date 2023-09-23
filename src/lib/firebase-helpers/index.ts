@@ -1,5 +1,5 @@
 import {app, database} from './firebase-config';
-import { getDatabase, get, child, ref, push, orderByChild,equalTo,query  } from "firebase/database";
+import { getDatabase, get, child, ref, push, orderByChild,equalTo,query, limitToFirst  } from "firebase/database";
 import { Product } from '@/types/types';
 import { ResponseParser } from '../response-parser';
 
@@ -26,6 +26,12 @@ export class FirebaseHelper {
         const projects = ResponseParser.parse<Product>(featuredProduct);
        
        return projects
+    }
+
+    static async fetchProductByCategoryLimit(category:string,numberOfProducts:number) : Promise<Product[]>{
+        const featuredProduct =  await get(query(ref(database, `product/`), ...[orderByChild('productCategory'),equalTo(category),limitToFirst(numberOfProducts)]));
+        const products = ResponseParser.parse<Product>(featuredProduct);
+        return products
     }
 
     static async fetchSingleProduct(id:any) : Promise<Product>{

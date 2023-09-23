@@ -5,3 +5,13 @@ export default function () {
     <div>[...id]</div>
   )
 }
+
+export const getServerSideProps = (context) => {
+  console.log(context.query, ' @@@context');
+
+  return {
+      props: {
+
+      }
+  }
+}

@@ -1,6 +1,7 @@
 import MetaHead from "@/components/MetaHead";
 import { FirebaseHelper } from "@/lib/firebase-helpers";
 import ProductDetail from "@/components/ProductDetail";
+import { CategoryProducts } from "@/components/CategoryProducts";
 export default function (props) {
 
     return (
@@ -10,7 +11,11 @@ export default function (props) {
                 <h2 className="sr-only">Site Breadcrumb</h2>
                 <div className="container" style={{ height: "150px" }}></div>
             </section>
+            <main className="inner-page-sec-padding pb-0">
             <ProductDetail product={props.product} />
+            <CategoryProducts categoryProducts={props.categoryProducts} />
+            </main>
+            
         </>
     );
 }
@@ -19,11 +24,13 @@ export default function (props) {
 export const getServerSideProps = async (context) => {
     console.log(context, " @@@context");
     const prodId = context.query.id;
-    const res = await FirebaseHelper.fetchSingleProduct(prodId);
+    const response = await FirebaseHelper.fetchSingleProduct(prodId);
+    const categoryProducts = await FirebaseHelper.fetchProductByCategoryLimit(response.productCategory,5)
 
     return {
         props: {
-            product: res,
+            product: response,
+            categoryProducts:categoryProducts.filter((res)=>res.productId !== response.productId)
         },
     };
 };

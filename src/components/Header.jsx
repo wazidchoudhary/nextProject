@@ -6,21 +6,21 @@ import StrUtils from "@/utils/str-utils";
 import store from "@/lib/store/store";
 import useSelector from "@/hooks/useSelector";
 const Header = () => {
-    const {cart = []} = useSelector('*');
-    const cartData = useSelector('cart');
+    const { cart = [] } = useSelector("*");
+    const cartData = useSelector("cart");
 
-    const createDynamicMenu = (prop,pageName) => {
+    const createDynamicMenu = (prop, pageName) => {
         const keys = Object.keys(prop);
-        return keys.map((menuTitle) => {
+        return keys.map((menuTitle, i) => {
             return (
-                <li className="cus-col-25" style={{border:'none'}}>
-                    <h3 className="menu-title" style={{fontSize:"14px"}}>
+                <li key={menuTitle + i} className="cus-col-25" style={{ border: "none" }}>
+                    <h3 className="menu-title" style={{ fontSize: "14px" }}>
                         <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`}>{menuTitle}</Link>
                     </h3>
-                    <ul className="mega-single-block" style={{marginBottom:"10px"}}>
-                        {prop[menuTitle].map((name) => {
+                    <ul className="mega-single-block" style={{ marginBottom: "10px" }}>
+                        {prop[menuTitle].map((name, i) => {
                             return (
-                                <li>
+                                <li key={name + i}>
                                     <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}/${StrUtils.normalToSnake(name)}`}>{name}</Link>
                                 </li>
                             );
@@ -33,14 +33,13 @@ const Header = () => {
 
     return (
         <>
-            <div>
                 <header className="site-header ha-header-1 absolute-header sticky-init fixed-header d-lg-block d-none">
                     <div className="container-fluid">
                         <div className="row align-items-center">
                             <div className="col-lg-7">
                                 <div className="main-navigation">
                                     <ul className="main-menu @@menuColor">
-                                        <li>
+                                        <li key={"logoHeader"}>
                                             <Image
                                                 src={"/assets/image/logo.png"}
                                                 alt={`logo`}
@@ -50,31 +49,25 @@ const Header = () => {
                                                 // quality={50}
                                             />
                                         </li>
-                                        <li className="menu-item has-children">
+                                        <li key={"homeHeader"} className="menu-item has-children">
                                             <Link href="/">Home</Link>
                                         </li>
                                         {/* Shop */}
-                                        <li className="menu-item has-children mega-menu">
-                                            <Link href={'/knifeHandles'}>Knife Handles</Link>
-                                            <ul className="sub-menu four-column">
-                                                {createDynamicMenu(knifeHandles,'knifeHandles')}
-                                            
-                                            </ul>
+                                        <li key={"knifeHandlesNav"} className="menu-item has-children mega-menu">
+                                            <Link href={"/knifeHandles"}>Knife Handles</Link>
+                                            <ul className="sub-menu four-column">{createDynamicMenu(knifeHandles, "knifeHandles")}</ul>
                                         </li>
-                                        <li className="menu-item has-children mega-menu">
-                                            <Link href={'/products?knife-handles'}>More Products</Link>
-                                            <ul className="sub-menu four-column">
-                                                {createDynamicMenu(products,'moreProducts')}
-                                            </ul>
+                                        <li key={"moreproductskey"} className="menu-item has-children mega-menu">
+                                            <Link href={"/products"}>More Products</Link>
+                                            <ul className="sub-menu four-column">{createDynamicMenu(products, "moreProducts")}</ul>
                                         </li>
                                         {/* Pages */}
-                                        <li className="menu-item has-children">
+                                        <li key={"aboutuskey"} className="menu-item has-children">
                                             <Link href="/about">About Us</Link>
                                         </li>
-                                        <li className="menu-item has-children">
+                                        <li key={"contactuskey"} className="menu-item has-children">
                                             <Link href="/contact">Contact Us</Link>
                                         </li>
-                                        
                                     </ul>
                                 </div>
                             </div>
@@ -86,12 +79,12 @@ const Header = () => {
                             <div className="col-lg-3 col-xl-3">
                                 <div className="header-top-widget">
                                     <ul className="header-links">
-                                        <li className="sin-link">
+                                        <li key={"cartAreakey"} className="sin-link">
                                             <a href="javascript:" className="search-trigger link-icon">
                                                 <i className="ion-ios-search-strong" />
                                             </a>
                                         </li>
-                                        <li className="sin-link">
+                                        <li key={"bagkey"} className="sin-link">
                                             <a href="javascript:" className="cart-link link-icon">
                                                 <i className="ion-bag" />
                                             </a>
@@ -140,14 +133,18 @@ const Header = () => {
                                                         Checkout
                                                     </a>
                                                 </div>
-                                                <ul >
+                                                <ul>
                                                     {cart.map((cart) => {
-                                                       return <li>{cart.productName} - {cart.quantity}</li>
+                                                        return (
+                                                            <li>
+                                                                {cart.productName} - {cart.quantity}
+                                                            </li>
+                                                        );
                                                     })}
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li className="sin-link">
+                                        <li key={"languagekey"} className="sin-link">
                                             <a href="javascript:" className="link-icon hamburgur-icon">
                                                 <i className="ion-navicon" />
                                             </a>
@@ -216,13 +213,18 @@ const Header = () => {
                             </div>
                         </div>
                     </div>
+                    
                 </header>
-                <header className="mobile-header d-lg-none absolute-header">
+                
+                            
+                     
+
+                {/* <header className="mobile-header d-lg-none absolute-header">
                     <div className="container">
                         <div className="row align-items-end">
                             <div className="col-md-4 col-7">
                                 <a href="index.html" className="site-brand">
-                                    {/* <img src="image/main-logo-white.png" /> */}
+                                   
                                 </a>
                             </div>
                             <div className="col-md-8 col-5 text-end">
@@ -243,7 +245,7 @@ const Header = () => {
                             </div>
                         </div>
                     </div>
-                </header>
+                </header> */}
                 <aside className="off-canvas-wrapper">
                     <div className="btn-close-off-canvas">
                         <i className="ion-android-close" />
@@ -260,11 +262,11 @@ const Header = () => {
                         </div>
                         {/* search box end */}
                         {/* mobile menu start */}
-                        <div className="mobile-navigation">
-                            {/* mobile menu navigation start */}
+                        {/* <div className="mobile-navigation">
+                         
                             <nav className="off-canvas-nav">
                                 <ul className="mobile-menu">
-                                    <li className="menu-item-has-children">
+                                    <li  className="menu-item-has-children">
                                         <a href="index.html#">Home</a>
                                         <ul className="sub-menu">
                                             <li>
@@ -450,10 +452,10 @@ const Header = () => {
                                     </li>
                                 </ul>
                             </nav>
-                            {/* mobile menu navigation end */}
-                        </div>
+                         
+                        </div> */}
                         {/* mobile menu end */}
-                        <nav className="off-canvas-nav">
+                        {/* <nav className="off-canvas-nav">
                             <ul className="mobile-menu currency-menu">
                                 <li className="menu-item-has-children">
                                     <a href="index.html#">
@@ -479,8 +481,8 @@ const Header = () => {
                                     </ul>
                                 </li>
                             </ul>
-                        </nav>
-                        <div className="off-canvas-bottom">
+                        </nav> */}
+                        {/* <div className="off-canvas-bottom">
                             <div className="contact-list mb--10">
                                 <a className="sin-contact">
                                     <i className="fas fa-mobile-alt" />
@@ -511,10 +513,10 @@ const Header = () => {
                                     <i className="fab fa-instagram" />
                                 </a>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </aside>
-            </div>
+           
         </>
     );
 };
