@@ -1,25 +1,39 @@
-import HeroSlider from "@/components/HeroSlider";
-import MetaHead from "@/components/MetaHead";
-import styles from "./Product.module.css";
-import { FirebaseHelper } from "@/lib/firebase-helpers";
-import { Card } from "@/components/card";
-import { useRouter } from "next/router";
+import { useState } from 'react';
+import { FirebaseHelper } from '@/lib/firebase-helpers';
+
+//Internal Imports
+import styles from './Product.module.css';
+
+import HeroSlider from '@/components/HeroSlider';
+import MetaHead from '@/components/MetaHead';
+import { Card } from '@/components/card';
+import { useRouter } from 'next/router';
+import { FilterSection } from '../../components/FilterSection';
+import { Filters } from '@/utils/sort-filter';
+
 export default function ({ products }) {
-    const router = useRouter()
+    const [search, setSearch] = useState('');
+    const [sorting, setSorting] = useState('');
+
+    const filterOparetion = Filters(search, products, sorting);
+
+    const router = useRouter();
     return (
         <>
             <MetaHead title="Products" description="best products" />
             <section className="bg-image">
                 <h2 className="sr-only">Site Breadcrumb</h2>
-                <div className="container" style={{ height: "150px" }}></div>
+                <div className="container" style={{ height: '150px' }}></div>
             </section>
             <section className="section-padding">
+                <FilterSection data={{ products, search, setSearch, setSorting }} />
+
                 <div className="container">
                     <div className="ha-custom-tab">
                         <div className="tab-content space-db--30" id="myTabContent">
                             <div className="tab-pane fade show active" id="shop" role="tabpanel" aria-labelledby="shop-tab">
                                 <div className="row">
-                                    {products.map((p) => (
+                                    {filterOparetion.map((p) => (
                                         <Card
                                             key={p.productId}
                                             content={{
