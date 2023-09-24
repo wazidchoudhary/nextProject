@@ -1,6 +1,6 @@
 import React from 'react';
 import MetaHead from '@/components/MetaHead';
-export default () => {
+export default function () {
     return (
         <>
             <MetaHead title="Contact Us - AS INTERNATIONAL" description="Contact As International If any enquiry" />
@@ -99,4 +99,4 @@ export default () => {
             </main>
         </>
     );
-};
+}
