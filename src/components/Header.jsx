@@ -5,6 +5,8 @@ import { knifeHandles, products } from "@/constants/navbar";
 import StrUtils from "@/utils/str-utils";
 import store from "@/lib/store/store";
 import useSelector from "@/hooks/useSelector";
+
+
 const Header = () => {
     const { cart = [] } = useSelector("*");
     const cartData = useSelector("cart");
@@ -134,9 +136,9 @@ const Header = () => {
                                                     </a>
                                                 </div>
                                                 <ul>
-                                                    {cart.map((cart) => {
+                                                    {cart.map((cart,i) => {
                                                         return (
-                                                            <li>
+                                                            <li key={i}>
                                                                 {cart.productName} - {cart.quantity}
                                                             </li>
                                                         );

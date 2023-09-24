@@ -22,7 +22,6 @@ export default function (props) {
 
 //getStaticProps
 export const getServerSideProps = async (context) => {
-    console.log(context, " @@@context");
     const prodId = context.query.id;
     const response = await FirebaseHelper.fetchSingleProduct(prodId);
     const categoryProducts = await FirebaseHelper.fetchProductByCategoryLimit(response.productCategory,5)
