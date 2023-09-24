@@ -40,7 +40,7 @@ const Header = () => {
                                 <div className="main-navigation">
                                     <ul className="main-menu @@menuColor">
                                         <li key={"logoHeader"}>
-                                            <Image
+                                            <img
                                                 src={"/assets/image/logo2.png"}
                                                 alt={`logo`}
                                                 height={45}
