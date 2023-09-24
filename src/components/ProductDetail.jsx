@@ -62,7 +62,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
         return productImage.length > 1 ? (
             <ImageGallery thumbnailPosition="bottom" items={images} autoPlay={true} />
         ) : (
-            <Image src={productImage[0]} width={100} alt={productName} height={100} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <Image src={productImage[0]} width={300} alt={productName} height={400} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         );
     };
 

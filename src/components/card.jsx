@@ -8,7 +8,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
     const showHoverImage = () => {
         return image2 ? (
             <div className="hover-image" style={{ height: '200px' }}>
-                <Image src={image2} width={100} loading="lazy" alt={name} height={100} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                <Image src={image2} width={200} loading="lazy" alt={name} height={200} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
         ) : (
             ''
@@ -23,7 +23,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
         <div className="col-lg-3 col-sm-6 mb--30">
             <div className="product-card" style={{ textAlign: 'left' }} onClick={() => handleClick(id)}>
                 <div className="image" style={{ height: '200px', border: '1px solid #e4e4e4' }}>
-                    <Image src={image1} width={100} loading="lazy" height={100} alt={name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    <Image src={image1} width={200} loading="lazy" height={200} alt={name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     <div className="hover-content" style={{ height: '100%' }}>
                         {showHoverImage()}
 

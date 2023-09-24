@@ -1,7 +1,13 @@
 import React from 'react';
 import { Card } from './card';
-
+import { useRouter } from 'next/router';
 export const CategoryProducts = ({ categoryProducts }) => {
+    const router  = useRouter()
+
+    const handleClick = (id)=>{
+        
+        router.push(`/products/${id}`)
+    }
     return (
         <section className="mt-5">
             <div className="container">
@@ -20,9 +26,8 @@ export const CategoryProducts = ({ categoryProducts }) => {
                                     priceOld: p.productOldPrice,
                                     image: p.productImage,
                                 }}
-                                handleClick={(id) => {
-                                    router.push(`/products/${id}`);
-                                }}
+                                handleClick={handleClick}
+                                    
                             />
                         ))}
                     </div>
