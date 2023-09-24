@@ -14,10 +14,11 @@ const Intro = () => {
                                     <Image
                                         src={"/assets/image/logo.png"}
                                         alt={`logo`}
-                                        height={70}
+                                        height={100}
                                         width={100}
                                         priority
                                         // quality={50}
+                                        style={{objectFit:"contain"}}
                                     />
                                 </div>
                             </div>

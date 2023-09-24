@@ -8,7 +8,7 @@ export default ({products}) => {
   const router = useRouter()
   return (
     <>
-       <MetaHead title={'Knife Handles'} description={'Knife Handles Category Product'} />
+       <MetaHead title={'KNIFE HANDLES'} description={'Knife Handles Category Product'} />
             <section className="bg-image">
                 <h2 className="sr-only">Site Breadcrumb</h2>
                 <div className="container-fluid" style={{ height: "100px" }}>
