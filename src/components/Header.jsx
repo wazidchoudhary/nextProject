@@ -8,7 +8,7 @@ import useSelector from "@/hooks/useSelector";
 const Header = () => {
     const { cart = [] } = useSelector("*");
     const cartData = useSelector("cart");
-
+    const [mobileMenu,setMobileMenu] = useState('')
     const createDynamicMenu = (prop, pageName) => {
         const keys = Object.keys(prop);
         return keys.map((menuTitle, i) => {
@@ -41,12 +41,13 @@ const Header = () => {
                                     <ul className="main-menu @@menuColor">
                                         <li key={"logoHeader"}>
                                             <Image
-                                                src={"/assets/image/logo.png"}
+                                                src={"/assets/image/logo2.png"}
                                                 alt={`logo`}
-                                                height={70}
-                                                width={100}
+                                                height={45}
+                                                width={150}
                                                 priority
-                                                // quality={50}
+                                                style={{objectFit:"contain"}}
+                                              
                                             />
                                         </li>
                                         <li key={"homeHeader"} className="menu-item has-children">
@@ -219,7 +220,7 @@ const Header = () => {
                             
                      
 
-                {/* <header className="mobile-header d-lg-none absolute-header">
+                <header className="mobile-header d-lg-none absolute-header">
                     <div className="container">
                         <div className="row align-items-end">
                             <div className="col-md-4 col-7">
@@ -235,8 +236,8 @@ const Header = () => {
                                                 <i className="ion-bag" />
                                             </a>
                                         </li>
-                                        <li className="sin-link">
-                                            <a href="javascript:" className="link-icon hamburgur-icon off-canvas-btn">
+                                        <li className="sin-link" >
+                                            <a onClick={()=>{setMobileMenu('open')}} href="javascript:" className="link-icon hamburgur-icon off-canvas-btn">
                                                 <i className="ion-navicon" />
                                             </a>
                                         </li>
@@ -245,9 +246,9 @@ const Header = () => {
                             </div>
                         </div>
                     </div>
-                </header> */}
-                <aside className="off-canvas-wrapper">
-                    <div className="btn-close-off-canvas">
+                </header>
+                <aside className={`off-canvas-wrapper ${mobileMenu}`}>
+                    <div className="btn-close-off-canvas" onClick={()=>{setMobileMenu('')}}>
                         <i className="ion-android-close" />
                     </div>
                     <div className="off-canvas-inner">
@@ -260,9 +261,10 @@ const Header = () => {
                                 </button>
                             </form>
                         </div>
+
                         {/* search box end */}
                         {/* mobile menu start */}
-                        {/* <div className="mobile-navigation">
+                        <div className="mobile-navigation">
                          
                             <nav className="off-canvas-nav">
                                 <ul className="mobile-menu">
@@ -453,7 +455,7 @@ const Header = () => {
                                 </ul>
                             </nav>
                          
-                        </div> */}
+                        </div>
                         {/* mobile menu end */}
                         {/* <nav className="off-canvas-nav">
                             <ul className="mobile-menu currency-menu">
