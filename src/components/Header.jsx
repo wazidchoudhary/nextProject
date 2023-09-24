@@ -40,12 +40,11 @@ const Header = () => {
                                 <div className="main-navigation">
                                     <ul className="main-menu @@menuColor">
                                         <li key={"logoHeader"}>
-                                            <img
-                                                src={"/assets/image/logo2.png"}
+                                            <Image
+                                                src={"/assets/image/Logo2.png"}
                                                 alt={`logo`}
                                                 height={45}
                                                 width={150}
-                                                priority
                                                 style={{objectFit:"contain"}}
                                               
                                             />
