@@ -87,7 +87,7 @@ const ProductDetail = ({ product,categoryProducts }) => {
     const isClassActive = (view) => {
         return view ? "active" : "";
     };
-    console.log(price)
+    
 
     return (
         
