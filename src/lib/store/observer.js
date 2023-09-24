@@ -3,7 +3,7 @@ export default class Observer {
     #subject = {};
 
     constructor(initialVal) {
-        this.#subject = initialVal
+        this.#subject = initialVal;
     }
 
     subscribe(callback) {
@@ -16,13 +16,11 @@ export default class Observer {
     }
 
     dispatch(newVal) {
-        this.#subject = {...this.#subject, ...newVal};
+        this.#subject = { ...this.#subject, ...newVal };
         this.#notify();
     }
-    
+
     get(key) {
         return this.#subject[key];
     }
-
 }
-
