@@ -1,7 +1,7 @@
-import store from "@/lib/store/store";
+import store from '@/lib/store/store';
 
 const useDispatch = () => {
-    return store.dispatch
-}
+    return store.dispatch;
+};
 
 export default useDispatch;

@@ -1,7 +1,7 @@
-import React from "react";
-import { useRouter } from "next/router";
-import { Card } from "./card";
-import { FirebaseHelper } from "@/lib/firebase-helpers";
+import React from 'react';
+import { useRouter } from 'next/router';
+import { Card } from './card';
+import { FirebaseHelper } from '@/lib/firebase-helpers';
 const FeatureProducts = ({ products }) => {
     const router = useRouter();
     return (

@@ -1,0 +1,11 @@
+# Ignore artifacts:
+build
+coverage
+assets
+
+*.svg
+*.jpg
+*.png
+*.jpeg
+*.json
+*.yml

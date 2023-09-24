@@ -1,16 +1,16 @@
-import { FirebaseHelper } from "@/lib/firebase-helpers";
-import React from "react";
-import StrUtils from "@/utils/str-utils";
-import MetaHead from "@/components/MetaHead";
-import { Card } from "@/components/card";
-import { EmptyProductSection } from "@/components/EmptyProductSection";
+import { FirebaseHelper } from '@/lib/firebase-helpers';
+import React from 'react';
+import StrUtils from '@/utils/str-utils';
+import MetaHead from '@/components/MetaHead';
+import { Card } from '@/components/card';
+import { EmptyProductSection } from '@/components/EmptyProductSection';
 export default function ({ products, category, url }) {
     return (
         <>
-            <MetaHead title={`${category}`} description={`${url.map((res) => StrUtils.snakeToNormal(res) + " PRODUCTS")}`} />
+            <MetaHead title={`${category}`} description={`${url.map((res) => StrUtils.snakeToNormal(res) + ' PRODUCTS')}`} />
             <section className="bg-image">
                 <h2 className="sr-only">Site Breadcrumb</h2>
-                <div className="container" style={{ height: "150px" }}></div>
+                <div className="container" style={{ height: '150px' }}></div>
             </section>
             {products.length > 0 ? (
                 <section className="section-padding">
@@ -50,12 +50,12 @@ export default function ({ products, category, url }) {
 }
 
 export const getServerSideProps = async (context) => {
-    console.log(context.query, " @@@context");
+    console.log(context.query, ' @@@context');
     const url = context.query.id;
-    let key = "productCategory";
+    let key = 'productCategory';
     let id = url[0];
     if (url.length > 1) {
-        key = "productSubCategory";
+        key = 'productSubCategory';
         id = url[1];
     }
     console.log(StrUtils.snakeToNormal(id));
