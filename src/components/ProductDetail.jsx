@@ -5,6 +5,7 @@ import ImageGallery from 'react-image-gallery';
 import store from '@/lib/store/store';
 import useDispatch from '@/hooks/useDispatch';
 import useSelector from '@/hooks/useSelector';
+import { CartHelper } from '@/lib/cart';
 
 const ProductDetail = ({ product, categoryProducts }) => {
     const {
@@ -22,29 +23,59 @@ const ProductDetail = ({ product, categoryProducts }) => {
         productQty,
         productSize,
     } = product;
-    const cartData = useSelector('cart') || [];
-    const dispatch = useDispatch();
+    
+  
     const [descriptionView, setDescriptionView] = useState(true);
-    const [quantity, setQuantity] = useState(1);
     const multiPrice = typeof productPrice !== 'string';
-
     const setInitialPrice = () => {
         const initialPrice = multiPrice ? priceHelper.lowestHighestPrice(productPrice).lowest : productPrice;
-        return initialPrice;
+        return Number(initialPrice);
     };
-    const [price, setPrice] = useState(setInitialPrice());
+
+    const [prod, setProd] = useState({
+        quantity:1,
+        selectedPrice:setInitialPrice(),
+        selectedDimension:'',
+        selectedColor:''
+    });
+    
+
+    
 
     const handleAddToCart = () => {
-        store.dispatch({
-            cart: [...cartData, { productName, id: productId, price: productPrice, quantity: 1 }],
-        });
+        const cartData = store.get('cart')
+        const index = cartData.findIndex((prod)=>prod.id == productId)
+        if(index != -1){
+            cartData[index].qty++;
+            store.dispatch({cart:[...cartData]})
+            localStorage.setItem('asInternationalCart',JSON.stringify([...cartData]))
+        }else{
+            const cartProduct = {id:productId,
+                name:productName,
+                image:productImage[0],
+                qty:prod.quantity,
+                price:parseFloat(prod.selectedPrice),
+                dimension:prod.selectedDimension,
+                color:prod.selectedColor
+            }
+    
+            store.dispatch({cart:[...cartData,cartProduct]})
+            localStorage.setItem('asInternationalCart',JSON.stringify([...cartData,cartProduct]))
+        }
+        
+        
     };
 
     useEffect(() => {
-        store.subscribe(({ cart }) => {
-            console.log(cart, ' @@@updated from product detail');
-        });
+        // store.subscribe(({ cart }) => {
+        //     console.log(cart, ' @@@updated from product detail');
+        // });
+        if(productColor.split(',').length < 2){
+            setProd({...prod,selectedColor:productColor})
+        }
     }, []);
+
+
 
     const setProductImages = () => {
         const images = [];
@@ -62,12 +93,14 @@ const ProductDetail = ({ product, categoryProducts }) => {
         return productImage.length > 1 ? (
             <ImageGallery thumbnailPosition="bottom" items={images} autoPlay={true} />
         ) : (
-            <Image src={productImage[0]} width={300} alt={productName} height={400} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <Image src={productImage[0]} width={150} alt={productName} height={150} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         );
     };
 
     const setColor = () => {
+        
         return productColor.split(',').map((color) => {
+            
             return (
                 <option key={color} value={color}>
                     {color}
@@ -79,7 +112,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
     const setDimensions = () => {
         return productPrice.map((res) => {
             return (
-                <option key={res.price} value={`${res.price}-${res.type}`}>
+                <option key={res.price} value={`${res.price}-${res.type} ${priceCategory.name}`}>
                     {res.type + ` ${priceCategory.name}`}
                 </option>
             );
@@ -115,7 +148,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
                                                 <label htmlFor="pa_color">Color</label>
                                             </th>
                                             <td className="value">
-                                                <select id="pa_color" className="hasCustomSelect">
+                                                <select id="pa_color" className="hasCustomSelect" onChange={(event) => {setProd({...prod,color:event.target.value})}}>
                                                     <option value="">Choose an option</option>
                                                     {setColor()}
                                                 </select>
@@ -130,7 +163,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
                                                     id="dimension"
                                                     className="hasCustomSelect"
                                                     onChange={(event) => {
-                                                        setPrice(event.target.value.split('-')[0]);
+                                                        setProd({...prod,selectedPrice:event.target.value.split('-')[0],selectedDimension:event.target.value.split('-')[1]});
                                                     }}
                                                 >
                                                     <option value="">Choose an option</option>
@@ -149,26 +182,26 @@ const ProductDetail = ({ product, categoryProducts }) => {
 
                         <div className="widget-block-3">
                             <span className="widget-label">Quantity</span>
-                            {multiPrice ? <div className="multiPrice">${price}</div> : ''}
+                            {multiPrice ? <div className="multiPrice">${prod.selectedPrice}</div> : ''}
                             <div className="widgets" style={{ position: 'relative' }}>
                                 <div className="count-input-block">
                                     <div className="quantity">
                                         <button
                                             className="minus"
                                             onClick={() => {
-                                                if (quantity > 1) {
-                                                    setQuantity(quantity - 1);
+                                                if (prod.quantity > 1) {
+                                                    setProd({...prod,quantity:prod.quantity - 1});
                                                 }
                                             }}
                                         >
                                             -
                                         </button>
 
-                                        <input type="number" id="quantity" className="qty" name="quantity" title="Qty" size={2} min={1} value={quantity} step={1} disabled={true} autoComplete="off" />
+                                        <input type="number" id="quantity" className="qty" name="quantity" title="Qty" size={2} min={1} value={prod.quantity} step={1} disabled={true} autoComplete="off" />
                                         <button
                                             className="plus"
                                             onClick={() => {
-                                                setQuantity(quantity + 1);
+                                                setProd({...prod,quantity:prod.quantity + 1})
                                             }}
                                         >
                                             +
@@ -176,7 +209,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
                                     </div>
                                 </div>
                                 <div className="add-cart-btn">
-                                    <button className="btn btn-outlined--primary" onClick={() => handleAddToCart(product)}>
+                                    <button className="btn btn-outlined--primary" onClick={() => handleAddToCart()}>
                                         <i className="ion-bag" />
                                         Add to Cart
                                     </button>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 
 //Internal Imports
@@ -10,7 +10,7 @@ import { Card } from '@/components/card';
 import { useRouter } from 'next/router';
 import { FilterSection } from '../../components/FilterSection';
 import { Filters } from '@/utils/sort-filter';
-
+import store from '@/lib/store/store';
 export default function ({ products }) {
     const [search, setSearch] = useState('');
     const [sorting, setSorting] = useState('');
@@ -18,6 +18,12 @@ export default function ({ products }) {
     const filterOparetion = Filters(search, products, sorting);
 
     const router = useRouter();
+    useEffect(()=>{
+        const fetchedFromLocalStorage = localStorage.getItem('asInternationalCart')
+        store.dispatch({
+            cart: fetchedFromLocalStorage ? JSON.parse(fetchedFromLocalStorage) : [] 
+        });
+    },[])
     return (
         <>
             <MetaHead title="Products" description="best products" />

@@ -17,6 +17,7 @@ export default class Observer {
 
     dispatch(newVal) {
         this.#subject = { ...this.#subject, ...newVal };
+        
         this.#notify();
     }
 

@@ -150,3 +150,8 @@ th {
     border-bottom: 1px solid #f1f1f1;
     z-index: 101;
 }
+
+.menu-bold{
+    font-weight: 600;
+    width: 70%;
+}

@@ -7,9 +7,7 @@ export default function Document() {
             <body>
                 <Main />
                 <NextScript />
-                {/* <script src="/assets/js/plugins.min.js"></script> */}
-                {/* <script src="/assets/js/ajax-mail.js"></script> */}
-                <script src="/assets/js/custom.js"></script>
+                
             </body>
         </Html>
     );
