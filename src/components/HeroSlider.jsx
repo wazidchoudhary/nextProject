@@ -14,7 +14,9 @@ const HeroSlider = () => {
                             tabIndex={0}
                             style={{ width: '100%', objectFit: 'contain', backgroundImage: 'url("assets/image/home-slider-image-1.webp")' }}
                         >
+                        
                             <div className="container position-relative">
+                            <div style={{color:'orange',fontSize:'16px',width:'300px',marginLeft:'auto',marginRight:'auto'}}>Site is under development,Please visit Again</div>
                                 <div className="row">
                                     <div className="col-lg-12 text-center">
                                         <h1>As International</h1>
