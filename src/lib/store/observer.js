@@ -7,17 +7,36 @@ export default class Observer {
     }
 
     subscribe(callback) {
-        this.#observers.push(callback);
+        const that = this;
+        var observer = {
+            callback,
+            key: Symbol(),
+            unsubscribe:function() {
+                console.log(this.key)
+                that.#unsubscribe(this.key);
+            },
+        };
+        observer.unsubscribe = observer.unsubscribe.bind(observer);
+        this.#observers.push(observer);
         callback(this.#subject);
+        return { unsubscribe: observer.unsubscribe };
+    }
+
+    #unsubscribe(key) {
+        this.#observers = this.#observers.filter((observer) => {
+            if (observer.key !== key) {
+                return observer;
+            }
+        });
+
     }
 
     #notify() {
-        this.#observers.forEach((cb) => cb(this.#subject));
+        this.#observers.forEach((observer) => observer.callback(this.#subject));
     }
 
     dispatch(newVal) {
         this.#subject = { ...this.#subject, ...newVal };
-        
         this.#notify();
     }
 

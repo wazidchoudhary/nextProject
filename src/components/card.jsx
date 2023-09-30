@@ -1,7 +1,12 @@
 import React from 'react';
 import Image from 'next/image';
 import { priceHelper } from '@/lib/price-helper';
+import useSelector from '@/hooks/useSelector';
+import { selectCartProduct } from '@/selector/cartSelector';
 export const Card = ({ content, handleClick = () => {} }) => {
+
+    const cart   = useSelector(selectCartProduct) || [];
+
     const { id, category, subCategory, name, priceOld, priceNew, image } = content;
     const [image1, image2] = image;
 
@@ -14,6 +19,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
             ''
         );
     };
+
 
     const getDiscountPercent = () => {
         return isNaN(Number(priceNew)) ? '' : <span className="product-badge-2">-{parseInt(((Number(priceOld) - Number(priceNew)) / Number(priceOld)) * 100)}%</span>;

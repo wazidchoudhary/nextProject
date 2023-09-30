@@ -6,6 +6,7 @@ import store from '@/lib/store/store';
 import useDispatch from '@/hooks/useDispatch';
 import useSelector from '@/hooks/useSelector';
 import { CartHelper } from '@/lib/cart';
+import { toast } from 'react-toastify';
 
 const ProductDetail = ({ product, categoryProducts }) => {
     const {
@@ -43,6 +44,10 @@ const ProductDetail = ({ product, categoryProducts }) => {
     
 
     const handleAddToCart = () => {
+        if(multiPrice && !prod.selectedDimension){
+            return toast.error('Please Select Dimension')
+            
+        }
         const cartData = store.get('cart')
         const index = cartData.findIndex((prod)=>prod.id == productId)
         if(index != -1){
@@ -70,6 +75,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
         // store.subscribe(({ cart }) => {
         //     console.log(cart, ' @@@updated from product detail');
         // });
+        
         if(productColor.split(',').length < 2){
             setProd({...prod,selectedColor:productColor})
         }

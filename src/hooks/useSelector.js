@@ -1,18 +1,20 @@
 import store from '@/lib/store/store';
 import { useState, useEffect } from 'react';
 
-const useSelector = (key) => {
+const useSelector = (func) => {
     const [reduxStore, setReduxStore] = useState({});
 
     useEffect(() => {
-        store.subscribe((store) => {
+        const { unsubscribe } = store.subscribe((store) => {
             setReduxStore(store || {});
         });
+
+        return () => {
+            unsubscribe();
+        };
     }, []);
 
-    if (key === '*') return reduxStore || {};
-
-    return reduxStore[key];
+    return func(reduxStore);
 };
 
 export default useSelector;

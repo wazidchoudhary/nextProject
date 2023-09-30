@@ -18,12 +18,7 @@ export default function ({ products }) {
     const filterOparetion = Filters(search, products, sorting);
 
     const router = useRouter();
-    useEffect(()=>{
-        const fetchedFromLocalStorage = localStorage.getItem('asInternationalCart')
-        store.dispatch({
-            cart: fetchedFromLocalStorage ? JSON.parse(fetchedFromLocalStorage) : [] 
-        });
-    },[])
+  
     return (
         <>
             <MetaHead title="Products" description="best products" />

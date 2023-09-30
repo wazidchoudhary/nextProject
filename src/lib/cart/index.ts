@@ -14,26 +14,15 @@ export interface Cart  {
 export class CartHelper {
     
     static addToCart(cartItem:Cart) : void {
-   
-        store.subscribe((store:any) => {
-            const cart =  store['cart']
-            store.dispatch({cart:[...cart,cartItem]})
-            
-        });
-        
-        
+        const cart = store.get('cart')
+        store.dispatch({cart:[...cart,cartItem]}) 
     }
 
     static removeFromCart(id:string) {
-        store.subscribe((store:any) => {
-            const cart =  store['cart']
-            const index = cart.findIndex((res:Cart)=>res.id === id)
-            cart.splice(index,1)
-            store.dispatch({cart:[...cart]})
-            localStorage.setItem('asInternationalCart',JSON.stringify([...cart]))
-
-        });
-        
+            const cart =  store.get('cart')
+            const updatedCart  = cart.filter((prod:Cart) => prod.id !== id)
+            store.dispatch({cart:updatedCart})
+            localStorage.setItem('asInternationalCart',JSON.stringify(updatedCart))
     }
 
 

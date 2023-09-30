@@ -3,12 +3,10 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { knifeHandles, products } from '@/constants/navbar';
 import StrUtils from '@/utils/str-utils';
-import store from '@/lib/store/store';
-import useSelector from '@/hooks/useSelector';
-import moreProducts from '@/pages/moreProducts';
 
+import Cart from './Cart';
 const Header = () => {
-    const { cart = [] } = useSelector('*');
+
     // const cartData = useSelector('cart');
     const [mobileMenu, setMobileMenu] = useState('');
     const createDynamicMenuForDesktop = (prop, pageName) => {
@@ -100,64 +98,10 @@ const Header = () => {
                                         </a>
                                     </li>
                                     <li key={'bagkey'} className="sin-link">
-                                        <Link href="/cart" className="cart-link link-icon">
+                                        {/* <Link href="/cart" className="cart-link link-icon"> */}
                                             <i className="ion-bag" />
-                                        </Link>
-                                        <div className="sin-dropdown cart-dropdown">
-                                            <div className="inner-single-block">
-                                                <div className="cart-product">
-                                                    <div className="icon">
-                                                        {/* <img src="image/products/home-1/cart-product-1.jpg" /> */}
-                                                        <div className="product-badge-3">1x</div>
-                                                    </div>
-                                                    <div className="description">
-                                                        <h4>Yuqidong Sudaderas</h4>
-                                                        <span className="price">€500.00</span>
-                                                        <ul className="attr-content">
-                                                            <li>
-                                                                <span>size :</span> S
-                                                            </li>
-                                                            <li>
-                                                                <span>color :</span> Beige
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <button type="button" className="cart-item-cross">
-                                                        <i className="fas fa-times" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <div className="inner-single-block">
-                                                <ul className="cart-details">
-                                                    <li>
-                                                        <span className="label">Subtotal</span> <span className="value">€500.00</span>
-                                                    </li>
-                                                    <li>
-                                                        <span className="label">Shipping</span> <span className="value">€7.00</span>
-                                                    </li>
-                                                    <li>
-                                                        <span className="label">Taxes</span> <span className="value">€0.00</span>
-                                                    </li>
-                                                    <li>
-                                                        <span className="label">Total</span> <span className="value">€507.00</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div className="inner-single-block">
-                                                <Link href="/checkout" className="btn w-100">
-                                                    Checkout
-                                                </Link>
-                                            </div>
-                                            <ul>
-                                                {cart.map((cart, i) => {
-                                                    return (
-                                                        <li key={i}>
-                                                            {cart.productName} - {cart.quantity}
-                                                        </li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        </div>
+                                        {/* </Link> */}
+                                       <Cart />
                                     </li>
                                     <li key={'languagekey'} className="sin-link">
                                         <a href="javascript:" className="link-icon hamburgur-icon">
@@ -180,7 +124,7 @@ const Header = () => {
                                         </div>
                                     </li>
                                 </ul>
-                                <div className="search-wrapper">
+                                {/* <div className="search-wrapper">
                                     <div className="search-wrapper-inner">
                                         <div className="container">
                                             <button className="search-dismiss">
@@ -196,7 +140,7 @@ const Header = () => {
                                             </form>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     </div>

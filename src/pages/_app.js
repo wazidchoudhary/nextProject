@@ -5,8 +5,8 @@ import { Analytics } from '@vercel/analytics/react';
 
 import '@/styles/globals.css';
 import NextNProgress from 'nextjs-progressbar';
-
-
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 export default function App({ Component, pageProps }) {
    
     return (
@@ -17,6 +17,7 @@ export default function App({ Component, pageProps }) {
                 <Header />
                 <Component {...pageProps} />
                 <Analytics />
+                <ToastContainer theme="dark"/>
             </div>
         </>
     );

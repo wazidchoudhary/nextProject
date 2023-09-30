@@ -4,7 +4,9 @@ import StrUtils from '@/utils/str-utils';
 import MetaHead from '@/components/MetaHead';
 import { Card } from '@/components/card';
 import { EmptyProductSection } from '@/components/EmptyProductSection';
+import { useRouter } from 'next/router';
 export default function ({ products, category, url }) {
+    const router = useRouter()
     return (
         <>
             <MetaHead title={`KNIFE HANDLES - ${category}`} description={`${url.map((res) => StrUtils.snakeToNormal(res) + ' PRODUCTS')}`} />

@@ -2,10 +2,37 @@ import MetaHead from '@/components/MetaHead';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import ProductDetail from '@/components/ProductDetail';
 import { CategoryProducts } from '@/components/CategoryProducts';
+import ProductSchema from '@/seo/ProductSchema';
 export default function (props) {
+
+    const {
+        productImage,
+        productId,
+        productName,
+        priceCategory,
+        productDescription,
+        productCategory,
+        productSubCategory,
+        productPrice,
+        productOldPrice,
+        productType,
+        productColor,
+        productQty,
+        productSize,
+    } = props.product;
     return (
         <>
-            <MetaHead title={props.product.productName} description={props.product.productCategory.category} />
+            <MetaHead title={props.product.productName} description={props.product.productCategory} />
+            <ProductSchema product={{
+                name:productName,
+                image:productImage,
+                description:productDescription,
+                category:productCategory,
+                price:productPrice,
+                oldPrice:productOldPrice,
+         
+
+            }} />
             <section className="bg-image">
                 <h2 className="sr-only">Site Breadcrumb</h2>
                 <div className="container" style={{ height: '150px' }}></div>
