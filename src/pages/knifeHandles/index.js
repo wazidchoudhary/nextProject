@@ -29,6 +29,7 @@ export default ({ products }) => {
                                         priceNew: p.productPrice,
                                         priceOld: p.productOldPrice,
                                         image: p.productImage,
+                                        color: p.productColor,
                                     }}
                                     handleClick={(id) => {
                                         router.push(`/products/${id}`);

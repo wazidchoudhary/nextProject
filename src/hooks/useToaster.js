@@ -1,10 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const useToaster = () => {
-  return (
-    <div>useToaster</div>
-  )
-}
+    return <div>useToaster</div>;
+};
 
-
-export default useToaster
+export default useToaster;

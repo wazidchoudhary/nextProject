@@ -24,8 +24,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
         productQty,
         productSize,
     } = product;
-    
-  
+
     const [descriptionView, setDescriptionView] = useState(true);
     const multiPrice = typeof productPrice !== 'string';
     const setInitialPrice = () => {
@@ -34,54 +33,24 @@ const ProductDetail = ({ product, categoryProducts }) => {
     };
 
     const [prod, setProd] = useState({
-        quantity:1,
-        selectedPrice:setInitialPrice(),
-        selectedDimension:'',
-        selectedColor:''
+        quantity: 1,
+        selectedPrice: setInitialPrice(),
+        selectedDimension: '',
+        selectedColor: '',
     });
-    
-
-    
 
     const handleAddToCart = () => {
-        if(multiPrice && !prod.selectedDimension){
-            return toast.error('Please Select Dimension')
-            
+        if (multiPrice && !prod.selectedDimension) {
+            return toast.error('Please Select Dimension');
         }
-        const cartData = store.get('cart')
-        const index = cartData.findIndex((prod)=>prod.id == productId)
-        if(index != -1){
-            cartData[index].qty++;
-            store.dispatch({cart:[...cartData]})
-            localStorage.setItem('asInternationalCart',JSON.stringify([...cartData]))
-        }else{
-            const cartProduct = {id:productId,
-                name:productName,
-                image:productImage[0],
-                qty:prod.quantity,
-                price:parseFloat(prod.selectedPrice),
-                dimension:prod.selectedDimension,
-                color:prod.selectedColor
-            }
-    
-            store.dispatch({cart:[...cartData,cartProduct]})
-            localStorage.setItem('asInternationalCart',JSON.stringify([...cartData,cartProduct]))
-        }
-        
-        
+        CartHelper.addToCart(product, prod);
     };
 
     useEffect(() => {
-        // store.subscribe(({ cart }) => {
-        //     console.log(cart, ' @@@updated from product detail');
-        // });
-        
-        if(productColor.split(',').length < 2){
-            setProd({...prod,selectedColor:productColor})
+        if (productColor.split(',').length < 2) {
+            setProd({ ...prod, selectedColor: productColor });
         }
     }, []);
-
-
 
     const setProductImages = () => {
         const images = [];
@@ -99,14 +68,12 @@ const ProductDetail = ({ product, categoryProducts }) => {
         return productImage.length > 1 ? (
             <ImageGallery thumbnailPosition="bottom" items={images} autoPlay={true} />
         ) : (
-            <Image src={productImage[0]} width={150} alt={productName} loading='lazy' height={150} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <Image src={productImage[0]} width={150} alt={productName} loading="lazy" height={150} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         );
     };
 
     const setColor = () => {
-        
         return productColor.split(',').map((color) => {
-            
             return (
                 <option key={color} value={color}>
                     {color}
@@ -154,8 +121,14 @@ const ProductDetail = ({ product, categoryProducts }) => {
                                                 <label htmlFor="pa_color">Color</label>
                                             </th>
                                             <td className="value">
-                                                <select id="pa_color" className="hasCustomSelect" onChange={(event) => {setProd({...prod,color:event.target.value})}}>
-                                                    <option value="">Choose an option</option>
+                                                <select
+                                                    id="pa_color"
+                                                    className="hasCustomSelect"
+                                                    onChange={(event) => {
+                                                        setProd({ ...prod, selectedColor: event.target.value });
+                                                    }}
+                                                    value={prod.selectedColor}
+                                                >
                                                     {setColor()}
                                                 </select>
                                             </td>
@@ -169,7 +142,7 @@ const ProductDetail = ({ product, categoryProducts }) => {
                                                     id="dimension"
                                                     className="hasCustomSelect"
                                                     onChange={(event) => {
-                                                        setProd({...prod,selectedPrice:event.target.value.split('-')[0],selectedDimension:event.target.value.split('-')[1]});
+                                                        setProd({ ...prod, selectedPrice: event.target.value.split('-')[0], selectedDimension: event.target.value.split('-')[1] });
                                                     }}
                                                 >
                                                     <option value="">Choose an option</option>
@@ -196,18 +169,30 @@ const ProductDetail = ({ product, categoryProducts }) => {
                                             className="minus"
                                             onClick={() => {
                                                 if (prod.quantity > 1) {
-                                                    setProd({...prod,quantity:prod.quantity - 1});
+                                                    setProd({ ...prod, quantity: prod.quantity - 1 });
                                                 }
                                             }}
                                         >
                                             -
                                         </button>
 
-                                        <input type="number" id="quantity" className="qty" name="quantity" title="Qty" size={2} min={1} value={prod.quantity} step={1} disabled={true} autoComplete="off" />
+                                        <input
+                                            type="number"
+                                            id="quantity"
+                                            className="qty"
+                                            name="quantity"
+                                            title="Qty"
+                                            size={2}
+                                            min={1}
+                                            value={prod.quantity}
+                                            step={1}
+                                            disabled={true}
+                                            autoComplete="off"
+                                        />
                                         <button
                                             className="plus"
                                             onClick={() => {
-                                                setProd({...prod,quantity:prod.quantity + 1})
+                                                setProd({ ...prod, quantity: prod.quantity + 1 });
                                             }}
                                         >
                                             +

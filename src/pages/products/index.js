@@ -1,4 +1,4 @@
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 
 //Internal Imports
@@ -18,7 +18,7 @@ export default function ({ products }) {
     const filterOparetion = Filters(search, products, sorting);
 
     const router = useRouter();
-  
+
     return (
         <>
             <MetaHead title="Products" description="best products" />
@@ -45,6 +45,7 @@ export default function ({ products }) {
                                                 priceNew: p.productPrice,
                                                 priceOld: p.productOldPrice,
                                                 image: p.productImage,
+                                                color: p.productColor,
                                             }}
                                             handleClick={(id) => {
                                                 router.push(`/products/${id}`);

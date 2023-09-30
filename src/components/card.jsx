@@ -1,15 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { priceHelper } from '@/lib/price-helper';
 import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
+import { CartHelper } from '@/lib/cart';
 export const Card = ({ content, handleClick = () => {} }) => {
+    const cart = useSelector(selectCartProduct) || [];
 
-    const cart   = useSelector(selectCartProduct) || [];
-
-    const { id, category, subCategory, name, priceOld, priceNew, image } = content;
+    const { id, category, subCategory, name, priceOld, priceNew, image, color = '' } = content;
     const [image1, image2] = image;
 
+    const [prod, setProd] = useState({
+        quantity: 1,
+        selectedPrice: '',
+        selectedDimension: '',
+        selectedColor: color.split(',')[0],
+    });
+
+    const handleAddToCart = () => {
+        const settingProd = { ...prod, selectedPrice: priceNew };
+        setProd(settingProd);
+        CartHelper.addToCart({ productId: id, productName: name, productImage: image }, settingProd);
+    };
     const showHoverImage = () => {
         return image2 ? (
             <div className="hover-image" style={{ height: '200px' }}>
@@ -19,7 +31,6 @@ export const Card = ({ content, handleClick = () => {} }) => {
             ''
         );
     };
-
 
     const getDiscountPercent = () => {
         return isNaN(Number(priceNew)) ? '' : <span className="product-badge-2">-{parseInt(((Number(priceOld) - Number(priceNew)) / Number(priceOld)) * 100)}%</span>;
@@ -62,11 +73,15 @@ export const Card = ({ content, handleClick = () => {} }) => {
                     </p>
                 </div>
             </div>
-            {typeof priceNew === 'string' ? <button onClick={()=>addToCart()} type="button" className="cardButton">
-                ADD TO CART
-            </button> : <button onClick={()=> handleClick(id)} type="button" className="cardButton">
-                SELECT OPTIONS
-            </button>}
+            {typeof priceNew === 'string' ? (
+                <button onClick={handleAddToCart} type="button" className="cardButton">
+                    ADD TO CART
+                </button>
+            ) : (
+                <button onClick={() => handleClick(id)} type="button" className="cardButton">
+                    SELECT OPTIONS
+                </button>
+            )}
         </div>
     );
 };

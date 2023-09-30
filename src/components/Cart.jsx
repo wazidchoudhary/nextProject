@@ -5,7 +5,10 @@ import store from '@/lib/store/store';
 import { CartHelper } from '@/lib/cart';
 import Image from 'next/image';
 import Link from 'next/link';
+import { EmptyProductSection } from './EmptyProductSection';
 const Cart = () => {
+    const cart = useSelector(selectCartProduct) || [];
+
     useEffect(() => {
         const fetchedFromLocalStorage = localStorage.getItem('asInternationalCart');
         store.dispatch({
@@ -13,31 +16,31 @@ const Cart = () => {
         });
     }, []);
 
-    const cart = useSelector(selectCartProduct) || [];
-    console.log(cart)
+    console.log(cart);
     return (
         <div className="sin-dropdown cart-dropdown">
-            <div className="inner-single-block">
+            <div className="inner-single-block" style={{ maxHeight: '600px', overflowY: 'scroll' }}>
+                {!cart.length && <EmptyProductSection height={100} width={100} description="Cart Is Empty" fontSize="20px" />}
                 {cart.map((cart, i) => {
                     return (
                         <div key={i} className="cart-product">
                             <div className="icon">
-                                <img width={60} height={60} src={cart.image} alt={cart.name}  style={{objectFit:'cover'}}/>
+                                <img width={60} height={60} src={cart.image} alt={cart.name} style={{ objectFit: 'cover', maxWidth: '1000px' }} />
                                 <div className="product-badge-3">{cart.qty}x</div>
                             </div>
-                            <div className="description">
-                                <h4 style={{width:'80%'}}>{cart.name}</h4>
+                            <div className="description" style={{ width: '100%' }}>
+                                <h4 style={{ width: '90%', whiteSpace: 'wrap' }}>{cart.name}</h4>
                                 <span className="price">${cart.price}</span>
-                                <ul className="attr-content" style={{margin:'0px'}}>
+                                <ul className="attr-content" style={{ margin: '0px' }}>
                                     <li>
-                                        <span>dimension :</span> {cart.dimension}
+                                        <span>dimension :</span> {cart.dimension ? cart.dimension : 'N/A'}
                                     </li>
                                     <li>
                                         <span>color :</span> {cart.color}
                                     </li>
                                 </ul>
                             </div>
-                            <button type="button" className="cart-item-cross" onClick={()=>CartHelper.removeFromCart(cart.id)}>
+                            <button type="button" className="cart-item-cross" onClick={() => CartHelper.removeFromCart(cart.id)}>
                                 <i className="fas fa-times" />
                             </button>
                         </div>

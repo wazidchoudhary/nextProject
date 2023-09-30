@@ -8,7 +8,6 @@ import NextNProgress from 'nextjs-progressbar';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 export default function App({ Component, pageProps }) {
-   
     return (
         <>
             <NextNProgress color="#24bbdb" height={5} />
@@ -17,7 +16,7 @@ export default function App({ Component, pageProps }) {
                 <Header />
                 <Component {...pageProps} />
                 <Analytics />
-                <ToastContainer theme="dark"/>
+                <ToastContainer theme="dark" />
             </div>
         </>
     );

@@ -4,7 +4,6 @@ import ProductDetail from '@/components/ProductDetail';
 import { CategoryProducts } from '@/components/CategoryProducts';
 import ProductSchema from '@/seo/ProductSchema';
 export default function (props) {
-
     const {
         productImage,
         productId,
@@ -23,16 +22,16 @@ export default function (props) {
     return (
         <>
             <MetaHead title={props.product.productName} description={props.product.productCategory} />
-            <ProductSchema product={{
-                name:productName,
-                image:productImage,
-                description:productDescription,
-                category:productCategory,
-                price:productPrice,
-                oldPrice:productOldPrice,
-         
-
-            }} />
+            <ProductSchema
+                product={{
+                    name: productName,
+                    image: productImage,
+                    description: productDescription,
+                    category: productCategory,
+                    price: productPrice,
+                    oldPrice: productOldPrice,
+                }}
+            />
             <section className="bg-image">
                 <h2 className="sr-only">Site Breadcrumb</h2>
                 <div className="container" style={{ height: '150px' }}></div>

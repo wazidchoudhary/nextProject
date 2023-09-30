@@ -11,8 +11,8 @@ export default class Observer {
         var observer = {
             callback,
             key: Symbol(),
-            unsubscribe:function() {
-                console.log(this.key)
+            unsubscribe: function () {
+                console.log(this.key);
                 that.#unsubscribe(this.key);
             },
         };
@@ -28,7 +28,6 @@ export default class Observer {
                 return observer;
             }
         });
-
     }
 
     #notify() {

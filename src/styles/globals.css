@@ -58,6 +58,7 @@
 
 .hasCustomSelect {
     padding: 5px;
+    width: 170px;
 }
 .variations tr {
     margin: 10px !important;
@@ -151,11 +152,15 @@ th {
     z-index: 101;
 }
 
-.menu-bold{
+.menu-bold {
     font-weight: 600;
     width: 70%;
 }
 
-.attr-content li{
+.attr-content li {
     margin: 0px !important;
+}
+
+*::-webkit-scrollbar {
+    display: none;
 }

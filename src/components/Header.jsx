@@ -6,7 +6,6 @@ import StrUtils from '@/utils/str-utils';
 
 import Cart from './Cart';
 const Header = () => {
-
     // const cartData = useSelector('cart');
     const [mobileMenu, setMobileMenu] = useState('');
     const createDynamicMenuForDesktop = (prop, pageName) => {
@@ -14,7 +13,7 @@ const Header = () => {
         return keys.map((menuTitle, i) => {
             return (
                 <li key={menuTitle + i} className="cus-col-25" style={{ border: 'none' }}>
-                    <h3 className="menu-title" style={{ fontSize: '14px',fontWeight:'600' }}>
+                    <h3 className="menu-title" style={{ fontSize: '14px', fontWeight: '600' }}>
                         <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`}>{menuTitle}</Link>
                     </h3>
                     <ul className="mega-single-block" style={{ marginBottom: '10px' }}>
@@ -35,9 +34,11 @@ const Header = () => {
         const keys = Object.keys(prop);
         return keys.map((menuTitle, i) => {
             return (
-                <li key={menuTitle + i} className="menu-item-has-children" >
-                    <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`} style={{fontWeight:'500'}}>{menuTitle}</Link>
-                    <ul className="sub-menu" >
+                <li key={menuTitle + i} className="menu-item-has-children">
+                    <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`} style={{ fontWeight: '500' }}>
+                        {menuTitle}
+                    </Link>
+                    <ul className="sub-menu">
                         {prop[menuTitle].map((name, i) => {
                             return (
                                 <li key={name + 1}>
@@ -76,7 +77,7 @@ const Header = () => {
                                     </li>
                                     {/* Pages */}
                                     <li className="menu-item has-children">
-                                        <Link  href="/about">About Us</Link>
+                                        <Link href="/about">About Us</Link>
                                     </li>
                                     <li className="menu-item has-children">
                                         <Link href="/contact">Contact Us</Link>
@@ -99,16 +100,15 @@ const Header = () => {
                                     </li>
                                     <li key={'bagkey'} className="sin-link">
                                         {/* <Link href="/cart" className="cart-link link-icon"> */}
-                                            <i className="ion-bag" />
+                                        <i className="ion-bag" />
                                         {/* </Link> */}
-                                       <Cart />
+                                        <Cart />
                                     </li>
                                     <li key={'languagekey'} className="sin-link">
                                         <a href="javascript:" className="link-icon hamburgur-icon">
                                             <i className="ion-navicon" />
                                         </a>
                                         <div className="sin-dropdown option-dropdown">
-                                            
                                             <div className="inner-single-block">
                                                 <h4 className="option-title">my account</h4>
                                                 <ul className="option-list">
@@ -118,7 +118,6 @@ const Header = () => {
                                                     <li>
                                                         <Link href="/checkout">Checkout</Link>
                                                     </li>
-                                                  
                                                 </ul>
                                             </div>
                                         </div>
@@ -150,9 +149,7 @@ const Header = () => {
             <header className="mobile-header d-lg-none absolute-header">
                 <div className="container">
                     <div className="row align-items-end">
-                        <div className="col-md-4 col-7">
-                            {/* <a href="index.html" className="site-brand"></a> */}
-                        </div>
+                        <div className="col-md-4 col-7">{/* <a href="index.html" className="site-brand"></a> */}</div>
                         <div className="col-md-8 col-5 text-end">
                             <div className="mobile-header-btns header-top-widget ">
                                 <ul className="header-links">
@@ -166,7 +163,6 @@ const Header = () => {
                                             onClick={() => {
                                                 setMobileMenu('open');
                                             }}
-                                           
                                             className="link-icon hamburgur-icon off-canvas-btn"
                                         >
                                             <i className="ion-navicon" />
@@ -204,30 +200,38 @@ const Header = () => {
                         <nav className="off-canvas-nav">
                             <ul className="mobile-menu">
                                 <li className="menu-item-has-children flex">
-                                    <Link className='menu-bold' href="/">Home</Link>
+                                    <Link className="menu-bold" href="/">
+                                        Home
+                                    </Link>
                                 </li>
                                 <li className="menu-item-has-children">
-                                    <Link className='menu-bold' href={'/knifeHandles'}>Knife Handles</Link>
+                                    <Link className="menu-bold" href={'/knifeHandles'}>
+                                        Knife Handles
+                                    </Link>
                                     <ul className="sub-menu">{createDynamicMenuForMobile(knifeHandles, 'knifeHandles')}</ul>
                                 </li>
                                 <li className="menu-item-has-children">
-                                    <Link className='menu-bold' href={'/products'}>More Products</Link>
+                                    <Link className="menu-bold" href={'/products'}>
+                                        More Products
+                                    </Link>
                                     <ul className="sub-menu">{createDynamicMenuForMobile(products, 'moreProducts')}</ul>
                                 </li>
-                                <li >
-                                        <Link className='menu-bold' href="/about">About Us</Link>
-                                    </li>
-                                    <li >
-                                        <Link className='menu-bold' href="/contact">Contact Us</Link>
-                                    </li>
+                                <li>
+                                    <Link className="menu-bold" href="/about">
+                                        About Us
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link className="menu-bold" href="/contact">
+                                        Contact Us
+                                    </Link>
+                                </li>
                             </ul>
                         </nav>
                     </div>
                     {/* [mobile menu end */}
-                  
                 </div>
             </aside>
-            
         </>
     );
 };
