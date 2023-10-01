@@ -32,10 +32,7 @@ export default function (props) {
                     oldPrice: productOldPrice,
                 }}
             />
-            <section className="bg-image">
-                <h2 className="sr-only">Site Breadcrumb</h2>
-                <div className="container" style={{ height: '150px' }}></div>
-            </section>
+            
             <main className="inner-page-sec-padding pb-0">
                 <ProductDetail product={props.product} />
                 <CategoryProducts categoryProducts={props.categoryProducts} />

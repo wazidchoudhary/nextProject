@@ -10,10 +10,7 @@ export default function ({ products, category, url }) {
     return (
         <>
             <MetaHead title={`KNIFE HANDLES - ${category}`} description={`${url.map((res) => StrUtils.snakeToNormal(res) + ' PRODUCTS')}`} />
-            <section className="bg-image">
-                <h2 className="sr-only">Site Breadcrumb</h2>
-                <div className="container" style={{ height: '150px' }}></div>
-            </section>
+
             {products.length > 0 ? (
                 <section className="section-padding">
                     <div className="container">

@@ -2,7 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 const Intro = () => {
     return (
-        <section className="section-margin welcome-section" id='intro' style={{ marginBottom: '50px' }}>
+        <section className="section-margin welcome-section jumbotron" id='intro' style={{ marginBottom: '50px' }}>
             <div className="container">
                 <div className="row justify-content-center section-padding border-bottom" style={{ paddingBottom: '50px' }}>
                     <div className="col-lg-10">
@@ -23,6 +23,7 @@ const Intro = () => {
                                 </div>
                             </div>
                             <article className="welcome-description">
+                            .ro
                                 <h4 className="sr-only">Welcome Article</h4>
                                 <p>
                                     Welcome to AS INTERNATIONAL, a distinguished leader in the realm of manufacturing and globally exporting an exemplary assortment of Buffalo/Cow Horn and Camel Bone

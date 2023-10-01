@@ -56,7 +56,7 @@ const Header = () => {
 
     return (
         <>
-            <header className="site-header ha-header-1 absolute-header sticky-init fixed-header d-lg-block d-none">
+            <header className="site-header ha-header-1 absolute-header sticky-init fixed-header d-lg-block d-none" style={{position: 'sticky'}}>
                 <div className="container-fluid">
                     <div className="row align-items-center">
                         <div className="col-lg-9">

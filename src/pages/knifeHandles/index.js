@@ -9,10 +9,6 @@ export default ({ products }) => {
     return (
         <>
             <MetaHead title={'KNIFE HANDLES'} description={'Knife Handles Category Product'} />
-            <section className="bg-image">
-                <h2 className="sr-only">Site Breadcrumb</h2>
-                <div className="container-fluid" style={{ height: '100px' }}></div>
-            </section>
             <section className="mt-5">
                 <div className="container-lg">
                     <div className="section-title mb--55">

@@ -4,10 +4,14 @@ import 'public/assets/css/main.css';
 import { Analytics } from '@vercel/analytics/react';
 
 import '@/styles/globals.css';
+
 import NextNProgress from 'nextjs-progressbar';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Footer from '@/components/Footer';
+import '@/styles/custom.css';
+
+
 export default function App({ Component, pageProps }) {
     return (
         <>

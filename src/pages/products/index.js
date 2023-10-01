@@ -22,10 +22,6 @@ export default function ({ products }) {
     return (
         <>
             <MetaHead title="Products" description="best products" />
-            <section className="bg-image">
-                <h2 className="sr-only">Site Breadcrumb</h2>
-                <div className="container" style={{ height: '150px' }}></div>
-            </section>
             <section className="section-padding">
                 <FilterSection data={{ products, search, setSearch, setSorting }} />
 

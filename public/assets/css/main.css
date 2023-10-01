@@ -58,11 +58,6 @@
 /*=== Variables ===*/
 /*=== Mixins ===*/
 /*>>>>>>>> Fonts <<<<<<<<<*/
-@import url("https://fonts.googleapis.com/css?family=Rubik:300,300i,400,400i,500,500i,700,700i,900");
-@import url("https://fonts.googleapis.com/css?family=Oswald:300,400,500,600,700");
-@import url("https://fonts.googleapis.com/css?family=Karla:400,400i,700,700i");
-@import url("https://fonts.googleapis.com/css?family=Playfair+Display:400,400i,700,700i,900");
-
 /*>>>>>>>> Reset <<<<<<<<<*/
 * {
   margin: 0;
@@ -23288,7 +23283,7 @@ input[type="number"] {
   color: #929292;
   font-family: 'Karla', sans-serif;
   font-size: 16px;
-  margin-top: 12px;
+  margin: 5px 0px;
 }
 
 .price-new {
@@ -24102,7 +24097,7 @@ input[type="number"] {
   -webkit-transition: .4s;
   -o-transition: .4s;
   transition: .4s;
-  color: #fff;
+  color: white;
 }
 
 .header-links .sin-link .link-icon:hover {
@@ -24936,7 +24931,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   font-size: 16px;
   color: #292929;
   text-transform: capitalize;
-  font-family: 'Oswald', sans-serif;
+  
   letter-spacing: .025em;
   margin-bottom: 0;
   margin-top: 25px;
@@ -24961,7 +24956,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 .hero-slider-2 .hero-content .slider-btn .btn {
   border-color: #292929 !important;
   color: #292929;
-  font-family: 'Oswald', sans-serif;
+  
   height: 40px;
   max-width: 150px;
 }
@@ -25163,7 +25158,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 .hero-slider-4 .hero-content .slider-btn .btn {
   border-color: #292929 !important;
   color: #292929;
-  font-family: 'Oswald', sans-serif;
+  
   max-width: 150px;
   height: 40px;
 }
@@ -25467,7 +25462,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   -webkit-transition: all 300ms ease-in;
   -o-transition: all 300ms ease-in;
   transition: all 300ms ease-in;
-  font-family: 'Oswald', sans-serif;
+  
 }
 
 .social-normal .single-icon:hover {

@@ -1,4 +1,7 @@
 @import '~react-image-gallery/styles/css/image-gallery.css';
+body {
+    font-family: 'Quicksand';
+}
 .cardButton {
     width: 100%;
     padding: 10px;
