@@ -1,6 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MetaHead from '@/seo/MetaHead';
+import { FirebaseHelper } from '@/lib/firebase-helpers';
 export default function () {
+    const [userData, setUserdata] = useState({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        FirebaseHelper.sendMessage(userData);
+        setUserdata({
+            name: '',
+            email: '',
+            subject: '',
+            message: '',
+        });
+    };
+
     return (
         <>
             <MetaHead title="Contact Us - AS INTERNATIONAL" description="Contact As International If any enquiry" />
@@ -57,7 +76,15 @@ export default function () {
                                                 <label>
                                                     Your Name <span className="required">*</span>
                                                 </label>
-                                                <input type="text" name="con_name" id="con_name" className="form-control" required />
+                                                <input
+                                                    type="text"
+                                                    name="con_name"
+                                                    id="con_name"
+                                                    className="form-control"
+                                                    value={userData.name}
+                                                    onChange={(e) => setUserdata((s) => ({ ...s, name: e.target.value }))}
+                                                    required
+                                                />
                                             </div>
                                         </div>
                                         <div className="col-lg-12">
@@ -65,24 +92,46 @@ export default function () {
                                                 <label>
                                                     Your Email <span className="required">*</span>
                                                 </label>
-                                                <input type="email" name="con_email" id="con_email" className="form-control" required />
+                                                <input
+                                                    type="email"
+                                                    name="con_email"
+                                                    id="con_email"
+                                                    className="form-control"
+                                                    value={userData.email}
+                                                    onChange={(e) => setUserdata((s) => ({ ...s, email: e.target.value }))}
+                                                    required
+                                                />
                                             </div>
                                         </div>
                                         <div className="col-lg-12">
                                             <div className="form-group">
                                                 <label>Subject</label>
-                                                <input type="text" name="con_subject" className="form-control" id="con_subject" />
+                                                <input
+                                                    type="text"
+                                                    name="con_subject"
+                                                    value={userData.subject}
+                                                    onChange={(e) => setUserdata((s) => ({ ...s, subject: e.target.value }))}
+                                                    className="form-control"
+                                                    id="con_subject"
+                                                />
                                             </div>
                                         </div>
                                         <div className="col-lg-12">
                                             <div className="form-group">
                                                 <label>Your Message</label>
-                                                <textarea name="con_message" className="form-control" id="con_message" defaultValue={''} />
+                                                <textarea
+                                                    name="con_message"
+                                                    value={userData.message}
+                                                    onChange={(e) => setUserdata((s) => ({ ...s, message: e.target.value }))}
+                                                    className="form-control"
+                                                    id="con_message"
+                                                    defaultValue={''}
+                                                />
                                             </div>
                                         </div>
                                         <div className="col-lg-6">
                                             <div className="form-btn">
-                                                <button type="submit" value="submit" id="submit" className="btn btn-black" name="submit">
+                                                <button type="submit" value="submit" id="submit" className="btn btn-black" onClick={handleSubmit} name="submit">
                                                     send
                                                 </button>
                                             </div>

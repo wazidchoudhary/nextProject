@@ -2,6 +2,7 @@ import { app, database } from './firebase-config';
 import { getDatabase, get, child, ref, push, orderByChild, equalTo, query, limitToFirst } from 'firebase/database';
 import { Product } from '@/types/types';
 import { ResponseParser } from '../response-parser';
+import { toast } from 'react-toastify';
 
 const dbRef = ref(database);
 const sync = (entity: string) => get(child(dbRef, `${entity}/`));
@@ -44,5 +45,19 @@ export class FirebaseHelper {
     static async fetchSingleProduct(id: any): Promise<Product> {
         const snapshot = await get(child(dbRef, `product/${id}`));
         return snapshot.val();
+    }
+    static async sendMessage(userData: any) {
+        console.log(userData);
+        const reference = ref(database, `messages/`);
+        push(reference, userData);
+        const messages = await this.syncAllMessages();
+        toast.success('Message sent Successfully.');
+        console.log('get message', messages);
+    }
+    static async syncAllMessages(): Promise<Product[]> {
+        const snapshot = await sync('messages');
+        const product = ResponseParser.parse<Product>(snapshot);
+
+        return product;
     }
 }
