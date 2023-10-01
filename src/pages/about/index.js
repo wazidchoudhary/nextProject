@@ -5,7 +5,6 @@ export default function () {
     return (
         <>
             <MetaHead title="About Us - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PROFILE" />
-            <h1>About Us</h1>
             <main className="contact_area section-padding pt--40">
                 <div className="container-lg pt-5">
                     <div className="section-title" style={{backgroundColor:'#f6f6f6',padding:'50px'}}>
