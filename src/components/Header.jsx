@@ -5,11 +5,14 @@ import { knifeHandles, products } from '@/constants/navbar';
 import StrUtils from '@/utils/str-utils';
 
 import Cart from './Cart';
+import useSelector from '@/hooks/useSelector';
+import { selectCartProduct } from '@/selector/cartSelector';
 const Header = () => {
     // const cartData = useSelector('cart');
     const [mobileMenu, setMobileMenu] = useState('');
+    const cart = useSelector(selectCartProduct) || [];
+    const isEmptyCart = cart.length === 0;
 
-    
     const createDynamicMenuForDesktop = (prop, pageName) => {
         const keys = Object.keys(prop);
         return keys.map((menuTitle, i) => {
@@ -56,7 +59,7 @@ const Header = () => {
 
     return (
         <>
-            <header className="site-header ha-header-1 absolute-header sticky-init fixed-header d-lg-block d-none" style={{position: 'sticky'}}>
+            <header className="site-header ha-header-1 absolute-header sticky-init fixed-header d-lg-block d-none" style={{ position: 'sticky' }}>
                 <div className="container-fluid">
                     <div className="row align-items-center">
                         <div className="col-lg-9">
@@ -102,9 +105,13 @@ const Header = () => {
                                     </li>
                                     <li key={'bagkey'} className="sin-link">
                                         <Link href="/cart" className="cart-link link-icon">
-                                        <i className="ion-bag" />
+                                            <i className="ion-bag" />
+                                            {!isEmptyCart && <span className="position-absolute translate-bottom badge rounded-pill bg-danger" style={{ fontSize: '10px', top: '14px', left: '60%' }}>
+                                               {cart.length}
+                                                <span className="visually-hidden">unread messages</span>
+                                            </span>}
                                         </Link>
-                                        <Cart />
+                                        <Cart cart={cart} />
                                     </li>
                                     <li key={'languagekey'} className="sin-link">
                                         <a href="javascript:" className="link-icon hamburgur-icon">

@@ -67,7 +67,7 @@
 }
 
 body {
-  font-family: 'Rubik', sans-serif;
+  
   font-weight: 400;
   color: #555555;
   font-size: 14px;
@@ -22358,9 +22358,8 @@ input[type="number"] {
 .section-title h2 {
   color: #292929;
   font-weight: 700;
-  margin: 0 0 30px;
+  margin: 0;
   text-transform: capitalize;
-  font-family: 'Playfair Display', serif;
   font-size: 28px;
   line-height: 32px;
 }
@@ -23468,7 +23467,7 @@ input[type="number"] {
   font-weight: 400;
   margin-bottom: 15px;
   display: block;
-  font-family: 'Playfair Display', serif;
+  
   -o-text-overflow: ellipsis;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -24828,7 +24827,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 .hero-slider .hero-content h1 {
   text-transform: capitalize;
   font-weight: 700;
-  font-family: 'Playfair Display', serif;
+  
   font-size: 28px;
   margin-top: 15px;
 }
@@ -24849,7 +24848,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 .hero-slider .hero-content p {
   color: #fff;
   text-transform: capitalize;
-  font-family: 'Rubik', sans-serif;
+  
   margin-top: 30px;
   margin-bottom: 0;
   font-size: 14px;
@@ -24905,7 +24904,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 .hero-slider-2 .hero-content h1 {
   text-transform: capitalize;
   font-weight: 700;
-  font-family: 'Playfair Display', serif;
+  
   font-size: 30px;
 }
 
@@ -25000,7 +24999,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 .hero-slider-3 .hero-content h1 {
   text-transform: capitalize;
   font-weight: 700;
-  font-family: 'Playfair Display', serif;
+  
   font-size: 30px;
 }
 
@@ -25021,7 +25020,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   font-size: 16px;
   color: #fff;
   text-transform: capitalize;
-  font-family: 'Rubik', sans-serif;
+  
   margin-top: 30px;
   margin-bottom: 0;
   line-height: 28px;
@@ -25100,7 +25099,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 .hero-slider-4 .hero-content h1 {
   text-transform: capitalize;
   font-weight: 700;
-  font-family: 'Playfair Display', serif;
+  
   font-size: 30px;
 }
 
@@ -25132,7 +25131,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   font-size: 16px;
   color: #292929;
   text-transform: capitalize;
-  font-family: 'Rubik', sans-serif;
+  
   margin-top: 30px;
   margin-bottom: 0;
   line-height: 28px;
@@ -25215,12 +25214,12 @@ ul.mobile-menu.currency-menu li:hover>a {
 }
 
 .welcome-content .title-sep {
-  margin-top: 30px;
+  margin-top: 0px;
 }
 
 @media (min-width: 576px) {
   .welcome-content .title-sep {
-    margin-top: 40px;
+    margin-top: 0px;
   }
 }
 
@@ -25232,13 +25231,13 @@ ul.mobile-menu.currency-menu li:hover>a {
 
 @media (min-width: 768px) {
   .welcome-content .welcome-description {
-    margin-top: 50px;
+    margin-top: 53px;
   }
 }
 
 @media (min-width: 992px) {
   .welcome-content .welcome-description {
-    margin-top: 60px;
+    margin-top: 30px;
   }
 }
 
@@ -25334,7 +25333,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   text-transform: capitalize;
   font-weight: 700;
   margin-bottom: 30px;
-  font-family: 'Playfair Display', serif;
+  
 }
 
 .newsletter-section .newsletter-content {
@@ -25533,7 +25532,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   text-transform: capitalize;
   color: #292929;
   font-size: 18px;
-  font-family: 'Playfair Display', serif;
+  
 }
 
 @media (min-width: 992px) {
@@ -25718,7 +25717,7 @@ ul.mobile-menu.currency-menu li:hover>a {
 
 .breadcrumb-contents h2 {
   font-size: 36px;
-  font-family: 'Playfair Display', serif;
+  
   font-weight: 700;
 }
 
@@ -25760,7 +25759,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   position: relative;
   margin: 0;
   text-transform: capitalize !important;
-  font-family: 'Playfair Display', serif;
+  
 }
 
 .sidebar-accordion {
@@ -27120,7 +27119,7 @@ ul.mobile-menu.currency-menu li:hover>a {
   padding: 0;
   line-height: 30px;
   font-weight: 500;
-  font-family: 'Playfair Display', serif;
+  
   font-size: 18px;
 }
 

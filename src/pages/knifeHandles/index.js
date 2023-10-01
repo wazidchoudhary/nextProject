@@ -3,16 +3,21 @@ import { FirebaseHelper } from '@/lib/firebase-helpers';
 import MetaHead from '@/seo/MetaHead';
 import { useRouter } from 'next/router';
 import { Card } from '@/components/card';
+import BreadCrumb from '@/seo/BreadCrumb';
+
 export default ({ products }) => {
-    console.log(products);
     const router = useRouter();
+    const title = 'KNIFE HANDLES';
+    const description = 'Knife Handles Category Product';
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
+
     return (
         <>
-            <MetaHead title={'KNIFE HANDLES'} description={'Knife Handles Category Product'} />
+            <MetaHead title={title} description={description} />
+            <BreadCrumb items={breadCrumbItems} text={title} />
             <section className="mt-5">
                 <div className="container-lg">
                     <div className="section-title mb--55">
-                        <h2>Knife Handles</h2>
                         <div className="row">
                             {products.map((p) => (
                                 <Card

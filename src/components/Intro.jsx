@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
+import Ellipsis from './Ellipsis';
 const Intro = () => {
     return (
-        <section className="section-margin welcome-section jumbotron" id='intro' style={{ marginBottom: '50px' }}>
+        <section className="section-margin welcome-section jumbotron" id="intro" style={{ marginBottom: '50px' }}>
             <div className="container">
                 <div className="row justify-content-center section-padding border-bottom" style={{ paddingBottom: '50px' }}>
                     <div className="col-lg-10">
@@ -23,10 +24,9 @@ const Intro = () => {
                                 </div>
                             </div>
                             <article className="welcome-description">
-                            .ro
                                 <h4 className="sr-only">Welcome Article</h4>
-                                <p>
-                                    Welcome to AS INTERNATIONAL, a distinguished leader in the realm of manufacturing and globally exporting an exemplary assortment of Buffalo/Cow Horn and Camel Bone
+                                <Ellipsis
+                                    text={`"Welcome to AS INTERNATIONAL, a distinguished leader in the realm of manufacturing and globally exporting an exemplary assortment of Buffalo/Cow Horn and Camel Bone
                                     materials. Our range encompasses an array of top-tier products, including Buffalo Horn Knife Handle Material, Camel Bone Knife Handle Material, Bone Crafts, Horn
                                     Craft, Buffalo Horn Plates for Optical Frames, Bone Buttons, Bone Pendants, Hair Bone Needles, and more. At AS INTERNATIONAL, we take pride in crafting our products
                                     with utmost precision and finesse, harnessing the capabilities of cutting-edge technological machinery. We source only the finest, quality-approved raw materials
@@ -38,8 +38,8 @@ const Intro = () => {
                                     cultivated a relationship of trust and reliability with our clients. As connoisseurs of our craft, we derive immense pleasure from presenting our products to you.
                                     We invite you to indulge in the experience of our offerings, which we are confident you will enjoy as much as we enjoy bringing them to you. If you have inquiries,
                                     curiosities, or suggestions, we encourage you to reach out to us without hesitation. Your engagement is invaluable to us as we continue to push the boundaries of
-                                    excellence in our domain.
-                                </p>
+                                    excellence in our domain."`}
+                                />
                             </article>
                             <div className="author-block">
                                 <a>

@@ -1,13 +1,11 @@
 import React, { useEffect } from 'react';
-import useSelector from '@/hooks/useSelector';
-import { selectCartProduct } from '@/selector/cartSelector';
 import store from '@/lib/store/store';
 import { CartHelper } from '@/lib/cart';
-import Image from 'next/image';
 import Link from 'next/link';
-import { EmptyProductSection } from './EmptyProductSection';
-const Cart = () => {
-    const cart = useSelector(selectCartProduct) || [];
+import EmptyCart from './EmptyCart';
+
+const Cart = ({ cart }) => {
+    const isCartEmpty = cart.length === 0;
 
     useEffect(() => {
         const fetchedFromLocalStorage = localStorage.getItem('asInternationalCart');
@@ -18,8 +16,8 @@ const Cart = () => {
 
     return (
         <div className="sin-dropdown cart-dropdown">
-            <div className="inner-single-block" style={{ maxHeight: '600px', overflowY: 'scroll' }}>
-                {!cart.length && <EmptyProductSection height={100} width={100} description="Cart Is Empty" fontSize="20px" />}
+            <div className="inner-single-block" style={{ maxHeight: '500px', overflowY: 'scroll' }}>
+                {isCartEmpty && <EmptyCart />}
                 {cart.map((cart, i) => {
                     return (
                         <div key={i} className="cart-product">
@@ -46,24 +44,28 @@ const Cart = () => {
                     );
                 })}
             </div>
-            <div className="inner-single-block">
-                <ul className="cart-details">
-                    <li>
-                        <span className="label">Subtotal</span> <span className="value">$500.00</span>
-                    </li>
-                    <li>
-                        <span className="label">Shipping</span> <span className="value">€7.00</span>
-                    </li>
-                    <li>
-                        <span className="label">Total</span> <span className="value">€507.00</span>
-                    </li>
-                </ul>
-            </div>
-            <div className="inner-single-block">
-                <Link href="/checkout" className="btn w-100">
-                    Checkout
-                </Link>
-            </div>
+            {!isCartEmpty && (
+                <>
+                    <div className="inner-single-block">
+                        <ul className="cart-details">
+                            <li>
+                                <span className="label">Subtotal</span> <span className="value">$500.00</span>
+                            </li>
+                            <li>
+                                <span className="label">Shipping</span> <span className="value">€7.00</span>
+                            </li>
+                            <li>
+                                <span className="label">Total</span> <span className="value">€507.00</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="inner-single-block">
+                        <Link href="/checkout" className="btn w-100">
+                            Checkout
+                        </Link>
+                    </div>
+                </>
+            )}
             <ul></ul>
         </div>
     );

@@ -3,22 +3,11 @@ import { FirebaseHelper } from '@/lib/firebase-helpers';
 import ProductDetail from '@/components/ProductDetail';
 import { CategoryProducts } from '@/components/CategoryProducts';
 import ProductSchema from '@/seo/ProductSchema';
+import BreadCrumb from '@/seo/BreadCrumb';
 export default function (props) {
-    const {
-        productImage,
-        productId,
-        productName,
-        priceCategory,
-        productDescription,
-        productCategory,
-        productSubCategory,
-        productPrice,
-        productOldPrice,
-        productType,
-        productColor,
-        productQty,
-        productSize,
-    } = props.product;
+    const { productImage, productName, productDescription, productCategory, productPrice, productOldPrice } = props.product;
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/products', name: 'Products' }, { name: productName }];
+
     return (
         <>
             <MetaHead title={props.product.productName} description={props.product.productCategory} />
@@ -32,7 +21,7 @@ export default function (props) {
                     oldPrice: productOldPrice,
                 }}
             />
-            
+            <BreadCrumb items={breadCrumbItems} text={productName} />
             <main className="inner-page-sec-padding pb-0">
                 <ProductDetail product={props.product} />
                 <CategoryProducts categoryProducts={props.categoryProducts} />

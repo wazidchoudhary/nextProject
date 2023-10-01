@@ -37,7 +37,7 @@ const HeroSlider = () => {
                                         <h2>AS <br/> INTERNATIONAL</h2>
                                         <p className=''>Discover the elegance of AS International: Where masterful artistry in Bone, Horn, Acrylic, and Wood blends seamlessly with dependable quality, unmatched customer service, and the allure of unique masterpieces. Dive into our world of timeless beauty and handcrafted perfection.</p>
                                         <div className="slider-btn">
-                                            <a href="https://teflonbonehorncrafts.com/products" className="btn btn-outlined" tabIndex={0}>
+                                            <a href="/products" className="btn btn-outlined" tabIndex={0}>
                                                 Shop Now
                                             </a>
                                         </div>

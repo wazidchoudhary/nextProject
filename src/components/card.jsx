@@ -5,8 +5,6 @@ import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
 import { CartHelper } from '@/lib/cart';
 export const Card = ({ content, handleClick = () => {} }) => {
-    const cart = useSelector(selectCartProduct) || [];
-
     const { id, category, subCategory, name, priceOld, priceNew, image, color = '' } = content;
     const [image1, image2] = image;
 

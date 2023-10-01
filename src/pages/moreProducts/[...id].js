@@ -5,13 +5,20 @@ import MetaHead from '@/seo/MetaHead';
 import { Card } from '@/components/card';
 import { EmptyProductSection } from '@/components/EmptyProductSection';
 import { useRouter } from 'next/router';
+import BreadCrumb from '@/seo/BreadCrumb';
+
 export default function ({ products, category, url }) {
     const router = useRouter();
+    const title = `Products - ${category}`;
+    const description = `${url.map((res) => StrUtils.snakeToNormal(res) + ' PRODUCTS')}`;
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/products', name: 'Products' }, { name:  category}];
+
     return (
         <>
-            <MetaHead title={`${category}`} description={`${url.map((res) => StrUtils.snakeToNormal(res) + ' PRODUCTS')}`} />
+            <MetaHead title={title} description={description} />
+            <BreadCrumb items={breadCrumbItems} text={title} />
             {products.length > 0 ? (
-                <section className="section-padding">
+                <section className="section-padding mt-5">
                     <div className="container">
                         <div className="ha-custom-tab">
                             <div className="tab-content space-db--30" id="myTabContent">
