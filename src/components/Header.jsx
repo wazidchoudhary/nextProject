@@ -59,7 +59,7 @@ const Header = () => {
             <header className="site-header ha-header-1 absolute-header sticky-init fixed-header d-lg-block d-none">
                 <div className="container-fluid">
                     <div className="row align-items-center">
-                        <div className="col-lg-7">
+                        <div className="col-lg-9">
                             <div className="main-navigation">
                                 <ul className="main-menu @@menuColor">
                                     <li key={'logoHeader'}>
@@ -87,11 +87,11 @@ const Header = () => {
                                 </ul>
                             </div>
                         </div>
-                        <div className="col-lg-2 col-xl-2 offset-lg-1 offset-xl-0">
+                        {/* <div className="col-lg-2 col-xl-2 offset-lg-1 offset-xl-0">
                             <div className="site-brand">
-                                <Link href="/home">{/* <img src="assets/image/IMG_20230720_114137-removebg-preview.png" /> */}</Link>
+                               
                             </div>
-                        </div>
+                        </div> */}
                         <div className="col-lg-3 col-xl-3">
                             <div className="header-top-widget">
                                 <ul className="header-links">
@@ -101,9 +101,9 @@ const Header = () => {
                                         </a>
                                     </li>
                                     <li key={'bagkey'} className="sin-link">
-                                        {/* <Link href="/cart" className="cart-link link-icon"> */}
+                                        <Link href="/cart" className="cart-link link-icon">
                                         <i className="ion-bag" />
-                                        {/* </Link> */}
+                                        </Link>
                                         <Cart />
                                     </li>
                                     <li key={'languagekey'} className="sin-link">

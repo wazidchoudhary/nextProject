@@ -18,12 +18,8 @@ import Image from 'next/image'
               Follow Us
             </h3>
             <div className="footer-social rounded-icons text-start">
-              <Link href="index-3.html#" className="single-icon"><i className="fab fa-facebook-f" /></Link>
-              <Link href="index-3.html#" className="single-icon"><i className="fab fa-twitter" /></Link>
-              <Link href="index-3.html#" className="single-icon"><i className="fas fa-rss" /></Link>
-              <Link href="index-3.html#" className="single-icon"><i className="fab fa-youtube" /></Link>
-              <Link href="index-3.html#" className="single-icon"><i className="fab fa-google-plus-g" /></Link>
-              <Link href="index-3.html#" className="single-icon"><i className="fab fa-instagram" /></Link>
+              <Link href="https://www.facebook.com/A.SINTERNATIONAL252?mibextid=ZbWKwL" target='_blank' className="single-icon"><i className="fab fa-facebook-f" /></Link>
+              <Link href="https://instagram.com/a.s_international252?utm_source=qr&igshid=MzNlNGNkZWQ4Mg==" className="single-icon" target='_blank'><i className="fab fa-instagram" /></Link>
             </div>
           </div>
         </div>
@@ -33,7 +29,7 @@ import Image from 'next/image'
               Products
             </h3>
             <ul className="footer-list">
-              <li><Link href="#featuredProducts">Featured Products</Link></li>
+              <li><Link href="/#featuredProducts">Featured Products</Link></li>
               <li><Link href="/knifeHandles">Knife Handles</Link></li>
               <li><Link href="/products">More Products</Link></li>
               
@@ -46,10 +42,10 @@ import Image from 'next/image'
               Our Company
             </h3>
             <ul className="footer-list">
-                <li><Link href="https://www.fedex.com/en-us/tracking.html">Delivery</Link></li>
+                <li><Link href="https://www.fedex.com/en-us/tracking.html" target='_blank'>Delivery</Link></li>
                 <li><Link href="/contact">Contact us</Link></li>
                 <li><Link href="/about">About Us</Link></li>
-                <li><Link href='#Intro'>What We Do</Link></li>
+                <li><Link href='/#intro'>Who We Are</Link></li>
             </ul>
           </div>
         </div>

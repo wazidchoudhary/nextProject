@@ -162,3 +162,18 @@ th {
 *::-webkit-scrollbar {
     display: none;
 }
+
+
+@media (max-width: 1130px) {
+    .menu-item {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+}
+
+@media (max-width: 1060px) {
+    .menu-item {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+}

@@ -16,7 +16,6 @@ const Cart = () => {
         });
     }, []);
 
-    console.log(cart);
     return (
         <div className="sin-dropdown cart-dropdown">
             <div className="inner-single-block" style={{ maxHeight: '600px', overflowY: 'scroll' }}>
@@ -50,13 +49,10 @@ const Cart = () => {
             <div className="inner-single-block">
                 <ul className="cart-details">
                     <li>
-                        <span className="label">Subtotal</span> <span className="value">€500.00</span>
+                        <span className="label">Subtotal</span> <span className="value">$500.00</span>
                     </li>
                     <li>
                         <span className="label">Shipping</span> <span className="value">€7.00</span>
-                    </li>
-                    <li>
-                        <span className="label">Taxes</span> <span className="value">€0.00</span>
                     </li>
                     <li>
                         <span className="label">Total</span> <span className="value">€507.00</span>
