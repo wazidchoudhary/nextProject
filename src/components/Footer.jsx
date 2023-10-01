@@ -78,7 +78,7 @@ import Image from 'next/image'
         </div>
         <div className="col-md-6">
           <ul className="footer-list--inline">
-            <li><Link href="/policy">Policy</Link></li>
+            <li><Link href="/policy">Privacy & Policy</Link></li>
             <li><Link href="/termsConditions">Term &amp; Conditions</Link></li>
             <li><Link href="/affiliate">Affiliate</Link></li>
             <li><Link href="/help">Help</Link></li>
