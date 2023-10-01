@@ -28,6 +28,14 @@
     font-family: 17px !important;
 }
 
+.ellipsis-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .ellipsis {
     display: -webkit-box;
     -webkit-line-clamp: 6;
@@ -36,14 +44,13 @@
     text-overflow: ellipsis;
 }
 
-.siteBreadCrumb {
+.siteBreadCrumb, .brd-list {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
 }
 
 .siteBreadCrumb a {
-    margin-right: 10px;
 }
 
 .siteBreadCrumbWrapper h1 {
@@ -55,6 +62,18 @@
     display: flex;
     justify-content: space-between;
     background: #f6f6f6;
-    padding: 20px 10px;
+    padding: 20px;
     align-items: center;
 }
+
+@media (max-width: 768px) {
+    .siteBreadCrumbWrapper h1 {
+        display: none;
+    }
+    .siteBreadCrumb li {
+        font-size: 12px;
+    }
+    .siteBreadCrumbWrapper {
+        padding: 20px 10px;
+    }
+  }

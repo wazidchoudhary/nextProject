@@ -157,7 +157,7 @@ const Header = () => {
                 </div>
             </header>
 
-            <header className="mobile-header d-lg-none absolute-header">
+            <header className="mobile-header d-lg-none absolute-header" style={{position: 'sticky'}}>
                 <div className="container">
                     <div className="row align-items-end">
                         <div className="col-md-4 col-7">{/* <a href="index.html" className="site-brand"></a> */}</div>
