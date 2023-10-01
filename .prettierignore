@@ -2,6 +2,7 @@
 build
 coverage
 assets
+.next
 
 *.svg
 *.jpg

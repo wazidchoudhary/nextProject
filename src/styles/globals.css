@@ -55,8 +55,6 @@ body {
     font-size: 15px;
 }
 
-
-
 .hasCustomSelect {
     padding: 5px;
     width: 170px;
@@ -165,7 +163,6 @@ th {
 *::-webkit-scrollbar {
     display: none;
 }
-
 
 @media (max-width: 1130px) {
     .menu-item {

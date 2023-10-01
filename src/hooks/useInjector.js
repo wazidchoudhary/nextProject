@@ -1,5 +1,4 @@
 export const useInjector = () => {
-
     const injectStyleLink = (url) => {
         const el = document.createElement('link');
         el.rel = 'stylesheet';
@@ -9,12 +8,11 @@ export const useInjector = () => {
 
     const debounce = (cb) => {
         setTimeout(() => {
-            cb()
-        }, 3000)
-    }
-
+            cb();
+        }, 3000);
+    };
 
     return {
-        injectStyleLink: debounce(injectStyleLink)
-    }
+        injectStyleLink: debounce(injectStyleLink),
+    };
 };

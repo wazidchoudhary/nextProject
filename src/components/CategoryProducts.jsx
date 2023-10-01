@@ -7,7 +7,7 @@ export const CategoryProducts = ({ categoryProducts }) => {
     const handleClick = (id) => {
         router.push(`/products/${id}`);
     };
-    return ( 
+    return (
         <section className="mt-5">
             {categoryProducts.length && (
                 <div className="container">

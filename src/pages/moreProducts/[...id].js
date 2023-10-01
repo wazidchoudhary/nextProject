@@ -11,7 +11,7 @@ export default function ({ products, category, url }) {
     const router = useRouter();
     const title = `Products - ${category}`;
     const description = `${url.map((res) => StrUtils.snakeToNormal(res) + ' PRODUCTS')}`;
-    const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/products', name: 'Products' }, { name:  category}];
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/products', name: 'Products' }, { name: category }];
 
     return (
         <>

@@ -16,7 +16,7 @@ const MOCK_OPTIONS = [
     },
 ];
 
-const BreadCrumb = ({ items = [], text='AS International' }) => {
+const BreadCrumb = ({ items = [], text = 'AS International' }) => {
     return (
         <div className="siteBreadCrumbWrapper">
             <h1>{text}</h1>

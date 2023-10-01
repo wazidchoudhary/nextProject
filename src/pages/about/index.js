@@ -7,11 +7,9 @@ export default function () {
             <MetaHead title="About Us - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PROFILE" />
             <main className="contact_area section-padding pt--40">
                 <div className="container-lg pt-5">
-                    <div className="section-title" style={{backgroundColor:'#f6f6f6',padding:'50px'}}>
-           
+                    <div className="section-title" style={{ backgroundColor: '#f6f6f6', padding: '50px' }}>
                         <Image src="/assets/image/logo.png" alt="As International Logo" width={150} height={100} />
                         <div className="row mt--30" style={{ textAlign: 'center' }}>
-                            
                             <h3 style={{ color: 'black' }}>Introducing AS International: Crafting Elegance from Nature's Gifts</h3>
                         </div>
                         <article className="aboutArticle" style={{ textAlign: 'justify' }}>

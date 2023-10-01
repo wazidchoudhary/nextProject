@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
 
-const MetaHead = ({ title = 'Create Next App', description, image='/assets/', siteName='teflon bone horn crafts' }) => {
+const MetaHead = ({ title = 'Create Next App', description, image = '/assets/', siteName = 'teflon bone horn crafts' }) => {
     const router = useRouter();
     const url = router.asPath;
     return (

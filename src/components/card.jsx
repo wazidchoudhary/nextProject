@@ -37,7 +37,7 @@ export const Card = ({ content, handleClick = () => {} }) => {
     return (
         <div className="col-lg-3 col-sm-6 mb--30">
             <div className="product-card" style={{ textAlign: 'left' }} onClick={() => handleClick(id)}>
-                <div className="image" style={{ height: '200px', border: '1px solid #e3e3e3',backgroundColor:'#f6f6f6' }}>
+                <div className="image" style={{ height: '200px', border: '1px solid #e3e3e3', backgroundColor: '#f6f6f6' }}>
                     <Image src={image1} width={140} loading="lazy" height={140} alt={name} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                     <div className="hover-content" style={{ height: '100%' }}>
                         {showHoverImage()}

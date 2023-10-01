@@ -11,7 +11,6 @@ import { ToastContainer } from 'react-toastify';
 import Footer from '@/components/Footer';
 import '@/styles/custom.css';
 
-
 export default function App({ Component, pageProps }) {
     return (
         <>
@@ -21,7 +20,7 @@ export default function App({ Component, pageProps }) {
                 <Header />
                 <Component {...pageProps} />
                 <Analytics />
-                <ToastContainer theme="dark" />
+                <ToastContainer theme="dark" position="bottom-right" />
                 <Footer />
             </div>
         </>
