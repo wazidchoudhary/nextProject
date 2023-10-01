@@ -66,6 +66,10 @@
     align-items: center;
 }
 
+.text-prim {
+    color: #24bbdb;
+}
+
 @media (max-width: 768px) {
     .siteBreadCrumbWrapper h1 {
         display: none;
@@ -76,4 +80,8 @@
     .siteBreadCrumbWrapper {
         padding: 20px 10px;
     }
+    .readMoreBtn {
+        left: 65%;
+    }
+    
   }
