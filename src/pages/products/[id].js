@@ -1,4 +1,4 @@
-import MetaHead from '@/components/MetaHead';
+import MetaHead from '@/seo/MetaHead';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import ProductDetail from '@/components/ProductDetail';
 import { CategoryProducts } from '@/components/CategoryProducts';

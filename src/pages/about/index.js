@@ -1,5 +1,5 @@
 import React from 'react';
-import MetaHead from '@/components/MetaHead';
+import MetaHead from '@/seo/MetaHead';
 import Image from 'next/image';
 export default function () {
     return (

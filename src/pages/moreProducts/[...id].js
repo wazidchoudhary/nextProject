@@ -1,7 +1,7 @@
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import React, { useEffect } from 'react';
 import StrUtils from '@/utils/str-utils';
-import MetaHead from '@/components/MetaHead';
+import MetaHead from '@/seo/MetaHead';
 import { Card } from '@/components/card';
 import { EmptyProductSection } from '@/components/EmptyProductSection';
 import { useRouter } from 'next/router';

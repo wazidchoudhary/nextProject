@@ -1,6 +1,6 @@
 import React from 'react';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
-import MetaHead from '@/components/MetaHead';
+import MetaHead from '@/seo/MetaHead';
 import { useRouter } from 'next/router';
 import { Card } from '@/components/card';
 export default ({ products }) => {

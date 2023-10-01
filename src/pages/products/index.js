@@ -5,7 +5,7 @@ import { FirebaseHelper } from '@/lib/firebase-helpers';
 import styles from './Product.module.css';
 
 import HeroSlider from '@/components/HeroSlider';
-import MetaHead from '@/components/MetaHead';
+import MetaHead from '@/seo/MetaHead';
 import { Card } from '@/components/card';
 import { useRouter } from 'next/router';
 import { FilterSection } from '../../components/FilterSection';

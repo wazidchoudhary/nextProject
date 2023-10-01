@@ -2,7 +2,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css';
-import MetaHead from '@/components/MetaHead';
+import MetaHead from '@/seo/MetaHead';
 import HeroSlider from '@/components/HeroSlider';
 import Intro from '@/components/Intro';
 import FeatureProducts from '@/components/FeatureProducts';
