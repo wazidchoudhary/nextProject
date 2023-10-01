@@ -5,7 +5,7 @@ import { FirebaseHelper } from '@/lib/firebase-helpers';
 const FeatureProducts = ({ products }) => {
     const router = useRouter();
     return (
-        <section className="section-margin welcome-section">
+        <section id='featuredProducts' className="section-margin welcome-section">
             <div className="container">
                 <div className="row justify-content-center section-padding border-bottom">
                     <div className="col-lg-10">

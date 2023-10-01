@@ -8,6 +8,8 @@ import Cart from './Cart';
 const Header = () => {
     // const cartData = useSelector('cart');
     const [mobileMenu, setMobileMenu] = useState('');
+
+    
     const createDynamicMenuForDesktop = (prop, pageName) => {
         const keys = Object.keys(prop);
         return keys.map((menuTitle, i) => {

@@ -20,8 +20,7 @@ const HeroSlider = () => {
                                     <div className="col-lg-12 text-center">
                                         <h1>As International</h1>
                                         <p>
-                                            We are manufacturer and Exporters of handicraft products made by Bone, Horn, Acrylic & Wood. We are dedicated to giving you the very best quality with a
-                                            focus on three characteristics, ie: dependability, customer service and uniqueness.
+                                        Discover the elegance of AS International: Where masterful artistry in Bone, Horn, Acrylic, and Wood blends seamlessly with dependable quality, unmatched customer service, and the allure of unique masterpieces. Dive into our world of timeless beauty and handcrafted perfection.
                                         </p>
                                         <div className="slider-btn">
                                             <Link href="products/" className="btn btn-outlined" tabIndex={0}>
