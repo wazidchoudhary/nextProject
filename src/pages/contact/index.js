@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import MetaHead from '@/seo/MetaHead';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
+import { toast } from 'react-toastify';
 export default function () {
     const [userData, setUserdata] = useState({
         name: '',
@@ -11,6 +12,14 @@ export default function () {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        if (userData.name === '') {
+            toast.error('Please enter your name');
+            return;
+        }
+        if (userData.email === '') {
+            toast.error('Please enter your Email');
+            return;
+        }
         FirebaseHelper.sendMessage(userData);
         setUserdata({
             name: '',
