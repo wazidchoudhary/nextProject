@@ -83,5 +83,17 @@
     .readMoreBtn {
         left: 65%;
     }
+
+    .hero-slider-custom p {
+        font-size: 20px!important;
+        width: 100% !important;
+        margin-top: 20px!important;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
     
   }

@@ -19,14 +19,14 @@ const HeroSlider = () => {
                   ]'
             >
                 <div className="slick-list draggable">
-                    <div className="slick-track" style={{ opacity: 1, width: 4320, transform: 'translate3d(0px, 0px, 0px)' }}>
+                    <div className="slick-track" style={{ opacity: 1, width: '100%', transform: 'translate3d(0px, 0px, 0px)' }}>
                         <div
                             className="single-slider hero-content bg-image slick-slide slick-current slick-active"
                             data-bg="image/bg-images/home-2/home-slider-image-1.jpg"
                             data-slick-index={0}
                             aria-hidden="false"
                             tabIndex={0}
-                            style={{ width: 1440, backgroundImage: 'url("assets/image/hero.webp")' }}
+                            style={{ width: '100%', objectFit:'contain', backgroundImage: 'url("assets/image/hero.webp")' }}
                         >
                             {/* <img src="assets/image/hero.webp"/> */}
                             <div className="container position-relative">
