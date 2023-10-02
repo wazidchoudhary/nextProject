@@ -140,7 +140,7 @@ export default function () {
                                         </div>
                                         <div className="col-lg-6">
                                             <div className="form-btn">
-                                                <button type="submit" value="submit" id="submit" className="btn btn-black" onClick={handleSubmit} name="submit">
+                                                <button type="submit" value="submit" id="submit" className="btn btn-black" onSubmit={handleSubmit} name="submit">
                                                     send
                                                 </button>
                                             </div>

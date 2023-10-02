@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Footer from '@/components/Footer';
 import '@/styles/custom.css';
+import { Accordian } from '@/components/accordian/Accordian';
 
 export default function App({ Component, pageProps }) {
     return (
@@ -21,6 +22,7 @@ export default function App({ Component, pageProps }) {
                 <Component {...pageProps} />
                 <Analytics />
                 <ToastContainer theme="dark" position="bottom-right" />
+                <Accordian />
                 <Footer />
             </div>
         </>
