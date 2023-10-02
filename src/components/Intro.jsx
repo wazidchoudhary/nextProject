@@ -10,7 +10,7 @@ const Intro = () => {
                         <div className="welcome-content">
                             <h6 className="title-xs">Who We Are</h6>
                             <div className="section-title">
-                                <h2>Welcome To As International</h2>
+                                <h2>Welcome To AS International</h2>
                                 <div className="title-sep">
                                     <Image
                                         src={'/assets/image/logo.png'}
@@ -43,7 +43,7 @@ const Intro = () => {
                             </article>
                             <div className="author-block">
                                 <a>
-                                    <span className="font-weight-mid text-black text-uppercase">Shakulat Choudhary</span> - CEO
+                                    <span className="font-weight-bold text-black text-uppercase">Shakulat Choudhary</span> - CEO
                                 </a>
                             </div>
                         </div>

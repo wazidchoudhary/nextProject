@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import MetaHead from '@/seo/MetaHead';
+import { useRouter } from 'next/router';
+import BreadCrumb from '@/seo/BreadCrumb';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import { toast } from 'react-toastify';
 export default function () {
+    const router = useRouter();
+    const title = 'Contact Us - AS INTERNATIONAL';
+    const description = 'Contact As International If any enquiry';
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
     const [userData, setUserdata] = useState({
         name: '',
         email: '',
@@ -31,7 +37,8 @@ export default function () {
 
     return (
         <>
-            <MetaHead title="Contact Us - AS INTERNATIONAL" description="Contact As International If any enquiry" />
+            <MetaHead title={title} description={description} />
+            <BreadCrumb items={breadCrumbItems} text={title} />
             <main className="contact_area section-padding pt--60">
                 <div className="container">
                     <div className="row mt--60 space-db--30">
@@ -48,7 +55,7 @@ export default function () {
                                         </div>
                                         <div className="contact-info-text">
                                             <p>
-                                                <span>Address:</span> 1234 - Bandit Tringi lAliquam <br /> Vitae. New York
+                                                <span>Address:</span> Khasra no 535-536, Garima Garden, Sahibabad, Postal-Code : 201001  <br /> Ghaziabad, UttarPradesh, India 
                                             </p>
                                         </div>
                                     </div>
@@ -68,7 +75,7 @@ export default function () {
                                         </div>
                                         <div className="contact-info-text">
                                             <p>
-                                                <span>Phone:</span> (800) 0123 456 789{' '}
+                                                <span>Phone:</span> (+91) 9990510321{' '}
                                             </p>
                                         </div>
                                     </div>

@@ -35,6 +35,13 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.ellipsis-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 .ellipsis {
     display: -webkit-box;
@@ -61,7 +68,7 @@
 .siteBreadCrumbWrapper {
     display: flex;
     justify-content: space-between;
-    background: #f6f6f6;
+    background: #e6e6e6;
     padding: 20px;
     align-items: center;
 }
@@ -96,4 +103,22 @@
     }
     
     
+  }
+
+  .custom-footer{
+    background-color: #e6e6e6;
+    
+  }
+
+  .list-button{
+    width: 250px;
+    margin-top: 20px;
+  }
+
+  .footer-title{
+    font-weight: 700 !important;
+  }
+
+  .footer-list{
+    font-weight: 600 !important;
   }

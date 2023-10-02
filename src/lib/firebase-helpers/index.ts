@@ -47,12 +47,11 @@ export class FirebaseHelper {
         return snapshot.val();
     }
     static async sendMessage(userData: any) {
-        console.log(userData);
         const reference = ref(database, `messages/`);
         push(reference, userData);
-        const messages = await this.syncAllMessages();
+        // const messages = await this.syncAllMessages();
         toast.success('Message sent Successfully.');
-        console.log('get message', messages);
+        // console.log('get message', messages);
     }
     static async syncAllMessages(): Promise<Product[]> {
         const snapshot = await sync('messages');

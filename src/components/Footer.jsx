@@ -3,8 +3,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 const Footer = () => {
     return (
-        <footer className>
-            <div className="section-padding-top section-padding-bottom space-db--50 footer-gray">
+        <footer className="">
+            <div className="section-padding-top section-padding-bottom space-db--50 custom-footer">
                 <div className="container">
                     <div className="row justify-content-between">
                         <div className="col-lg-5 col-md-6 col-sm-12">
@@ -80,7 +80,7 @@ const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className="copyright footer-gray">
+            <div className="copyright custom-footer">
                 <div className="container">
                     <div className="row">
                         <div className="col-md-6 text-center text-md-start">

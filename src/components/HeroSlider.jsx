@@ -20,6 +20,7 @@ const HeroSlider = () => {
             >
                 <div className="slick-list draggable">
                     <div className="slick-track" style={{ opacity: 1, width: '100%', transform: 'translate3d(0px, 0px, 0px)' }}>
+                    
                         <div
                             className="single-slider hero-content bg-image slick-slide slick-current slick-active"
                             data-bg="image/bg-images/home-2/home-slider-image-1.jpg"

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from './card';
+import { Card } from './Card/card';
 import { useRouter } from 'next/router';
 export const CategoryProducts = ({ categoryProducts }) => {
     const router = useRouter();

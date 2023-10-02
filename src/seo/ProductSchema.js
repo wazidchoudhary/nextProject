@@ -10,6 +10,8 @@ export const ProductSchema = ({ product }) => {
         name: product.name,
         image: [product.image],
         description: product.description,
+        sku: `as${product.id}`,
+        mpn: `${product.id}`,
         brand: {
             '@type': 'Brand',
             name: 'AS International',

@@ -1,18 +1,18 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { Card } from './card';
+import { Card } from './Card/card';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 const FeatureProducts = ({ products }) => {
     const router = useRouter();
     return (
         <section id="featuredProducts" className="section-margin welcome-section">
-            <div className="container">
+            <div className="container-lg">
                 <div className="row justify-content-center section-padding border-bottom">
                     <div className="col-lg-10">
                         <div className="welcome-content">
                             <div className="section-title">
                                 <h2>Featured Products</h2>
-                                <div className="shop-product-wrap grid with-pagination row space-db--30">
+                                <div className="shop-product-wrap grid with-pagination mt-2 row space-db--30">
                                     {products.map((p) => (
                                         <Card
                                             key={p.productId}

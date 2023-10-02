@@ -5,7 +5,7 @@ import { CategoryProducts } from '@/components/CategoryProducts';
 import ProductSchema from '@/seo/ProductSchema';
 import BreadCrumb from '@/seo/BreadCrumb';
 export default function (props) {
-    const { productImage, productName, productDescription, productCategory, productPrice, productOldPrice } = props.product;
+    const { productId, productImage, productName, productDescription, productCategory, productPrice, productOldPrice } = props.product;
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/products', name: 'Products' }, { name: productName }];
 
     return (
@@ -13,6 +13,7 @@ export default function (props) {
             <MetaHead title={props.product.productName} description={props.product.productCategory} />
             <ProductSchema
                 product={{
+                    id:productId,
                     name: productName,
                     image: productImage,
                     description: productDescription,
