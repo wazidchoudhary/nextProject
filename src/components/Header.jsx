@@ -167,6 +167,12 @@ const Header = () => {
                                     <li className="sin-link">
                                         <Link href="/cart" className="cart-link link-icon">
                                             <i className="ion-bag" />
+                                            {!isEmptyCart && (
+                                                <span className="position-absolute translate-bottom badge rounded-pill bg-danger" style={{ fontSize: '10px', top: '14px', left: '60%' }}>
+                                                    {cart.length}
+                                                    <span className="visually-hidden">unread messages</span>
+                                                </span>
+                                            )}
                                         </Link>
                                     </li>
                                     <li className="sin-link">
