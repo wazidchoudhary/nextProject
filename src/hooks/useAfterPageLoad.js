@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-const useAfterPageLoad = (initialVal, delay=3000) => {
-    const [val, setVal] = useState();
+const useAfterPageLoad = (initialVal, defaultValue, delay=3000) => {
+    const [val, setVal] = useState(defaultValue);
 
     useEffect(() => {
       const to = setTimeout(setVal, delay, initialVal);

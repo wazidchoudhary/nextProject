@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
+import React, {  } from 'react';
 import useAfterPageLoad from '@/hooks/useAfterPageLoad';
 
 const HeroSlider = () => {
 
-    const [bgImage, setBgImage] = useAfterPageLoad('url("assets/image/hero.webp")')
+    const [bgImage, setBgImage] = useAfterPageLoad('url("assets/image/hero.webp")', 'url("https://img.freepik.com/free-vector/white-blurred-background_1034-249.jpg?w=2000")')
 
     return (
         <section className="hero-area section-margin">
@@ -18,7 +17,7 @@ const HeroSlider = () => {
                             data-slick-index={0}
                             aria-hidden="false"
                             tabIndex={0}
-                            style={{ width: '100%', objectFit: 'contain', backgroundImage: bgImage }}
+                            style={{ width: '100%', objectFit: 'contain', backgroundImage: 'url("assets/image/hero.webp")' }}
                         >
                             {/* <img src="assets/image/hero.webp"/> */}
                             <div className="container position-relative">
