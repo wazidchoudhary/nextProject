@@ -22,7 +22,7 @@ const HeroSlider = () => {
                             {/* <img src="assets/image/hero.webp"/> */}
                             <div className="container position-relative">
                                 <div className="row">
-                                    <div className="col-lg-12 hero-slider-custom" style={{fontWeight: 900}}>
+                                    <div className="col-lg-12 hero-slider-custom">
                                         <h2>
                                             AS <br /> INTERNATIONAL
                                         </h2>
