@@ -12,8 +12,8 @@ export const CategoryProducts = ({ categoryProducts }) => {
             {categoryProducts.length && (
                 <div className="container">
                     <div className="section-title mb--55">
-                        <h2>Other Products In The Same Category:</h2>
-                        <div className="row">
+                        <h3>Other Products In The Same Category:</h3>
+                        <div className="row mt-3">
                             {categoryProducts.map((p) => (
                                 <Card
                                     key={p.productId}

@@ -29,6 +29,6 @@ export const getStaticProps = async (context) => {
         props: {
             products: products,
         },
-        revalidate: 600,
+        revalidate: 3600,
     };
 };
