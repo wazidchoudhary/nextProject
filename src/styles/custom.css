@@ -16,7 +16,7 @@
 
 .readMoreBtn {
     position: absolute;
-    left: 85%;
+    left: 87%;
     bottom: 0;
     background-color: white;
     color: #24bbdb;
@@ -74,6 +74,7 @@
 
 .text-prim {
     color: #24bbdb;
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
