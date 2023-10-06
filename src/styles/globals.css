@@ -164,7 +164,7 @@ th {
     display: none;
 }
 
-.search-box{
+.search-box {
     width: 85%;
 }
 
@@ -178,18 +178,18 @@ th {
         padding-left: 15px !important;
         padding-right: 15px !important;
     }
-    .sort-select{
+    .sort-select {
         width: 80% !important;
     }
 }
 @media (max-width: 768px) {
-    .sort-select{
+    .sort-select {
         width: 70% !important;
     }
 }
 
 @media (max-width: 580px) {
-    .sort-select{
+    .sort-select {
         width: 85% !important;
     }
 }

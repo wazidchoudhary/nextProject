@@ -6,8 +6,8 @@ import { CartHelper } from '@/lib/cart';
 export const Card = ({ content, handleClick = () => {}, layout = 'grid' }) => {
     const { id, category, subCategory, name, priceOld, priceNew, image, description, color = '' } = content;
     const [image1, image2] = image;
-    const layoutClass = layout === 'grid' ? ['', '', '','','','','auto'] : ['product-type-list', 'list-description', 'list-buttons','#f6f6f6','pt-2 pb-3','list-button','250px'];
-    
+    const layoutClass = layout === 'grid' ? ['', '', '', '', '', '', 'auto'] : ['product-type-list', 'list-description', 'list-buttons', '#f6f6f6', 'pt-2 pb-3', 'list-button', '250px'];
+
     const [prod, setProd] = useState({
         quantity: 1,
         selectedPrice: '',
@@ -48,10 +48,9 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid' }) => {
 
     return (
         <>
-         
-            <div className={`col-lg-3 col-sm-6 mb--30 ${layoutClass[4]}`} style={{backgroundColor:layoutClass[3]}}>
+            <div className={`col-lg-3 col-sm-6 mb--30 ${layoutClass[4]}`} style={{ backgroundColor: layoutClass[3] }}>
                 <div className={`product-card ${layoutClass[0]}`} style={{ textAlign: 'left' }} onClick={() => handleClick(id)}>
-                    <div className="image" style={{ height: '200px', width:layoutClass[6], border: '1px solid #e3e3e3', backgroundColor: '#f6f6f6' }}>
+                    <div className="image" style={{ height: '200px', width: layoutClass[6], border: '1px solid #e3e3e3', backgroundColor: '#f6f6f6' }}>
                         <Image src={image1} width={140} loading="lazy" height={140} alt={name} style={{ width: '100%', height: '200px', objectFit: 'contain' }} />
                         <div className="hover-content" style={{ height: '100%' }}>
                             {showHoverImage()}
@@ -65,7 +64,7 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid' }) => {
                                 <a>{category}</a>
                             </h5>
                         </div>
-                        
+
                         <p className="mb-0 price">
                             <del className="price-old">{priceOld ? '$' + priceOld : ''}</del>
                             <span className="price-new" style={{ marginLeft: '5px' }}>
@@ -79,7 +78,6 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid' }) => {
                             <>
                                 <p>color : {color}</p>
                                 {getButtons()}
-                                
                             </>
                         )}
                     </div>

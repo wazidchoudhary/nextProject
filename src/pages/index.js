@@ -5,8 +5,6 @@ import Intro from '@/components/Intro';
 import FeatureProducts from '@/components/FeatureProducts';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 
- 
-
 const inter = Inter({ subsets: ['latin'] });
 
 export default function ({ products }) {

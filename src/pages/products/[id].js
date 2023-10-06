@@ -13,7 +13,7 @@ export default function (props) {
             <MetaHead title={props.product.productName} description={props.product.productCategory} />
             <ProductSchema
                 product={{
-                    id:productId,
+                    id: productId,
                     name: productName,
                     image: productImage,
                     description: productDescription,

@@ -16,7 +16,7 @@ const Ellipsis = ({ text = '', className = '' }) => {
             )}
 
             {!isCollapsed && (
-                <a onClick={collapse} className='text-prim'>
+                <a onClick={collapse} className="text-prim">
                     ...Read Less
                 </a>
             )}

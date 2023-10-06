@@ -55,7 +55,7 @@ export default function () {
                                         </div>
                                         <div className="contact-info-text">
                                             <p>
-                                                <span>Address:</span> Khasra no 535-536, Garima Garden, Sahibabad, Postal-Code : 201001  <br /> Ghaziabad, UttarPradesh, India 
+                                                <span>Address:</span> Khasra no 535-536, Garima Garden, Sahibabad, Postal-Code : 201001 <br /> Ghaziabad, UttarPradesh, India
                                             </p>
                                         </div>
                                     </div>

@@ -1,5 +1,5 @@
 import { FirebaseHelper } from '@/lib/firebase-helpers';
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import StrUtils from '@/utils/str-utils';
 import MetaHead from '@/seo/MetaHead';
 import { Card } from '@/components/Card/card';
@@ -13,8 +13,8 @@ import { Filters } from '@/utils/sort-filter';
 export default function ({ products, category, url }) {
     const [search, setSearch] = useState('');
     const [sorting, setSorting] = useState('');
-    const [layout,setLayout] = useState('grid')
-    const layoutClass = layout ==='grid' ? '' : 'shop-product-wrap list'
+    const [layout, setLayout] = useState('grid');
+    const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
     const title = `KNIFE HANDLES - ${category}`;
@@ -25,23 +25,23 @@ export default function ({ products, category, url }) {
         <>
             <MetaHead title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
-            {products.map((p)=>
+            {products.map((p) => (
                 <ProductSchema
-                product={{
-                    id:p.productId,
-                    name: p.productName,
-                    image: p.productImage,
-                    description: p.productDescription,
-                    category: p.productCategory,
-                    price: p.productPrice,
-                    oldPrice: p.productOldPrice,
-                }}
-            />
-            )}
+                    product={{
+                        id: p.productId,
+                        name: p.productName,
+                        image: p.productImage,
+                        description: p.productDescription,
+                        category: p.productCategory,
+                        price: p.productPrice,
+                        oldPrice: p.productOldPrice,
+                    }}
+                />
+            ))}
             {products.length > 0 ? (
                 <section className="section-padding mt-5">
                     <div className="container">
-                    <FilterSection data={{ products, search, setSearch, setSorting,setLayout,layout }} />
+                        <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
                         <div className="ha-custom-tab">
                             <div className="tab-content space-db--30" id="myTabContent">
                                 <div className="tab-pane fade show active" id="shop" role="tabpanel" aria-labelledby="shop-tab">
@@ -57,12 +57,11 @@ export default function ({ products, category, url }) {
                                                     priceNew: p.productPrice,
                                                     priceOld: p.productOldPrice,
                                                     image: p.productImage,
-                                                    description:p.productDescription
+                                                    description: p.productDescription,
                                                 }}
                                                 handleClick={(id) => {
                                                     router.push(`/products/${id}`);
                                                 }}
-
                                                 layout={layout}
                                             />
                                         ))}

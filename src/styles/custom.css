@@ -51,13 +51,12 @@
     text-overflow: ellipsis;
 }
 
-.siteBreadCrumb, .brd-list {
+.siteBreadCrumb,
+.brd-list {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
 }
-
-
 
 .siteBreadCrumbWrapper h1 {
     text-align: center;
@@ -92,33 +91,30 @@
     }
 
     .hero-slider-custom p {
-        font-size: 20px!important;
+        font-size: 20px !important;
         width: 100% !important;
-        margin-top: 20px!important;
+        margin-top: 20px !important;
         display: -webkit-box;
         -webkit-line-clamp: 6;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    
-    
-  }
+}
 
-  .custom-footer{
+.custom-footer {
     background-color: #e6e6e6;
-    
-  }
+}
 
-  .list-button{
+.list-button {
     width: 250px;
     margin-top: 20px;
-  }
+}
 
-  .footer-title{
+.footer-title {
     font-weight: 700 !important;
-  }
+}
 
-  .footer-list{
+.footer-list {
     font-weight: 600 !important;
-  }
+}

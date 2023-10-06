@@ -22,7 +22,7 @@ const BreadCrumb = ({ items = [], text = 'AS International' }) => {
             <h1>{text}</h1>
             <ul className="siteBreadCrumb">
                 {items.map((opt, key) => (
-                    <li key={key} className='brd-list'>
+                    <li key={key} className="brd-list">
                         <Link href={opt.url || '#'} className={`${opt.url ? 'text-primary ellipsis-1' : 'ellipsis-1'}`}>
                             {opt.name}
                         </Link>

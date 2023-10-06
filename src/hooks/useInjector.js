@@ -7,7 +7,7 @@ export const useInjector = () => {
     };
 
     const debounce = (cb) => {
-        setTimeout(() => {
+        setTimeout(() => { 
             cb();
         }, 3000);
     };

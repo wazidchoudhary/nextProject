@@ -1,14 +1,12 @@
-import React, {  } from 'react';
+import React from 'react';
 import useAfterPageLoad from '@/hooks/useAfterPageLoad';
 
 const HeroSlider = () => {
-
-    const [bgImage, setBgImage] = useAfterPageLoad('url("assets/image/hero.webp")', 'url("https://img.freepik.com/free-vector/white-blurred-background_1034-249.jpg?w=2000")')
+    const [bgImage, setBgImage] = useAfterPageLoad('url("assets/image/hero.webp")', 'url("https://img.freepik.com/free-vector/white-blurred-background_1034-249.jpg?w=2000")');
 
     return (
         <section className="hero-area section-margin">
-            <div
-                className="handart-slick-slider hero-slider-2 slick-initialized slick-slider">
+            <div className="handart-slick-slider hero-slider-2 slick-initialized slick-slider">
                 <div className="slick-list draggable">
                     <div className="slick-track" style={{ opacity: 1, width: '100%', transform: 'translate3d(0px, 0px, 0px)' }}>
                         <div
