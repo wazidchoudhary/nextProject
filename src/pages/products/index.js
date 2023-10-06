@@ -12,17 +12,25 @@ import { FilterSection } from '../../components/FilterSection';
 import { Filters } from '@/utils/sort-filter';
 import BreadCrumb from '@/seo/BreadCrumb';
 import ProductSchema from '@/seo/ProductSchema';
+import Container from '@/components/Layout/Container';
+import store from '@/lib/store/store';
+import useSelector from '@/hooks/useSelector';
+import { selectCartProduct } from '@/selector/cartSelector';
 
 export default function ({ products }) {
     const [search, setSearch] = useState('');
     const [sorting, setSorting] = useState('');
     const [layout, setLayout] = useState('grid');
+    const cartProduct = useSelector(selectCartProduct) || []
+    const cartProductIds = cartProduct.map((product)=>product.id)
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
     const title = 'Products';
     const description = 'Teflon Bone horn Materials';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
+
+
     return (
         <>
             <MetaHead title={title} description={description} />
@@ -41,39 +49,32 @@ export default function ({ products }) {
                 />
             ))}
 
-            <section className="section-padding">
-                <div className="container pt-5">
-                    <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
-                    <div className="ha-custom-tab">
-                        <div className="row space-db--30" id="myTabContent">
-                            <div className="tab-pane fade show active" id="shop" role="tabpanel" aria-labelledby="shop-tab">
-                                <div className={`row ${layoutClass}`}>
-                                    {filterOperation.map((p) => (
-                                        <Card
-                                            key={p.productId}
-                                            content={{
-                                                id: p.productId,
-                                                category: p.productCategory,
-                                                subCategory: p.productSubCategory,
-                                                name: p.productName,
-                                                priceNew: p.productPrice,
-                                                priceOld: p.productOldPrice,
-                                                image: p.productImage,
-                                                color: p.productColor,
-                                                description: p.productDescription,
-                                            }}
-                                            handleClick={(id) => {
-                                                router.push(`/products/${id}`);
-                                            }}
-                                            layout={layout}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <Container>
+                <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
+                <div className={`row ${layoutClass}`}>
+                    {filterOperation.map((p) => (
+                        <Card
+                            key={p.productId}
+                            content={{
+                                id: p.productId,
+                                category: p.productCategory,
+                                subCategory: p.productSubCategory,
+                                name: p.productName,
+                                priceNew: p.productPrice,
+                                priceOld: p.productOldPrice,
+                                image: p.productImage,
+                                color: p.productColor,
+                                description: p.productDescription,
+                            }}
+                            handleClick={(id) => {
+                                router.push(`/products/${id}`);
+                            }}
+                            layout={layout}
+                            addedInCart={cartProductIds.includes(p.productId)}
+                        />
+                    ))}
                 </div>
-            </section>
+            </Container>
         </>
     );
 }

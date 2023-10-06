@@ -11,8 +11,7 @@ export const FilterSection = ({ data }) => {
         <div className="shop-toolbar mb--30">
             <div className="row align-items-center">
                 <div className="col-lg-6 col-sm-6">
-                    {/* Product View Mode */}
-                    <div className="product-view-mode w-25 d-inline">
+                    <div className="product-view-mode w-25 d-none d-md-inline">
                         <a className={`sorting-btn ${layout === 'list' ? classActive : ''}`} data-bs-target="list" onClick={() => setLayout('list')}>
                             <i className="fas fa-list" />
                         </a>
@@ -30,11 +29,8 @@ export const FilterSection = ({ data }) => {
                 </div>
 
                 <div className="col-lg-6 col-sm-6 mt-sm-0 mt-3">
-                    {/* <span className="toolbar-status">
-          There are 12 products.
-        </span> */}
                     <div className="sorting-selection float-right">
-                        <span>Sort By:</span>
+                        <span className='d-none d-md-inline'>Sort By:</span>
                         <select id="input-sort" onChange={sorting} className="form-control sort-select" style={{ width: '85%' }}>
                             <option value="" selected="selected">
                                 Default Sorting

@@ -9,6 +9,7 @@ import BreadCrumb from '@/seo/BreadCrumb';
 import ProductSchema from '@/seo/ProductSchema';
 import { FilterSection } from '@/components/FilterSection';
 import { Filters } from '@/utils/sort-filter';
+import Container from '@/components/Layout/Container';
 
 export default function ({ products, category, url }) {
     const [search, setSearch] = useState('');
@@ -39,38 +40,30 @@ export default function ({ products, category, url }) {
                 />
             ))}
             {products.length > 0 ? (
-                <section className="section-padding mt-5">
-                    <div className="container">
-                        <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
-                        <div className="ha-custom-tab">
-                            <div className="tab-content space-db--30" id="myTabContent">
-                                <div className="tab-pane fade show active" id="shop" role="tabpanel" aria-labelledby="shop-tab">
-                                    <div className={`row ${layoutClass}`}>
-                                        {filterOperation.map((p) => (
-                                            <Card
-                                                key={p.productId}
-                                                content={{
-                                                    id: p.productId,
-                                                    category: p.productCategory,
-                                                    subCategory: p.productSubCategory,
-                                                    name: p.productName,
-                                                    priceNew: p.productPrice,
-                                                    priceOld: p.productOldPrice,
-                                                    image: p.productImage,
-                                                    description: p.productDescription,
-                                                }}
-                                                handleClick={(id) => {
-                                                    router.push(`/products/${id}`);
-                                                }}
-                                                layout={layout}
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <Container>
+                    <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
+                    <div className={`row ${layoutClass}`}>
+                        {filterOperation.map((p) => (
+                            <Card
+                                key={p.productId}
+                                content={{
+                                    id: p.productId,
+                                    category: p.productCategory,
+                                    subCategory: p.productSubCategory,
+                                    name: p.productName,
+                                    priceNew: p.productPrice,
+                                    priceOld: p.productOldPrice,
+                                    image: p.productImage,
+                                    description: p.productDescription,
+                                }}
+                                handleClick={(id) => {
+                                    router.push(`/products/${id}`);
+                                }}
+                                layout={layout}
+                            />
+                        ))}
                     </div>
-                </section>
+                </Container>
             ) : (
                 <EmptyProductSection />
             )}
