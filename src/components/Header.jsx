@@ -99,9 +99,9 @@ const Header = () => {
                             <div className="header-top-widget">
                                 <ul className="header-links">
                                     <li key={'cartAreakey'} className="sin-link">
-                                        <a href="javascript:" className="search-trigger link-icon">
+                                        <Link href="/search" className="search-trigger link-icon">
                                             <i className="ion-ios-search-strong" />
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li key={'bagkey'} className="sin-link">
                                         <Link href="/cart" className="cart-link link-icon">
