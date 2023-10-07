@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
 
+let debounceId;
+
 export default function ({}) {
     const router = useRouter();
     const [userInput, setUserInput] = useState('');
@@ -36,31 +38,40 @@ export default function ({}) {
         return false;
     };
 
+    const debounce = (callback) => {
+        clearTimeout(debounceId);
+        debounceId = setTimeout(() => {
+            callback();
+        }, 500);
+    };
+
     useEffect(() => {
-        if (userInput) {
-            const uprCase = userInput.toUpperCase();
-            let filtered = products.filter((prod) => {
-                const title = prod.productName.toUpperCase();
-                const description = (prod.productDescription || '').toUpperCase();
-                const color = (prod.productColor || '').toUpperCase();
-                const category = (prod.productCategory || '').toUpperCase();
+        debounce(() => {
+            if (userInput) {
+                const uprCase = userInput.toUpperCase();
+                let filtered = products.filter((prod) => {
+                    const title = prod.productName.toUpperCase();
+                    const description = (prod.productDescription || '').toUpperCase();
+                    const color = (prod.productColor || '').toUpperCase();
+                    const category = (prod.productCategory || '').toUpperCase();
 
-                return hasMatchedKeywords(uprCase, title) || hasMatchedKeywords(uprCase, description) || hasMatchedKeywords(uprCase, color) || hasMatchedKeywords(uprCase, category);
-            });
-            
-            if(selectedCategory) {
-                filtered = filtered.filter(p => {
-                    const category = (p.productCategory || '').toUpperCase();
-                    if(selectedCategory === category) {
-                        return p;
-                    }
-                })
+                    return hasMatchedKeywords(uprCase, title) || hasMatchedKeywords(uprCase, description) || hasMatchedKeywords(uprCase, color) || hasMatchedKeywords(uprCase, category);
+                });
+
+                if (selectedCategory) {
+                    filtered = filtered.filter((p) => {
+                        const category = (p.productCategory || '').toUpperCase();
+                        if (selectedCategory === category) {
+                            return p;
+                        }
+                    });
+                }
+
+                setFilteredProducts(filtered);
+            } else {
+                setFilteredProducts([]);
             }
-
-            setFilteredProducts(filtered)
-        } else {
-            setFilteredProducts([])
-        }
+        });
     }, [userInput, selectedCategory]);
 
     return (
@@ -84,31 +95,33 @@ export default function ({}) {
                     </div>
                 </div>
                 {filteredProducts.length > 0 && (
-                   <Fragment>
-                   <h4 className='my-3' style={{margin: '20px 0'}}>Products ({filteredProducts.length})</h4>
-                   <div className={`row`}>
-                        {filteredProducts.map((p) => (
-                            <Card
-                                key={p.productId}
-                                content={{
-                                    id: p.productId,
-                                    category: p.productCategory,
-                                    subCategory: p.productSubCategory,
-                                    name: p.productName,
-                                    priceNew: p.productPrice,
-                                    priceOld: p.productOldPrice,
-                                    image: p.productImage,
-                                    color: p.productColor,
-                                    description: p.productDescription,
-                                }}
-                                handleClick={(id) => {
-                                    router.push(`/products/${id}`);
-                                }}
-                                addedInCart={cartProductIds.includes(p.productId)}
-                            />
-                        ))}
-                    </div>
-                   </Fragment>
+                    <Fragment>
+                        <h4 className="my-3" style={{ margin: '20px 0' }}>
+                            Products ({filteredProducts.length})
+                        </h4>
+                        <div className={`row`}>
+                            {filteredProducts.map((p) => (
+                                <Card
+                                    key={p.productId}
+                                    content={{
+                                        id: p.productId,
+                                        category: p.productCategory,
+                                        subCategory: p.productSubCategory,
+                                        name: p.productName,
+                                        priceNew: p.productPrice,
+                                        priceOld: p.productOldPrice,
+                                        image: p.productImage,
+                                        color: p.productColor,
+                                        description: p.productDescription,
+                                    }}
+                                    handleClick={(id) => {
+                                        router.push(`/products/${id}`);
+                                    }}
+                                    addedInCart={cartProductIds.includes(p.productId)}
+                                />
+                            ))}
+                        </div>
+                    </Fragment>
                 )}
                 {filteredProducts.length === 0 && <EmptyProductSection containerHeight="auto" />}
             </Container>
