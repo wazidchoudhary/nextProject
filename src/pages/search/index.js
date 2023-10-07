@@ -24,11 +24,11 @@ export default function ({}) {
     const title = selectedCategory || 'Search';
     const description = 'Teflon Bone horn Materials';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Search' }];
+    const pageDesc = userInput ? 'No Product Found In This Category' : 'Type something to search';
 
     useEffect(() => {
         (async () => {
             const products = await FirebaseHelper.syncAllProducts();
-            console.log(products, ' @@@prod');
             setProducts(products);
         })();
     }, []);
@@ -42,7 +42,7 @@ export default function ({}) {
         clearTimeout(debounceId);
         debounceId = setTimeout(() => {
             callback();
-        }, 500);
+        }, 50);
     };
 
     useEffect(() => {
@@ -123,7 +123,7 @@ export default function ({}) {
                         </div>
                     </Fragment>
                 )}
-                {filteredProducts.length === 0 && <EmptyProductSection containerHeight="auto" />}
+                {filteredProducts.length === 0 && <EmptyProductSection containerHeight="auto" description={pageDesc} />}
             </Container>
         </>
     );
