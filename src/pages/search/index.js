@@ -21,7 +21,7 @@ export default function ({}) {
     const allCategories = [...Object.keys(Constants.knifeHandles), ...Object.keys(Constants.products)].sort();
     const title = selectedCategory || 'Search';
     const description = 'Teflon Bone horn Materials';
-    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Search' }];
 
     useEffect(() => {
         (async () => {
