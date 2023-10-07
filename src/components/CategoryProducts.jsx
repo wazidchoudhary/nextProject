@@ -1,9 +1,12 @@
 import React from 'react';
 import { Card } from './Card/card';
 import { useRouter } from 'next/router';
+import useSelector from '@/hooks/useSelector';
+import { selectCartProduct } from '@/selector/cartSelector';
 export const CategoryProducts = ({ categoryProducts }) => {
     const router = useRouter();
-
+    const cartProduct = useSelector(selectCartProduct) || [];
+    const cartProductIds = cartProduct.map((product) => product.id);
     const handleClick = (id) => {
         router.push(`/products/${id}`);
     };
@@ -27,6 +30,7 @@ export const CategoryProducts = ({ categoryProducts }) => {
                                         image: p.productImage,
                                     }}
                                     handleClick={handleClick}
+                                    addedInCart={cartProductIds.includes(p.productId)}
                                 />
                             ))}
                         </div>

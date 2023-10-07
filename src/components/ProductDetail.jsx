@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { priceHelper } from '@/lib/price-helper';
 import ImageGallery from 'react-image-gallery';
-import store from '@/lib/store/store';
-import useDispatch from '@/hooks/useDispatch';
 import useSelector from '@/hooks/useSelector';
 import { CartHelper } from '@/lib/cart';
 import { toast } from 'react-toastify';
+import { selectCartProduct } from '@/selector/cartSelector';
 
 const ProductDetail = ({ product, categoryProducts }) => {
     const {
@@ -24,7 +23,9 @@ const ProductDetail = ({ product, categoryProducts }) => {
         productQty,
         productSize,
     } = product;
-
+    const cartProduct = useSelector(selectCartProduct) || [];
+    const cartProductIds = cartProduct.map((product) => product.id);
+    const addedInCart = cartProductIds.includes(productId);
     const [descriptionView, setDescriptionView] = useState(true);
     const multiPrice = typeof productPrice !== 'string';
     const setInitialPrice = () => {
