@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google';
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import HeroSlider from '@/components/HeroSlider';
 import Intro from '@/components/Intro';
 import FeatureProducts from '@/components/FeatureProducts';
@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ['latin'] });
 export default function ({ products }) {
     return (
         <>
-            <MetaHead
+            <CommonMeta
                 title="AS International – Manufacturer and wholesale supplier of all type of handicraft Products."
                 description="AS International is a company of the people who are perfect craftsmen and genuine manufacturer of so many products made of buffalo and sheep horn, camel and buffalo bone and also of different variety wood"
             />

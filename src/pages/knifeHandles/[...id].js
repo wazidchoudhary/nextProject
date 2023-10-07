@@ -1,7 +1,7 @@
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import React, { useState } from 'react';
 import StrUtils from '@/utils/str-utils';
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import { Card } from '@/components/Card/card';
 import { EmptyProductSection } from '@/components/EmptyProductSection';
 import { useRouter } from 'next/router';
@@ -10,10 +10,14 @@ import ProductSchema from '@/seo/ProductSchema';
 import { FilterSection } from '@/components/FilterSection';
 import { Filters } from '@/utils/sort-filter';
 import Container from '@/components/Layout/Container';
+import useSelector from '@/hooks/useSelector';
+import { selectCartProduct } from '@/selector/cartSelector';
 
 export default function ({ products, category, url }) {
     const [search, setSearch] = useState('');
     const [sorting, setSorting] = useState('');
+    const cartProduct = useSelector(selectCartProduct) || [];
+    const cartProductIds = cartProduct.map((product) => product.id);
     const [layout, setLayout] = useState('grid');
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
@@ -24,7 +28,7 @@ export default function ({ products, category, url }) {
 
     return (
         <>
-            <MetaHead title={title} description={description} />
+            <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             {products.map((p) => (
                 <ProductSchema
@@ -61,6 +65,7 @@ export default function ({ products, category, url }) {
                                     router.push(`/products/${id}`);
                                 }}
                                 layout={layout}
+                                addedInCart={cartProductIds.includes(p.productId)}
                             />
                         ))}
                     </div>

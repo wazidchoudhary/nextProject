@@ -1,4 +1,4 @@
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import ProductDetail from '@/components/ProductDetail';
 import { CategoryProducts } from '@/components/CategoryProducts';
@@ -10,7 +10,7 @@ export default function (props) {
 
     return (
         <>
-            <MetaHead title={props.product.productName} description={props.product.productCategory} />
+            <CommonMeta title={props.product.productName} description={props.product.productCategory} />
             <ProductSchema
                 product={{
                     id: productId,

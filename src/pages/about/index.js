@@ -1,10 +1,10 @@
 import React from 'react';
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import Image from 'next/image';
 export default function () {
     return (
         <>
-            <MetaHead title="About Us - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PROFILE" />
+            <CommonMeta title="About Us - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PROFILE" />
             <main className="contact_area section-padding pt--40">
                 <div className="container-lg pt-5">
                     <div className="section-title" style={{ backgroundColor: '#f6f6f6', padding: '50px' }}>

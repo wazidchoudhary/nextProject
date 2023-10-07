@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import { useRouter } from 'next/router';
 import { Card } from '@/components/Card/card';
 import BreadCrumb from '@/seo/BreadCrumb';
@@ -22,7 +22,7 @@ export default ({ products }) => {
 
     return (
         <>
-            <MetaHead title={title} description={description} />
+            <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             {products.map((p) => (
                 <ProductSchema

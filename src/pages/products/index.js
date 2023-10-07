@@ -5,7 +5,7 @@ import { FirebaseHelper } from '@/lib/firebase-helpers';
 import styles from './Product.module.css';
 
 import HeroSlider from '@/components/HeroSlider';
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import { Card } from '@/components/Card/card';
 import { useRouter } from 'next/router';
 import { FilterSection } from '../../components/FilterSection';
@@ -33,7 +33,7 @@ export default function ({ products }) {
 
     return (
         <>
-            <MetaHead title={title} description={description} />
+            <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             {products.map((p) => (
                 <ProductSchema

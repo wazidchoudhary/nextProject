@@ -1,9 +1,9 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import { Card } from './Card/card';
-import { FirebaseHelper } from '@/lib/firebase-helpers';
 import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
+
 const FeatureProducts = ({ products }) => {
     const router = useRouter();
     const cartProduct = useSelector(selectCartProduct) || [];

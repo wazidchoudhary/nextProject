@@ -1,5 +1,5 @@
 import { FirebaseHelper } from '@/lib/firebase-helpers';
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import BreadCrumb from '@/seo/BreadCrumb';
 import Container from '@/components/Layout/Container';
 import { Fragment, useEffect, useState } from 'react';
@@ -76,7 +76,7 @@ export default function ({}) {
 
     return (
         <>
-            <MetaHead title={title} description={description} />
+            <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             <Container>
                 <div className="row">

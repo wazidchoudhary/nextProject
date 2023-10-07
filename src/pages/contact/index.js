@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import MetaHead from '@/seo/MetaHead';
+import CommonMeta from '@/seo/MetaHead';
 import { useRouter } from 'next/router';
 import BreadCrumb from '@/seo/BreadCrumb';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
@@ -37,7 +37,7 @@ export default function () {
 
     return (
         <>
-            <MetaHead title={title} description={description} />
+            <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             <main className="contact_area section-padding pt--60">
                 <div className="container">
