@@ -39,4 +39,9 @@ export class CartHelper {
         store.dispatch({ cart: updatedCart });
         localStorage.setItem('asInternationalCart', JSON.stringify(updatedCart));
     }
+
+    static emptyCart() {
+        store.dispatch({ cart: [] });
+        localStorage.setItem('asInternationalCart', JSON.stringify([])); 
+    }
 }

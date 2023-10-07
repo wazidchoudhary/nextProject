@@ -206,16 +206,6 @@ const Header = () => {
                     <i className="ion-android-close" />
                 </div>
                 <div className="off-canvas-inner">
-                    {/* search box start */}
-                    <div className="search-box offcanvas">
-                        <form>
-                            <input type="text" placeholder="Search Here" />
-                            <button className="search-btn">
-                                <i className="ion-ios-search-strong" />
-                            </button>
-                        </form>
-                    </div>
-
                     <MobileNav knifeHandles={knifeHandles} createDynamicMenuForMobile={createDynamicMenuForMobile} products={products} />
                 </div>
             </aside>
