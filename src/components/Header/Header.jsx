@@ -3,12 +3,12 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { knifeHandles, products } from '@/constants/navbar';
 import StrUtils from '@/utils/str-utils';
-
-import Cart from './Cart';
+import Cart from '../Cart';
 import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
+import MobileNav from './MobileNav';
+
 const Header = () => {
-    // const cartData = useSelector('cart');
     const [mobileMenu, setMobileMenu] = useState('');
     const cart = useSelector(selectCartProduct) || [];
     const isEmptyCart = cart.length === 0;
@@ -216,42 +216,7 @@ const Header = () => {
                         </form>
                     </div>
 
-                    {/* search box end */}
-                    {/* mobile menu start */}
-                    <div className="mobile-navigation">
-                        <nav className="off-canvas-nav">
-                            <ul className="mobile-menu">
-                                <li className="menu-item-has-children flex">
-                                    <Link className="menu-bold" href="/">
-                                        Home
-                                    </Link>
-                                </li>
-                                <li className="menu-item-has-children">
-                                    <Link className="menu-bold" href={'/knifeHandles'}>
-                                        Knife Handles
-                                    </Link>
-                                    <ul className="sub-menu">{createDynamicMenuForMobile(knifeHandles, 'knifeHandles')}</ul>
-                                </li>
-                                <li className="menu-item-has-children">
-                                    <Link className="menu-bold" href={'/products'}>
-                                        More Products
-                                    </Link>
-                                    <ul className="sub-menu">{createDynamicMenuForMobile(products, 'moreProducts')}</ul>
-                                </li>
-                                <li>
-                                    <Link className="menu-bold" href="/about">
-                                        About Us
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link className="menu-bold" href="/contact">
-                                        Contact Us
-                                    </Link>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    {/* [mobile menu end */}
+                    <MobileNav knifeHandles={knifeHandles} createDynamicMenuForMobile={createDynamicMenuForMobile} products={products} />
                 </div>
             </aside>
         </>
