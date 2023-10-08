@@ -34,6 +34,11 @@ const MobileNav = ({ knifeHandles, createDynamicMenuForMobile, products }) => {
                                 Contact Us
                             </Link>
                         </li>
+                        <li>
+                            <Link className="menu-bold" href="/checkout">
+                                Checkout
+                            </Link>
+                        </li>
                     </ul>
                 </nav>
             </div>

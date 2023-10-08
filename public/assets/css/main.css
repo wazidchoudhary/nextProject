@@ -27676,17 +27676,13 @@ ul.mobile-menu.currency-menu li:hover>a {
   text-transform: uppercase;
   color: #fff;
   background-color: #24bbdb;
-  background-color: #24bbdb;
+
   -webkit-transition: .4s;
   -o-transition: .4s;
   transition: .4s;
 }
 
-.place-order:hover {
-  background: #b85e5e;
-  border-color: #b85e5e;
-  color: #fff;
-}
+
 
 /*=====  End of 14. Checkout  ======*/
 .checkout-area.checkout-area-padding {

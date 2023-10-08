@@ -2,18 +2,18 @@ import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
 import { CartHelper } from '@/lib/cart';
 import BreadCrumb from '@/seo/BreadCrumb';
-import React from 'react';
-import products from '../products';
+import React, { Fragment } from 'react';
 import store from '@/lib/store/store';
+import { useRouter } from 'next/router';
 
 export default function () {
     const cartProducts = useSelector(selectCartProduct) || [];
+    const router = useRouter()
+    const title = 'Cart';
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
     const totalPrice = cartProducts.reduce((previousValue, currentValue) => {
         return previousValue + (currentValue.qty * currentValue.price);
     }, 0);
-    const title = 'Cart';
-    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
-
     const manageQuantity = (id,cal) =>{
       const index = cartProducts.findIndex((prod) => prod.id == id);
         if (index != -1) {
@@ -35,7 +35,7 @@ export default function () {
                                     <table className="table">
                                         <thead>
                                             <tr>
-                                                <th className="pro-remove" />
+                                                <th className="pro-remove d-none d-md-flex">remove</th>
                                                 <th className="pro-thumbnail">Image</th>
                                                 <th className="pro-title">Product</th>
                                                 <th className="pro-price">Price</th>
@@ -46,18 +46,20 @@ export default function () {
                                         <tbody>
                                             {cartProducts.map((product, j) => {
                                                 return (
-                                                    <tr key={j}>
-                                                        <td className="pro-remove" style={{cursor:'pointer'}} onClick={()=>CartHelper.removeFromCart(product.id)}>
-                                                            
-                                                                <i className="far fa-trash-alt" />
-                                                           
+                                                    <Fragment>
+                                                    <tr key={j} >
+                                                        <td className="pro-remove d-none d-sm-table-cell" style={{cursor:'pointer'}} onClick={()=>CartHelper.removeFromCart(product.id)}>
+                                                                <i className="far fa-trash-alt" />        
                                                         </td>
+                                                        <td className="pro-title d-block d-sm-none"><span className='d-inline'>{product.name}</span><span className='d-inline float-end' onClick={()=>CartHelper.removeFromCart(product.id)}><i className="far fa-trash-alt" /></span></td>
                                                         <td className="pro-thumbnail">
-                                                            <img src={product.image} alt="Product" />
+                                                            <img src={product.image} style={{width:'150px', height:'150px', objectFit:'cover'}} alt="Product" />
                                                         </td>
-                                                        <td className="pro-title">{product.name}</td>
+                                                        <td className="pro-title d-none d-sm-table-cell">{product.name}</td>
                                                         <td className="pro-price">
-                                                            <span>${product.price}</span>
+                                                            <span className='d-inline d-sm-none'>Price</span>
+                                                            <span className='d-inline float-end float-sm-end'>${product.price}</span>
+
                                                         </td>
                                                         <td className="pro-quantity">
                                                             <div style={{marginRight:'auto', marginLeft: '50px',width: '100px'}} >
@@ -88,9 +90,13 @@ export default function () {
                                                             </div>
                                                         </td>
                                                         <td className="pro-subtotal">
-                                                            <span>${product.price}</span>
+                                                            <span className='d-inline d-md-none'>SubTotal</span>
+                                                            <span className='d-inline float-end float-sm-none'>${product.price*product.qty}</span>
                                                         </td>
                                                     </tr>
+                                                    <tr class="spacer d-sm-table-row d-sm-none" style={{padding: "10px 0",border:'none',background:'none'}}><td colspan="6"></td></tr>
+
+                                                    </Fragment>
                                                 );
                                             })}
                                         </tbody>
@@ -114,18 +120,15 @@ export default function () {
                                         <p>
                                             Sub Total <span className="text-primary">${totalPrice}</span>
                                         </p>
-                                        <p>
-                                            Shipping Cost <span className="text-primary">$00.00</span>
+                                        <p className='text-primary'>
+                                          Shipping cost to be paid at the time of order confirmation
                                         </p>
                                         <h2>
                                             Grand Total <span className="text-primary">${totalPrice}</span>
                                         </h2>
                                     </div>
                                     <div className="cart-summary-button" style={{ marginBottom: '10px' }}>
-                                        <a href="checkout.html" className="checkout-btn c-btn">
-                                            Checkout
-                                        </a>
-                                        <button className="update-btn c-btn">Update Cart</button>
+                                        <button onClick={()=>router.push('/checkout')} className="checkout-btn c-btn">Checkout</button>
                                     </div>
                                 </div>
                             </div>

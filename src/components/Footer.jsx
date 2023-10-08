@@ -52,14 +52,15 @@ const Footer = () => {
                                             Delivery
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link href="/contact">Contact us</Link>
-                                    </li>
+                                    
                                     <li>
                                         <Link href="/about">About Us</Link>
                                     </li>
                                     <li>
-                                        <Link href="/#intro">Who We Are</Link>
+                                        <Link href="/privacyPolicy">Privacy & Policy</Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/termsConditions">Refund & Return Policy</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -73,6 +74,9 @@ const Footer = () => {
                                     </li>
                                     <li>
                                         <Link href="/checkout">Checkout</Link>
+                                    </li>
+                                    <li>
+                                        <Link href="/contact">Contact us</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -98,17 +102,17 @@ const Footer = () => {
                         <div className="col-md-6">
                             <ul className="footer-list--inline">
                                 <li>
-                                    <Link href="/policy">Privacy & Policy</Link>
+                                    <Link href="/privacyPolicy">Privacy & Policy</Link>
                                 </li>
                                 <li>
                                     <Link href="/termsConditions">Term &amp; Conditions</Link>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <Link href="/affiliate">Affiliate</Link>
                                 </li>
                                 <li>
                                     <Link href="/help">Help</Link>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                     </div>

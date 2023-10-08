@@ -103,8 +103,10 @@
 }
 
 .custom-footer {
-    background-color: #e6e6e6;
+    background-color: #0f0f0f;
 }
+
+
 
 .list-button {
     width: 250px;
@@ -113,8 +115,17 @@
 
 .footer-title {
     font-weight: 700 !important;
+    color: white;
 }
 
 .footer-list {
     font-weight: 600 !important;
+    color: #cfcfcf;
+}
+
+.single-footer p{
+    color: #cfcfcf;
+}
+.copyright {
+    color: #cfcfcf;
 }
