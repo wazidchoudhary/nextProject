@@ -12,7 +12,6 @@ export default class Observer {
             callback,
             key: Symbol(),
             unsubscribe: function () {
-                console.log(this.key);
                 that.#unsubscribe(this.key);
             },
         };

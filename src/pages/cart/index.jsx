@@ -69,7 +69,7 @@ export default function () {
                       {/* Product Row */}
 
                       {/* Discount Row  */}
-                      <tr>
+                      {/* <tr>
                         <td colSpan={6} className="actions">
                           <div className="coupon-block">
                             <div className="coupon-text">
@@ -85,7 +85,7 @@ export default function () {
                             <input type="hidden" id="_wpnonce" name="_wpnonce" defaultValue="05741b501f" /><input type="hidden" name="_wp_http_referer" defaultValue="/petmark/cart/" />
                           </div>
                         </td>
-                      </tr>
+                      </tr> */}
                     </tbody>
                   </table>
                 </div>
