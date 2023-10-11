@@ -12,6 +12,7 @@ import 'public/assets/css/main.css';
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/custom.css';
+import { Accordian } from '@/components/accordian/Accordian';
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
@@ -29,6 +30,7 @@ export default function App({ Component, pageProps }) {
                 <Component {...pageProps} />
                 <Analytics />
                 <ToastContainer theme="dark" position="bottom-right" />
+                <Accordian />
                 <Footer />
             </div>
         </>

@@ -21,3 +21,5 @@ export const products = {
     'WOODEN CUTLERY': [],
     'HORN AND BONE BUTTON': [],
 };
+
+export const allProducts = { ...knifeHandles, ...products };
