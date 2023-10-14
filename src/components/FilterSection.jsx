@@ -20,7 +20,7 @@ export const FilterSection = ({ data }) => {
                         </a>
                     </div>
                     <input
-                        className="form-control d-inline search-box"
+                        className="form-control w-100 d-inline search-box"
                         value={search}
                         type="text"
                         placeholder="Search by Name, Category, Sub-Category"
@@ -29,9 +29,8 @@ export const FilterSection = ({ data }) => {
                 </div>
 
                 <div className="col-lg-6 col-sm-6 mt-sm-0 mt-3">
-                    <div className="sorting-selection float-right">
-                        <span className='d-none d-md-inline'>Sort By:</span>
-                        <select id="input-sort" onChange={sorting} className="form-control sort-select" style={{ width: '85%' }}>
+                        <p className='d-none d-md-inline'>Sort By:</p>
+                        <select id="input-sort" onChange={sorting} className="form-control w-100" >
                             <option value="" selected="selected">
                                 Default Sorting
                             </option>
@@ -40,7 +39,7 @@ export const FilterSection = ({ data }) => {
                             <option value="lowToHigh">Sort By:Price (Low &gt; High)</option>
                             <option value="highToLow">Sort By:Price (High &gt; Low)</option>
                         </select>
-                    </div>
+                    
                 </div>
             </div>
         </div>
