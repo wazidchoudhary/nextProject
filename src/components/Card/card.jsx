@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { priceHelper } from '@/lib/price-helper';
 import { CartHelper } from '@/lib/cart';
+import Link from 'next/link';
 
 export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedInCart }) => {
     const { id, category, subCategory, name, priceOld, priceNew, image, description, color = '' } = content;
@@ -63,7 +64,7 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
                         <h3 className="post-title ellipsis-1">{name}</h3>
                         <div className="description-header">
                             <h5 className="description-tag text--bold">
-                                <a>{category}</a>
+                                <Link href={`/products/${category}`} className='ellipsis-1'>{category}</Link>
                             </h5>
                         </div>
 

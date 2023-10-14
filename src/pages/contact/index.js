@@ -75,7 +75,7 @@ export default function () {
                                         </div>
                                         <div className="contact-info-text">
                                             <p>
-                                                <span>Phone:</span> (+91) 9990510321{' '}
+                                                <span>Phone:</span> (+91) 9990510321,{' '}78385 00700
                                             </p>
                                         </div>
                                     </div>

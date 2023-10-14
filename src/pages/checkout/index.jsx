@@ -25,7 +25,7 @@ export default function () {
         city:'',
         state:'',
         zipCode: '',
-        orderNotes: '',
+        orderNote: '',
         addressLine1:'',
         addressLine2:'',
         mobile:'',
@@ -33,7 +33,6 @@ export default function () {
     });
 
     const handleSubmit = (e) => {
-        e.preventDefault();
         if (shippingData.name === '') {
             toast.error('Please enter your name');
             return;
@@ -44,7 +43,7 @@ export default function () {
         }
         // FirebaseHelper.sendMessage(shippingData);
         setShippingData({
-            name: '',
+        name: '',
         companyName:'',
         email: '',
         city:'',
@@ -86,15 +85,15 @@ export default function () {
                                             <p>If you have shopped with us before, please enter your details in the boxes below. </p>
                                             <div className="form-group">
                                                 <label htmlFor="quick-user">Email *</label>
-                                                <input type="text" placeholder id="quick-user" />
+                                                <input type="text" onChange={(e) => setShippingData((s) => ({ ...s, email: e.target.value }))} required placeholder id="quick-user" />
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="quick-pass">Mobile No *</label>
-                                                <input type="text" placeholder id="quick-pass" />
+                                                <input type="text" onChange={(e) => setShippingData((s) => ({ ...s, mobile: e.target.value }))} required placeholder id="quick-pass" />
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="quick-pass">Order Id *</label>
-                                                <input type="text" placeholder id="quick-pass" />
+                                                <input type="text" onChange={(e) => setShippingData((s) => ({ ...s, orderId: e.target.value }))} required placeholder id="quick-pass" />
                                             </div>
                                             <div className="form-group">
                                                 <div className="d-flex align-items-center">
@@ -119,12 +118,12 @@ export default function () {
                                         <div className="row">
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>Full Name*</label>
-                                                <input type="text" placeholder="Full Name" />
+                                                <input onChange={(e) => setShippingData((s) => ({ ...s, name: e.target.value }))} type="text" required placeholder="Full Name" />
                                             </div>
                                           
                                             <div className="col-12 mb--20">
                                                 <label>Company Name</label>
-                                                <input type="text" placeholder="Company Name" />
+                                                <input onChange={(e) => setShippingData((s) => ({ ...s, companyName: e.target.value }))} type="text" required placeholder="Company Name" />
                                             </div>
                                             <div className="col-12 col-12 mb--20">
                                                 <label>Country*</label>
@@ -138,35 +137,35 @@ export default function () {
                                             </div>
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>Email Address*</label>
-                                                <input type="email" placeholder="Email Address" />
+                                                <input onChange={(e) => setShippingData((s) => ({ ...s, email: e.target.value }))} type="email" placeholder="Email Address" />
                                             </div>
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>Phone no*</label>
-                                                <input type="text" placeholder="Phone number" />
+                                                <input onChange={(e) => setShippingData((s) => ({ ...s, mobile: e.target.value }))} type="text" required placeholder="Phone number" />
                                             </div>
                                             <div className="col-12 mb--20">
                                                 <label>Address*</label>
-                                                <input type="text" placeholder="Address line 1" />
-                                                <input type="text" placeholder="Address line 2" />
+                                                <input type="text" onChange={(e) => setShippingData((s) => ({ ...s, addressLine1: e.target.value }))} required placeholder="Address line 1" />
+                                                <input type="text" onChange={(e) => setShippingData((s) => ({ ...s, addressLine2: e.target.value }))} required placeholder="Address line 2" />
                                             </div>
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>Town/City*</label>
-                                                <input type="text" placeholder="Town/City" />
+                                                <input onChange={(e) => setShippingData((s) => ({ ...s, city: e.target.value }))} type="text" required placeholder="Town/City" />
                                             </div>
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>State*</label>
-                                                <input type="text" placeholder="State" />
+                                                <input onChange={(e) => setShippingData((s) => ({ ...s, state: e.target.value }))} type="text" required placeholder="State" />
                                             </div>
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>Zip Code*</label>
-                                                <input type="text" placeholder="Zip Code" />
+                                                <input onChange={(e) => setShippingData((s) => ({ ...s, zipCode: e.target.value }))} type="text" required placeholder="Zip Code" />
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="order-note-block mt--30">
                                         <label htmlFor="order-note">Order notes</label>
-                                        <textarea id="order-note" cols={30} rows={10} className="order-note" placeholder="Notes about your order, e.g. special notes for delivery." defaultValue={''} />
+                                        <textarea onChange={(e) => setShippingData((s) => ({ ...s, orderNote: e.target.value }))} id="order-note" cols={30} rows={10} className="order-note" placeholder="Notes about your order, e.g. special notes for delivery." defaultValue={''} />
                                     </div>
                                 </div>
                                 <div className="col-lg-5">

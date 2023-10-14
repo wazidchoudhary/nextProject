@@ -6,12 +6,16 @@ import EmptyCart from './EmptyCart';
 
 const Cart = ({ cart }) => {
     const isCartEmpty = cart.length === 0;
-
+    const totalPrice = cart.reduce((previousValue, currentValue) => {
+        return previousValue + (currentValue.qty * currentValue.price);
+    }, 0);
     useEffect(() => {
         const fetchedFromLocalStorage = localStorage.getItem('asInternationalCart');
         store.dispatch({
             cart: fetchedFromLocalStorage ? JSON.parse(fetchedFromLocalStorage) : [],
         });
+
+        
     }, []);
 
     return (
@@ -49,13 +53,13 @@ const Cart = ({ cart }) => {
                     <div className="inner-single-block">
                         <ul className="cart-details">
                             <li>
-                                <span className="label">Subtotal</span> <span className="value">$500.00</span>
+                                <span className="label">Subtotal</span> <span className="value">${totalPrice}</span>
                             </li>
                             <li>
-                                <span className="label">Shipping</span> <span className="value">€7.00</span>
+                            <p className="text-primary">Shipping cost to be paid at the time of order confirmation</p>
                             </li>
                             <li>
-                                <span className="label">Total</span> <span className="value">€507.00</span>
+                                <span className="label">Total</span> <span className="value">${totalPrice}</span>
                             </li>
                         </ul>
                     </div>
