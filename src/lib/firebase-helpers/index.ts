@@ -1,6 +1,6 @@
 import { app, database } from './firebase-config';
 import { getDatabase, get, child, ref, push, orderByChild, equalTo, query, limitToFirst } from 'firebase/database';
-import { Product } from '@/types/types';
+import { Order, Product } from '@/types/types';
 import { ResponseParser } from '../response-parser';
 import { toast } from 'react-toastify';
 
@@ -53,6 +53,14 @@ export class FirebaseHelper {
         toast.success('Message sent Successfully.');
         // console.log('get message', messages);
     }
+
+    static async createOrder(orderData:Order){
+        const reference = ref(database,'orders')
+        push(reference,orderData).then(()=>{
+            toast.success('Ordered Successfully')
+        })
+    }
+    
     static async syncAllMessages(): Promise<Product[]> {
         const snapshot = await sync('messages');
         const product = ResponseParser.parse<Product>(snapshot);

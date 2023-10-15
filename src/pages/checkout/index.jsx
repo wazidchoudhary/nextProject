@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import cart from '../cart';
 import { useRouter } from 'next/router';
 import { check } from 'prettier';
+import Paypal from '@/components/Paypal';
 
 export default function () {
     const title = 'Checkout';
@@ -17,7 +18,8 @@ export default function () {
     const total = cartProducts.reduce((previousValue, currentValue) => {
         return previousValue + currentValue.qty * currentValue.price;
     }, 0);
-
+    console.log(cartProducts)
+    const [placeOrder,setPlaceOrder] = useState(false)
     const [shippingData, setShippingData] = useState({
         name: '',
         companyName:'',
@@ -216,16 +218,22 @@ export default function () {
                                                         </span>
                                                     </label>
                                                 </div>
+                                                <Paypal amount={total} products={cartProducts} placeOrder={placeOrder} shippingDetail={shippingData}>
                                                 <button
                                                     className="place-order w-100"
                                                     style={{
                                                         backgroundColor: checkbox ? '#24bbdb' : 'gray',
                                                         color: 'white',
+                                                        display:`${placeOrder ? 'none' : 'block'}`
                                                     }}
                                                     disabled={!checkbox}
+
+                                                    onClick={()=>setPlaceOrder(true)}
                                                 >
                                                     Place order
                                                 </button>
+                                                </Paypal>
+                                                
                                             </div>
                                         </div>
                                     </div>
