@@ -30,7 +30,7 @@ export class CartHelper {
             store.dispatch({ cart: [...cartData, cartProduct] });
             localStorage.setItem('asInternationalCart', JSON.stringify([...cartData, cartProduct]));
         }
-        
+
         toast.success('Product added successfully ');
     }
 
@@ -43,6 +43,6 @@ export class CartHelper {
 
     static emptyCart() {
         store.dispatch({ cart: [] });
-        localStorage.setItem('asInternationalCart', JSON.stringify([])); 
+        localStorage.setItem('asInternationalCart', JSON.stringify([]));
     }
 }

@@ -3,7 +3,7 @@ const { default: Observer } = require('./observer');
 const store = new Observer({
     cart: [],
     allProducts: [],
-    wishList: []
+    wishList: [],
 });
 
 export default store;

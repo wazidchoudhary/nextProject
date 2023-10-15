@@ -164,7 +164,7 @@ const Header = () => {
                         <div className="col-md-8 col-5 text-end">
                             <div className="mobile-header-btns header-top-widget ">
                                 <ul className="header-links">
-                                <li key={'cartAreakey'} className="sin-link">
+                                    <li key={'cartAreakey'} className="sin-link">
                                         <Link href="/search" className="search-trigger link-icon">
                                             <i className="ion-ios-search-strong" />
                                         </Link>

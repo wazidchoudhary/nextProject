@@ -29,17 +29,16 @@ export const FilterSection = ({ data }) => {
                 </div>
 
                 <div className="col-lg-6 col-sm-6 mt-sm-0 mt-3">
-                        <p className='d-none d-md-inline'>Sort By:</p>
-                        <select id="input-sort" onChange={sorting} className="form-control w-100" >
-                            <option value="" selected="selected">
-                                Default Sorting
-                            </option>
-                            <option value="Az">Sort By:Name (A - Z)</option>
-                            <option value="Za">Sort By:Name (Z - A)</option>
-                            <option value="lowToHigh">Sort By:Price (Low &gt; High)</option>
-                            <option value="highToLow">Sort By:Price (High &gt; Low)</option>
-                        </select>
-                    
+                    <p className="d-none d-md-inline">Sort By:</p>
+                    <select id="input-sort" onChange={sorting} className="form-control w-100">
+                        <option value="" selected="selected">
+                            Default Sorting
+                        </option>
+                        <option value="Az">Sort By:Name (A - Z)</option>
+                        <option value="Za">Sort By:Name (Z - A)</option>
+                        <option value="lowToHigh">Sort By:Price (Low &gt; High)</option>
+                        <option value="highToLow">Sort By:Price (High &gt; Low)</option>
+                    </select>
                 </div>
             </div>
         </div>

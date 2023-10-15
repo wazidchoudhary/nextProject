@@ -22,10 +22,9 @@ export default function () {
                             <h5>Return Eligibility Criteria</h5>
                             <p>
                                 For an item to qualify for a return:
-                               <br />
+                                <br />
                                 - The item should remain untouched, and in the pristine condition, you got it. <br />
                                 - The original packaging should be intact. <br />
-                               
                                 However, specific goods are non-returnable. This includes perishable items such as edibles, plants, and newspapers. We strictly do not entertain returns for products
                                 that fall under intimate wear, sanitary utilities, potentially dangerous materials, or any combustible liquid or gas.
                             </p>

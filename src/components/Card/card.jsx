@@ -36,11 +36,15 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
     };
 
     const getButtons = () => {
-        
         return typeof priceNew === 'string' ? (
-            <button onClick={handleAddToCart} disabled={addedInCart} type="button" className={`cardButton ${layoutClass[5]}`} style={addedInCart ? {backgroundColor:'#24bbdb',color:'white'} : {}}>
-                {addedInCart ? <><i className='fa fa-check'></i> ADDED</>: 'ADD TO CART'}
-               
+            <button onClick={handleAddToCart} disabled={addedInCart} type="button" className={`cardButton ${layoutClass[5]}`} style={addedInCart ? { backgroundColor: '#24bbdb', color: 'white' } : {}}>
+                {addedInCart ? (
+                    <>
+                        <i className="fa fa-check"></i> ADDED
+                    </>
+                ) : (
+                    'ADD TO CART'
+                )}
             </button>
         ) : (
             <button onClick={() => handleClick(id)} type="button" className={`cardButton ${layoutClass[5]}`}>
@@ -64,7 +68,9 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
                         <h3 className="post-title ellipsis-1">{name}</h3>
                         <div className="description-header">
                             <h5 className="description-tag text--bold">
-                                <Link href={`/products/${category}`} className='ellipsis-1'>{category}</Link>
+                                <Link href={`/products/${category}`} className="ellipsis-1">
+                                    {category}
+                                </Link>
                             </h5>
                         </div>
 

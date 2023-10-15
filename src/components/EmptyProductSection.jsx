@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 
-export const EmptyProductSection = ({ width = 300, height = 300, description = 'No Product Found In This Category', fontSize = '35px', containerHeight = '80vh',children }) => {
+export const EmptyProductSection = ({ width = 300, height = 300, description = 'No Product Found In This Category', fontSize = '35px', containerHeight = '80vh', children }) => {
     return (
         <>
             <section className="mt-5 display-center" style={{ minHeight: containerHeight }}>

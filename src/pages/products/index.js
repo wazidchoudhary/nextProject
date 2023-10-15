@@ -21,15 +21,14 @@ export default function ({ products }) {
     const [search, setSearch] = useState('');
     const [sorting, setSorting] = useState('');
     const [layout, setLayout] = useState('grid');
-    const cartProduct = useSelector(selectCartProduct) || []
-    const cartProductIds = cartProduct.map((product)=>product.id)
+    const cartProduct = useSelector(selectCartProduct) || [];
+    const cartProductIds = cartProduct.map((product) => product.id);
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
     const title = 'Products';
     const description = 'Teflon Bone horn Materials';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
-
 
     return (
         <>

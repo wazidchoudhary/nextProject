@@ -12,9 +12,11 @@ export default function () {
     const cartProducts = useSelector(selectCartProduct) || [];
     const title = 'Cart';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
-    const totalPrice = cartProducts.reduce((previousValue, currentValue) => {
-        return previousValue + currentValue.qty * currentValue.price;
-    }, 0);
+    const totalPrice = cartProducts
+        .reduce((previousValue, currentValue) => {
+            return previousValue + currentValue.qty * currentValue.price;
+        }, 0)
+        .toFixed(2);
     const manageQuantity = (id, cal) => {
         const index = cartProducts.findIndex((prod) => prod.id == id);
         if (index != -1) {

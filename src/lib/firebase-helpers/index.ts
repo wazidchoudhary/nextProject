@@ -3,6 +3,7 @@ import { getDatabase, get, child, ref, push, orderByChild, equalTo, query, limit
 import { Order, Product } from '@/types/types';
 import { ResponseParser } from '../response-parser';
 import { toast } from 'react-toastify';
+import { error } from 'jquery';
 
 const dbRef = ref(database);
 const sync = (entity: string) => get(child(dbRef, `${entity}/`));
@@ -54,13 +55,22 @@ export class FirebaseHelper {
         // console.log('get message', messages);
     }
 
-    static async createOrder(orderData:Order){
-        const reference = ref(database,'orders')
-        push(reference,orderData).then(()=>{
-            toast.success('Ordered Successfully')
-        })
+    static async createOrder(orderData: Order) {
+        const reference = ref(database, 'orders');
+        const orderStatus = push(reference, orderData)
+            .then(() => {
+                toast.success('Ordered Successfully');
+                return true;
+            })
+            .catch((error) => {
+                toast.error('Error ocurred during saving data');
+                console.log(error);
+                return false;
+            });
+        console.log(orderStatus);
+        return orderStatus;
     }
-    
+
     static async syncAllMessages(): Promise<Product[]> {
         const snapshot = await sync('messages');
         const product = ResponseParser.parse<Product>(snapshot);

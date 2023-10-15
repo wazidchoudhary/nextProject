@@ -8,6 +8,9 @@ import cart from '../cart';
 import { useRouter } from 'next/router';
 import { check } from 'prettier';
 import Paypal from '@/components/Paypal';
+import { toast } from 'react-toastify';
+import Modal from '@/components/Modal';
+import OrderDetail from '@/components/OrderDetail';
 
 export default function () {
     const title = 'Checkout';
@@ -15,51 +18,71 @@ export default function () {
     const router = useRouter();
     const cartProducts = useSelector(selectCartProduct) || [];
     const [checkbox, setCheckbox] = useState(false);
-    const total = cartProducts.reduce((previousValue, currentValue) => {
-        return previousValue + currentValue.qty * currentValue.price;
-    }, 0);
-    console.log(cartProducts)
-    const [placeOrder,setPlaceOrder] = useState(false)
+    const [isModalVisible,setModalVisible] = useState(false);
+    const total = cartProducts
+        .reduce((previousValue, currentValue) => {
+            return previousValue + currentValue.qty * currentValue.price;
+        }, 0)
+        .toFixed(2);
+    console.log(cartProducts);
+    const [placeOrder, setPlaceOrder] = useState(false);
     const [shippingData, setShippingData] = useState({
         name: '',
-        companyName:'',
+        companyName: '',
         email: '',
-        city:'',
-        state:'',
+        mobile: '',
+        addressLine1: '',
+        addressLine2: '',
+        country: '',
+        city: '',
+        state: '',
         zipCode: '',
         orderNote: '',
-        addressLine1:'',
-        addressLine2:'',
-        mobile:'',
-        country:''
     });
 
-    const handleSubmit = (e) => {
-        if (shippingData.name === '') {
-            toast.error('Please enter your name');
-            return;
+    const handlePlaceOrder = (e) => {
+        const key = Object.keys(shippingData);
+        for (let i = 0; i < key.length; i++) {
+            if (key[i] != 'companyName' && key[i] != 'addressLine2' && key[i] != 'orderNote') {
+                if (shippingData[key[i]] === '') {
+                    toast.error(`Please enter your ${key[i]}`);
+                    return;
+                }
+            }
         }
-        if (shippingData.email === '') {
-            toast.error('Please enter your Email');
-            return;
-        }
-        // FirebaseHelper.sendMessage(shippingData);
-        setShippingData({
-        name: '',
-        companyName:'',
-        email: '',
-        city:'',
-        state:'',
-        zipCode: '',
-        orderNotes: '',
-        addressLine1:'',
-        addressLine2:'',
-        mobile:'',
-        country:''
-        });
+
+        setPlaceOrder(true);
     };
 
+    const handleOrderPlaced = ({purchase_units}) => {
+        setShippingData({
+            name: '',
+            companyName: '',
+            email: '',
+            city: '',
+            state: '',
+            zipCode: '',
+            orderNotes: '',
+            addressLine1: '',
+            addressLine2: '',
+            mobile: '',
+            country: '',
+        });
+        setPlaceOrder(false);
+        const purchasedProducts = purchase_units[0].description.split(',');
+        const newCart = products.filter((product) => !purchasedProducts.includes(product.id));
+        store.dispatch({ cart: [...newCart] });
+        router.push('/orderDetail/')
 
+    };
+
+    const handleOrderFailed = ({ payer, id, purchase_units, update_time }) =>{
+        setPlaceOrder(false);
+        const purchasedProducts = purchase_units[0].description.split(',');
+        const newCart = products.filter((product) => !purchasedProducts.includes(product.id));
+        store.dispatch({ cart: [...newCart] });
+        setModalVisible(true);
+    }
 
     return (
         <>
@@ -69,19 +92,16 @@ export default function () {
             <Container>
                 <div className="row">
                     <div className="col-12">
-                        {/* Checkout Form s*/}
                         <div className="checkout-form">
                             <div className="row row-40">
                                 <div className="col-12">
                                     <h1 className="quick-title">CHECKOUT</h1>
-                                    {/* Slide Down Trigger  */}
                                     <div className="checkout-quick-box">
                                         <p>
                                             <i className="far fa-sticky-note" />
                                             Returning customer? <p className="slide-trigger">Click here</p>
                                         </p>
                                     </div>
-                                    {/* Slide Down Blox ==> Login Box  */}
                                     <div className="checkout-slidedown-box" id="quick-login" style={{ display: 'none' }}>
                                         <div className="quick-login-form">
                                             <p>If you have shopped with us before, please enter your details in the boxes below. </p>
@@ -122,21 +142,12 @@ export default function () {
                                                 <label>Full Name*</label>
                                                 <input onChange={(e) => setShippingData((s) => ({ ...s, name: e.target.value }))} type="text" required placeholder="Full Name" />
                                             </div>
-                                          
+
                                             <div className="col-12 mb--20">
                                                 <label>Company Name</label>
                                                 <input onChange={(e) => setShippingData((s) => ({ ...s, companyName: e.target.value }))} type="text" required placeholder="Company Name" />
                                             </div>
-                                            <div className="col-12 col-12 mb--20">
-                                                <label>Country*</label>
-                                                <select className="nice-select">
-                                                    {countries.map((country, i) => (
-                                                        <option key={i} value={country}>
-                                                            {country}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
+
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>Email Address*</label>
                                                 <input onChange={(e) => setShippingData((s) => ({ ...s, email: e.target.value }))} type="email" placeholder="Email Address" />
@@ -149,6 +160,16 @@ export default function () {
                                                 <label>Address*</label>
                                                 <input type="text" onChange={(e) => setShippingData((s) => ({ ...s, addressLine1: e.target.value }))} required placeholder="Address line 1" />
                                                 <input type="text" onChange={(e) => setShippingData((s) => ({ ...s, addressLine2: e.target.value }))} required placeholder="Address line 2" />
+                                            </div>
+                                            <div className="col-12 col-12 mb--20">
+                                                <label>Country*</label>
+                                                <select onChange={(e) => setShippingData((s) => ({ ...s, country: e.target.value }))} className="nice-select">
+                                                    {countries.map((country, i) => (
+                                                        <option key={i} value={country}>
+                                                            {country}
+                                                        </option>
+                                                    ))}
+                                                </select>
                                             </div>
                                             <div className="col-md-6 col-12 mb--20">
                                                 <label>Town/City*</label>
@@ -167,7 +188,15 @@ export default function () {
 
                                     <div className="order-note-block mt--30">
                                         <label htmlFor="order-note">Order notes</label>
-                                        <textarea onChange={(e) => setShippingData((s) => ({ ...s, orderNote: e.target.value }))} id="order-note" cols={30} rows={10} className="order-note" placeholder="Notes about your order, e.g. special notes for delivery." defaultValue={''} />
+                                        <textarea
+                                            onChange={(e) => setShippingData((s) => ({ ...s, orderNote: e.target.value }))}
+                                            id="order-note"
+                                            cols={30}
+                                            rows={10}
+                                            className="order-note"
+                                            placeholder="Notes about your order, e.g. special notes for delivery."
+                                            defaultValue={''}
+                                        />
                                     </div>
                                 </div>
                                 <div className="col-lg-5">
@@ -218,22 +247,20 @@ export default function () {
                                                         </span>
                                                     </label>
                                                 </div>
-                                                <Paypal amount={total} products={cartProducts} placeOrder={placeOrder} shippingDetail={shippingData}>
-                                                <button
-                                                    className="place-order w-100"
-                                                    style={{
-                                                        backgroundColor: checkbox ? '#24bbdb' : 'gray',
-                                                        color: 'white',
-                                                        display:`${placeOrder ? 'none' : 'block'}`
-                                                    }}
-                                                    disabled={!checkbox}
-
-                                                    onClick={()=>setPlaceOrder(true)}
-                                                >
-                                                    Place order
-                                                </button>
+                                                <Paypal amount={total} products={cartProducts} placeOrder={placeOrder} shippingDetail={shippingData} handleOrderPlaced={handleOrderPlaced} handleOrderFailed={handleOrderFailed}>
+                                                    <button
+                                                        className="place-order w-100"
+                                                        style={{
+                                                            backgroundColor: checkbox ? '#24bbdb' : 'gray',
+                                                            color: 'white',
+                                                            display: `${placeOrder ? 'none' : 'block'}`,
+                                                        }}
+                                                        disabled={!checkbox}
+                                                        onClick={handlePlaceOrder}
+                                                    >
+                                                        Place order
+                                                    </button>
                                                 </Paypal>
-                                                
                                             </div>
                                         </div>
                                     </div>

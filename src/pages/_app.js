@@ -12,14 +12,15 @@ import 'public/assets/css/main.css';
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/custom.css';
+import '@/styles/orderDetail.css';
 
 export default function App({ Component, pageProps }) {
     const router = useRouter();
     useEffect(() => {
         router.events.on('routeChangeStart', () => {
-           // close mobile sidebar
+            // close mobile sidebar
         });
-    }, [])
+    }, []);
     return (
         <>
             <NextNProgress color="#24bbdb" height={5} />

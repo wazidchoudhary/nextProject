@@ -29,32 +29,32 @@ export interface Product {
 }
 
 export interface Customer {
-    name:string;
-    companyName?:string;
-    country:string;
-    email:string;
-    mobile:string;
-    addressLine1:string;
-    addressLine2:string;
-    city:string;
-    state:string;
-    zipCode:string;
-    orderNote?:string;
+    name: string;
+    companyName?: string;
+    country: string;
+    email: string;
+    mobile: string;
+    addressLine1: string;
+    addressLine2: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    orderNote?: string;
 }
 
-export interface Cart{
-    name:string;
-    id:number;
-    dimension?:string;
-    color?:string;
-    image:string;
-    price:number;
-    qty:number;
+export interface Cart {
+    name: string;
+    id: number;
+    dimension?: string;
+    color?: string;
+    image: string;
+    price: number;
+    qty: number;
 }
 
-export interface Order{
-    orderId : string;
-    shippingDetail : Customer;
-    products:Array<Cart>;
-    
+export interface Order {
+    orderId: string;
+    shippingDetail: Customer;
+    products: Array<Cart>;
+    time:string;
 }

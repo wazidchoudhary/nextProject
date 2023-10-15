@@ -52,7 +52,7 @@ const Footer = () => {
                                             Delivery
                                         </Link>
                                     </li>
-                                    
+
                                     <li>
                                         <Link href="/about">About Us</Link>
                                     </li>

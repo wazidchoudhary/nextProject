@@ -6,16 +6,16 @@ import EmptyCart from './EmptyCart';
 
 const Cart = ({ cart }) => {
     const isCartEmpty = cart.length === 0;
-    const totalPrice = cart.reduce((previousValue, currentValue) => {
-        return previousValue + (currentValue.qty * currentValue.price);
-    }, 0);
+    const totalPrice = cart
+        .reduce((previousValue, currentValue) => {
+            return previousValue + currentValue.qty * currentValue.price;
+        }, 0)
+        .toFixed(2);
     useEffect(() => {
         const fetchedFromLocalStorage = localStorage.getItem('asInternationalCart');
         store.dispatch({
             cart: fetchedFromLocalStorage ? JSON.parse(fetchedFromLocalStorage) : [],
         });
-
-        
     }, []);
 
     return (
@@ -56,7 +56,7 @@ const Cart = ({ cart }) => {
                                 <span className="label">Subtotal</span> <span className="value">${totalPrice}</span>
                             </li>
                             <li>
-                            <p className="text-primary">Shipping cost to be paid at the time of order confirmation</p>
+                                <p className="text-primary">Shipping cost to be paid at the time of order confirmation</p>
                             </li>
                             <li>
                                 <span className="label">Total</span> <span className="value">${totalPrice}</span>
