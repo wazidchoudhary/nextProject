@@ -36,7 +36,7 @@ export class CartHelper {
 
     static removeFromCart(id: string) {
         const cart = store.get('cart');
-        const updatedCart = cart.filter((prod: any) => prod.id !== id);
+        const updatedCart = cart.filter((prod: any) => prod.id != id);
         store.dispatch({ cart: updatedCart });
         localStorage.setItem('asInternationalCart', JSON.stringify(updatedCart));
     }

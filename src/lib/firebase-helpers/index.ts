@@ -58,17 +58,22 @@ export class FirebaseHelper {
     static async createOrder(orderData: Order) {
         const reference = ref(database, 'orders');
         const orderStatus = push(reference, orderData)
-            .then(() => {
+            .then((data) => {
                 toast.success('Ordered Successfully');
-                return true;
+                return {status:true,key:data.key};
             })
             .catch((error) => {
                 toast.error('Error ocurred during saving data');
                 console.log(error);
-                return false;
+                return {status:false};
             });
         console.log(orderStatus);
         return orderStatus;
+    }
+
+    static async fetchOrderDetail(id:string){
+        const snapshot = await get(child(dbRef, `orders/${id}`));
+        return snapshot.val();
     }
 
     static async syncAllMessages(): Promise<Product[]> {

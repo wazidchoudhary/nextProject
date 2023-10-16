@@ -20,7 +20,7 @@ const Cart = ({ cart }) => {
 
     return (
         <div className="sin-dropdown cart-dropdown">
-            <div className="inner-single-block" style={{ maxHeight: '500px', overflowY: 'scroll' }}>
+            <div className="inner-single-block" style={{ maxHeight: '450px', overflowY: 'scroll' }}>
                 {isCartEmpty && <EmptyCart />}
                 {cart.map((cart, i) => {
                     return (

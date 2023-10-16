@@ -1,8 +1,7 @@
+import React from 'react';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import { optionsDevelopment } from '@/lib/paypal/paypal.config';
-import store from '@/lib/store/store';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
 const Paypal = ({ amount, products, placeOrder, shippingDetail, children, handleOrderPlaced = () => {} },handleOrderFailed = () =>{}) => {
@@ -36,8 +35,9 @@ const Paypal = ({ amount, products, placeOrder, shippingDetail, children, handle
                 time:update_time
             };
             const orderCompleted = await FirebaseHelper.createOrder(Order);
-            if (orderCompleted) {
-                handleOrderPlaced({purchase_units});
+            
+            if (orderCompleted.status) {
+                handleOrderPlaced(purchase_units,orderCompleted.key);
             }else{
                 handleOrderFailed({ payer, id, purchase_units, update_time })
             }
