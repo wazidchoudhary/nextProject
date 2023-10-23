@@ -41,7 +41,7 @@ export default function () {
     const handlePlaceOrder = (e) => {
         const key = Object.keys(shippingData);
         for (let i = 0; i < key.length; i++) {
-            if (key[i] != 'companyName' && key[i] != 'addressLine2' && key[i] != 'orderNote') {
+            if (key[i] !== 'companyName' && key[i] !== 'addressLine2' && key[i] !== 'orderNote') {
                 if (shippingData[key[i]] === '') {
                     toast.error(`Please enter your ${key[i]}`);
                     return;
