@@ -12,7 +12,7 @@ import store from '@/lib/store/store';
 import { CartHelper } from '@/lib/cart';
 
 
-export default function () {
+export default function ({PAYPAL_KEY}) {
     const title = 'Checkout';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
     const router = useRouter();
@@ -268,6 +268,7 @@ export default function () {
                                         shippingDetail={shippingData}
                                         handleOrderPlaced={handleOrderPlaced}
                                         handleOrderFailed={handleOrderFailed}
+                                        paypalKey={PAYPAL_KEY}
                                     >
                                         <button
                                             className="place-order w-100"
@@ -291,3 +292,13 @@ export default function () {
         </>
     );
 }
+
+
+export const getStaticProps = async (context) => {
+    const paypalKey = process.env.PAYPAL
+    return {
+        props: {
+            PAYPAL_KEY : paypalKey,
+        },
+    };
+};

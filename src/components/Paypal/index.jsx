@@ -1,10 +1,15 @@
 import React from 'react';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
-import { optionsDevelopment } from '@/lib/paypal/paypal.config';
+
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { toast } from 'react-toastify';
 
-const Paypal = ({ amount, products, placeOrder, shippingDetail, children, handleOrderPlaced = () => {} },handleOrderFailed = () =>{}) => {
+const Paypal = ({ amount, products, placeOrder, shippingDetail, children, handleOrderPlaced = () => {} ,handleOrderFailed = () =>{},paypalKey}) => {
+   
+    const options = {
+        'client-id': paypalKey,
+    };
+   
     const createOrder = (data, action) => {
         return action.order
             .create({
@@ -52,7 +57,7 @@ const Paypal = ({ amount, products, placeOrder, shippingDetail, children, handle
     };
 
     return (
-        <PayPalScriptProvider options={optionsDevelopment}>
+        <PayPalScriptProvider options={options}>
             {children}
             {placeOrder ? <PayPalButtons style={{ layout: 'vertical' }} createOrder={createOrder} onApprove={onApprove} onError={onError} onCancel={onCancel} /> : ''}
         </PayPalScriptProvider>
