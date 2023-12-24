@@ -10,7 +10,7 @@ const Footer = () => {
                         <div className="col-lg-5 col-md-6 col-sm-12">
                             <div className="single-footer pb--50">
                                 <div className="brand-footer mb--30">
-                                    <Image title='Footer Logo' src="/assets/image/logo2.webp" alt="As International Logo" width={350} height={100} />
+                                    <Image title='Footer Logo' src="/assets/image/Logo2.webp" alt="As International Logo" width={350} height={100} />
                                 </div>
                                 <p>
                                     Where masterful artistry in Bone, Horn, Acrylic, and Wood blends seamlessly with dependable quality, unmatched customer service, and the allure of unique
