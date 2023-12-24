@@ -66,7 +66,7 @@ const Header = () => {
                             <div className="main-navigation">
                                 <ul className="main-menu @@menuColor">
                                     <li key={'logoHeader'}>
-                                        <Image title='Header logo' src={'/assets/image/logo2.webp'} alt={`logo`} height={45} width={150} style={{ objectFit: 'contain' }} />
+                                        <Image title='Header logo' src={'/assets/image/Logo2.webp'} alt={`logo`} height={45} width={150} style={{ objectFit: 'contain' }} />
                                     </li>
                                     <li className="menu-item has-children">
                                         <Link title='Home' href="/">Home</Link>
