@@ -62,7 +62,7 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
                         <div className="hover-content" style={{ height: '100%' }}>
                             {showHoverImage()}
                         </div>
-                        {getDiscountPercent()}
+                        {/* {getDiscountPercent()} */}
                     </div>
                     <div className={`description-block  ${layoutClass[1]}`}>
                         <h3 className="post-title ellipsis-1">{name}</h3>
