@@ -6,6 +6,7 @@ import useSelector from '@/hooks/useSelector';
 import { CartHelper } from '@/lib/cart';
 import { toast } from 'react-toastify';
 import { selectCartProduct } from '@/selector/cartSelector';
+import { useRouter } from 'next/router';
 
 const ProductDetail = ({ product, categoryProducts }) => {
     const {
@@ -32,6 +33,8 @@ const ProductDetail = ({ product, categoryProducts }) => {
         const initialPrice = multiPrice ? priceHelper.lowestHighestPrice(productPrice).lowest : productPrice;
         return Number(initialPrice);
     };
+
+    const router = useRouter()
 
     const [prod, setProd] = useState({
         quantity: 1,
@@ -223,16 +226,16 @@ const ProductDetail = ({ product, categoryProducts }) => {
                             <b>Categories</b> : {productCategory}, {productSubCategory}
                         </div>
                         <div className="policy-block">
-                            <ul className="policy-list">
-                                <li>
+                            {/* <ul className="policy-list" style={{cursor:'pointer'}}>
+                                <li >
                                     <div className="icon"></div>
-                                    <p>Delivery policy (edit with Customer reassurance module)</p>
+                                    <p  onClick={()=>router.push('/termsConditions')}>Delivery policy (Click to read Terms & Conditions)</p>
                                 </li>
                                 <li>
                                     <div className="icon"></div>
-                                    <p>Return policy (edit with Customer reassurance module)</p>
+                                    <p onClick={()=>router.push('/termsConditions')}>Return policy (Click to read Terms & Conditions)</p>
                                 </li>
-                            </ul>
+                            </ul> */}
                         </div>
                     </div>
                 </div>
