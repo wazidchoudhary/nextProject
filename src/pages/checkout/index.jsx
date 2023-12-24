@@ -296,6 +296,7 @@ export default function ({PAYPAL_KEY}) {
 
 export const getStaticProps = async (context) => {
     const paypalKey = process.env.PAYPAL
+    console.log(paypalKey)
     return {
         props: {
             PAYPAL_KEY : paypalKey,
