@@ -24,7 +24,7 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
     const showHoverImage = () => {
         return image2 ? (
             <div className="hover-image" style={{ height: '200px' }}>
-                <Image src={image2} width={140} loading="lazy" alt={name} height={140} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <Image title={name} src={image2} width={140} loading="lazy" alt={name} height={140} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
         ) : (
             ''
@@ -58,7 +58,7 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
             <div className={`col-6 col-md-3 col-lg-3 col-sm-6 mb--30 ${layoutClass[4]}`} style={{ backgroundColor: layoutClass[3] }}>
                 <div className={`product-card ${layoutClass[0]}`} style={{ textAlign: 'left' }} onClick={() => handleClick(id)}>
                     <div className="image" style={{ height: '200px', width: layoutClass[6], border: '1px solid #e3e3e3', backgroundColor: '#f6f6f6' }}>
-                        <Image src={image1} width={140} loading="lazy" height={140} alt={name} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
+                        <Image title={name} src={image1} width={140} loading="lazy" height={140} alt={name} style={{ width: '100%', height: '200px', objectFit: 'cover' }} />
                         <div className="hover-content" style={{ height: '100%' }}>
                             {showHoverImage()}
                         </div>
@@ -68,7 +68,7 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
                         <h3 className="post-title ellipsis-1">{name}</h3>
                         <div className="description-header">
                             <h5 className="description-tag text--bold">
-                                <Link href={`/products/${category}`} className="ellipsis-1">
+                                <Link title={category} href={`/products/${category}`} className="ellipsis-1">
                                     {category}
                                 </Link>
                             </h5>

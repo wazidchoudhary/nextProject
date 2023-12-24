@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { closeSidebar } from '@/lib/navbar-helper';
+
 
 import 'public/assets/css/plugins.min.css';
 import 'public/assets/css/main.css';

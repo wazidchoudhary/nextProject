@@ -6,9 +6,10 @@ export default function () {
         <Fragment>
             <CommonMeta title="Refund & Return Policy - AS INTERNATIONAL" description="AS INTERNATIONAL Refund and Return Policy" />
             <main className="policy_area section-padding pt--40">
+            <h1 className='d-none'>REFUND AND RETURN POLICY</h1>
                 <div className="container-lg pt-5">
                     <div className="section-title" style={{ backgroundColor: '#f6f6f6', padding: '50px' }}>
-                        <Image src="/assets/image/logo.png" alt="Your Company Logo" width={150} height={100} />
+                        <Image src="/assets/image/logo.webp" alt="Your Company Logo" width={150} height={100} />
                         <div className="row mt--30" style={{ textAlign: 'center' }}>
                             <h3 style={{ color: 'black' }}>Return and Refund Policy</h3>
                         </div>

@@ -42,6 +42,7 @@ export default function ({ products, category, url }) {
             {products.length > 0 ? (
                 <Container>
                     <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
+              
                     <div className={`row ${layoutClass}`}>
                         {filterOperation.map((p) => (
                             <Card

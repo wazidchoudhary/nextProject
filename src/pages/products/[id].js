@@ -11,6 +11,7 @@ export default function (props) {
     return (
         <>
             <CommonMeta title={props.product.productName} description={props.product.productCategory} />
+           
             <ProductSchema
                 product={{
                     id: productId,

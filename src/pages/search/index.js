@@ -80,6 +80,7 @@ export default function ({}) {
             <BreadCrumb items={breadCrumbItems} text={title} />
             <Container>
                 <div className="row">
+                <h1 className='d-none'>SEARCH</h1>
                     <div className="col-12 col-md-8">
                         <input type="text" onChange={(e) => setUserInput(e.target.value || '')} className="form-control my-2" placeholder="Search..." />
                     </div>

@@ -8,7 +8,8 @@ export default function () {
             <main className="policy_area section-padding pt--40">
                 <div className="container-lg pt-5">
                     <div className="section-title" style={{ backgroundColor: '#f6f6f6', padding: '50px' }}>
-                        <Image src="/assets/image/logo.png" alt="Your Company Logo" width={150} height={100} />
+                    <h1 className='d-none'>Privacy Policy -  AS INTERNATIONAL</h1>
+                        <Image src="/assets/image/logo.webp" alt="Your Company Logo" width={150} height={100} />
                         <div className="row mt--30" style={{ textAlign: 'center' }}>
                             <h3 style={{ color: 'black' }}>Privacy Policy</h3>
                         </div>

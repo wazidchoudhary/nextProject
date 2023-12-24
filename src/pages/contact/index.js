@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 export default function () {
     const router = useRouter();
     const title = 'Contact Us - AS INTERNATIONAL';
-    const description = 'Contact As International If any enquiry';
-    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
+    const description = 'Contact  As International If any enquiry';
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Contact Us' }];
     const [userData, setUserdata] = useState({
         name: '',
         email: '',
@@ -40,13 +40,14 @@ export default function () {
             <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             <main className="contact_area section-padding pt--60">
+            <h1 className='d-none'>Contact Us</h1>
                 <div className="container">
                     <div className="row mt--60 space-db--30">
                         <div className="col-lg-5 col-md-5 col-12">
                             <div className="contact_adress">
                                 <div className="ct_address">
                                     <h3 className="ct_title">Location &amp; Details</h3>
-                                    <p>It is a long established fact that readewill be distracted by the readable content of a page when looking at ilayout.</p>
+                                    <p>As International.</p>
                                 </div>
                                 <div className="address_wrapper">
                                     <div className="address">

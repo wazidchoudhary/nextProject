@@ -24,6 +24,7 @@ export default ({ products }) => {
         <>
             <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
+       
             {products.map((p) => (
                 <ProductSchema
                     product={{

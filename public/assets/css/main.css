@@ -24885,12 +24885,12 @@ ul.mobile-menu.currency-menu li:hover>a {
   align-items: center;
   color: #292929;
   padding-top: 0px;
-  height: 600px;
+  height: 500px;
 }
 
 @media (min-width: 768px) {
   .hero-slider-2 .hero-content {
-    height: 765px;
+    height: 500px;
     padding-top: 100px;
   }
 }

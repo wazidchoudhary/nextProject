@@ -13,8 +13,8 @@ import { CartHelper } from '@/lib/cart';
 
 
 export default function ({PAYPAL_KEY}) {
-    const title = 'Checkout';
-    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
+    const title = 'Checkout - AS INTERNATIONAL PRODUCT CHECKOUT';
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Checkout' }];
     const router = useRouter();
     const cartProducts = useSelector(selectCartProduct) || [];
     const [checkbox, setCheckbox] = useState(false);

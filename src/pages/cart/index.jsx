@@ -10,8 +10,8 @@ import { EmptyProductSection } from '@/components/EmptyProductSection';
 export default function () {
     const router = useRouter();
     const cartProducts = useSelector(selectCartProduct) || [];
-    const title = 'Cart';
-    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
+    const title = 'Cart - AS INTERNATIONAL PRODUCTS CART';
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Cart' }];
     const totalPrice = cartProducts
         .reduce((previousValue, currentValue) => {
             return previousValue + currentValue.qty * currentValue.price;
@@ -29,6 +29,7 @@ export default function () {
     return (
         <>
             <BreadCrumb items={breadCrumbItems} text={title} />
+            
             {cartProducts.length === 0 ? (
                 <EmptyProductSection height={200} width={200} description="Cart Is Empty" fontSize="25px" containerHeight="auto">
                     <button type="button" onClick={() => router.push('/products')} className="btn btn-primary" style={{ marginTop: '50px' }}>

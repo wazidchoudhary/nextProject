@@ -26,8 +26,8 @@ export default function ({ products }) {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
-    const title = 'Products';
-    const description = 'Teflon Bone horn Materials';
+    const title = 'AS INTERNATIONAL -TEFLON BONE HORN HAND CRAFTS';
+    const description = 'AS INTERNATIONAL Teflon Bone horn hand crafts and material suppliers ';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
 
     return (
@@ -50,6 +50,7 @@ export default function ({ products }) {
 
             <Container>
                 <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
+                
                 <div className={`row ${layoutClass}`}>
                     {filterOperation.map((p) => (
                         <Card

@@ -64,7 +64,7 @@ const Cart = ({ cart }) => {
                         </ul>
                     </div>
                     <div className="inner-single-block">
-                        <Link href="/checkout" className="btn w-100">
+                        <Link title='Checkout' href="/checkout" className="btn w-100">
                             Checkout
                         </Link>
                     </div>

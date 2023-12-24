@@ -11,8 +11,9 @@ export default function ({ products }) {
     return (
         <>
             <CommonMeta
-                title="AS International – Manufacturer and wholesale supplier of all type of handicraft Products."
+                title="AS International – Manufacturer and supplier of handcraft Items."
                 description="AS International is a company of the people who are perfect craftsmen and genuine manufacturer of so many products made of buffalo and sheep horn, camel and buffalo bone and also of different variety wood"
+                keywords=''
             />
             <HeroSlider />
             <Intro />

@@ -7,7 +7,7 @@ export const EmptyProductSection = ({ width = 300, height = 300, description = '
             <section className="mt-5 display-center" style={{ minHeight: containerHeight }}>
                 <div className="container">
                     <div className="section-title mb--55">
-                        <Image src={'/assets/image/no-product.png'} alt="No Product Found" width={width} height={height} />
+                        <Image title='No Product Found' src={'/assets/image/no-product.webp'} alt="No Product Found" width={width} height={height} />
                         <h2 style={{ fontSize: fontSize }}>{description}</h2>
 
                         {children}

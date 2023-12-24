@@ -13,7 +13,8 @@ const Intro = () => {
                                 <h2>Welcome To AS International</h2>
                                 <div className="title-sep">
                                     <Image
-                                        src={'/assets/image/logo.png'}
+                                        title='Intro Logo'
+                                        src={'/assets/image/logo.webp'}
                                         alt={`logo`}
                                         height={100}
                                         width={100}
@@ -42,7 +43,7 @@ const Intro = () => {
                                 />
                             </article>
                             <div className="author-block">
-                                <a>
+                                <a title='As International' href='/home'>
                                     <span className="font-weight-bold text-black text-uppercase">Shakulat Choudhary</span> - CEO
                                 </a>
                             </div>

@@ -19,13 +19,13 @@ const Header = () => {
             return (
                 <li key={menuTitle + i} className="cus-col-25" style={{ border: 'none' }}>
                     <h3 className="menu-title" style={{ fontSize: '14px', fontWeight: '600' }}>
-                        <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`}>{menuTitle}</Link>
+                        <Link title={StrUtils.normalToSnake(menuTitle)} href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`}>{menuTitle}</Link>
                     </h3>
                     <ul className="mega-single-block" style={{ marginBottom: '10px' }}>
                         {prop[menuTitle].map((name, i) => {
                             return (
                                 <li key={name + i}>
-                                    <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}/${StrUtils.normalToSnake(name)}`}>{name}</Link>
+                                    <Link title={StrUtils.normalToSnake(name)} href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}/${StrUtils.normalToSnake(name)}`}>{name}</Link>
                                 </li>
                             );
                         })}
@@ -40,14 +40,14 @@ const Header = () => {
         return keys.map((menuTitle, i) => {
             return (
                 <li key={menuTitle + i} className="menu-item-has-children">
-                    <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`} style={{ fontWeight: '500' }}>
+                    <Link title={StrUtils.normalToSnake(menuTitle)} href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}`} style={{ fontWeight: '500' }}>
                         {menuTitle}
                     </Link>
                     <ul className="sub-menu">
                         {prop[menuTitle].map((name, i) => {
                             return (
                                 <li key={name + 1}>
-                                    <Link href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}/${StrUtils.normalToSnake(name)}`}>{name}</Link>
+                                    <Link title={StrUtils.normalToSnake(name)} href={`/${pageName}/${StrUtils.normalToSnake(menuTitle)}/${StrUtils.normalToSnake(name)}`}>{name}</Link>
                                 </li>
                             );
                         })}
@@ -66,26 +66,26 @@ const Header = () => {
                             <div className="main-navigation">
                                 <ul className="main-menu @@menuColor">
                                     <li key={'logoHeader'}>
-                                        <Image src={'/assets/image/Logo2.png'} alt={`logo`} height={45} width={150} style={{ objectFit: 'contain' }} />
+                                        <Image title='Header logo' src={'/assets/image/logo2.webp'} alt={`logo`} height={45} width={150} style={{ objectFit: 'contain' }} />
                                     </li>
                                     <li className="menu-item has-children">
-                                        <Link href="/">Home</Link>
+                                        <Link title='Home' href="/">Home</Link>
                                     </li>
                                     {/* Shop */}
                                     <li className="menu-item has-children mega-menu">
-                                        <Link href={'/knifeHandles'}>Knife Handles</Link>
+                                        <Link title='Knife Handles' href={'/knifeHandles'}>Knife Handles</Link>
                                         <ul className="sub-menu four-column">{createDynamicMenuForDesktop(knifeHandles, 'knifeHandles')}</ul>
                                     </li>
                                     <li className="menu-item has-children mega-menu">
-                                        <Link href={'/products'}>More Products</Link>
+                                        <Link title='More Products' href={'/products'}>More Products</Link>
                                         <ul className="sub-menu four-column">{createDynamicMenuForDesktop(products, 'moreProducts')}</ul>
                                     </li>
                                     {/* Pages */}
                                     <li className="menu-item has-children">
-                                        <Link href="/about">About Us</Link>
+                                        <Link title='About Us' href="/about">About Us</Link>
                                     </li>
                                     <li className="menu-item has-children">
-                                        <Link href="/contact">Contact Us</Link>
+                                        <Link title='Contact Us' href="/contact">Contact Us</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -99,12 +99,12 @@ const Header = () => {
                             <div className="header-top-widget">
                                 <ul className="header-links">
                                     <li key={'cartAreakey'} className="sin-link">
-                                        <Link href="/search" className="search-trigger link-icon">
+                                        <Link title="search-bar" href="/search" className="search-trigger link-icon">
                                             <i className="ion-ios-search-strong" />
                                         </Link>
                                     </li>
                                     <li key={'bagkey'} className="sin-link">
-                                        <Link href="/cart" className="cart-link link-icon">
+                                        <Link title='Cart' href="/cart" className="cart-link link-icon">
                                             <i className="ion-bag" />
                                             {!isEmptyCart && (
                                                 <span className="position-absolute translate-bottom badge rounded-pill bg-danger" style={{ fontSize: '10px', top: '14px', left: '60%' }}>
@@ -116,7 +116,7 @@ const Header = () => {
                                         <Cart cart={cart} />
                                     </li>
                                     <li key={'languagekey'} className="sin-link">
-                                        <a href="javascript:" className="link-icon hamburgur-icon">
+                                        <a title='hamburgur-icon' href="javascript:" className="link-icon hamburgur-icon">
                                             <i className="ion-navicon" />
                                         </a>
                                         <div className="sin-dropdown option-dropdown">
@@ -124,10 +124,10 @@ const Header = () => {
                                                 <h4 className="option-title">my account</h4>
                                                 <ul className="option-list">
                                                     <li>
-                                                        <Link href="'/cart">Cart</Link>
+                                                        <Link title='Cart' href="'/cart">Cart</Link>
                                                     </li>
                                                     <li>
-                                                        <Link href="/checkout">Checkout</Link>
+                                                        <Link title='Checkout' href="/checkout">Checkout</Link>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -160,17 +160,17 @@ const Header = () => {
             <header className="mobile-header d-lg-none absolute-header" style={{ position: 'sticky' }}>
                 <div className="container">
                     <div className="row align-items-end">
-                        <div className="col-md-4 col-7">{/* <a href="index.html" className="site-brand"></a> */}</div>
+                        <div className="col-md-4 col-7"></div>
                         <div className="col-md-8 col-5 text-end">
                             <div className="mobile-header-btns header-top-widget ">
                                 <ul className="header-links">
                                     <li key={'cartAreakey'} className="sin-link">
-                                        <Link href="/search" className="search-trigger link-icon">
+                                        <Link title='Search' href="/search" className="search-trigger link-icon">
                                             <i className="ion-ios-search-strong" />
                                         </Link>
                                     </li>
                                     <li className="sin-link">
-                                        <Link href="/cart" className="cart-link link-icon">
+                                        <Link title='Cart' href="/cart" className="cart-link link-icon">
                                             <i className="ion-bag" />
                                             {!isEmptyCart && (
                                                 <span className="position-absolute translate-bottom badge rounded-pill bg-danger" style={{ fontSize: '10px', top: '14px', left: '60%' }}>

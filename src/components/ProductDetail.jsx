@@ -63,13 +63,16 @@ const ProductDetail = ({ product, categoryProducts }) => {
                 originalHeight: '400',
                 originalWidth: '100',
                 originalAlt: productName,
+                originalTitle:productName,
+                thumbnailTitle:productName+' thumbnail',
+                thumbnailAlt:productName+' thumbnail',
                 thumbnailLoading: 'eager',
             });
         });
         return productImage.length > 1 ? (
-            <ImageGallery thumbnailPosition="bottom" items={images} autoPlay={true} />
+            <ImageGallery title={productName} thumbnailPosition="bottom" items={images} autoPlay={true} />
         ) : (
-            <Image src={productImage[0]} width={150} alt={productName} loading="lazy" height={150} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <Image title={productName} src={productImage[0]} width={150} alt={productName} loading="lazy" height={150} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
         );
     };
 

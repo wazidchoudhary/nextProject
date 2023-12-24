@@ -14,6 +14,21 @@ const CommonMeta = ({ title = 'Create Next App', description, image = '/assets/'
         siteName,
         'as international',
         keywords,
+        'Bull Shoe Horn Supplier',
+        'Dyed Stabilized Bone Scales Exporter',
+        'Water Buffalo Horn Scale Manufacturer',
+        'Buffalo Horn Plate Exporter in india',
+        'wooden Knife Handle Manufacturer',
+        'Bone Bridge Pin Blank',
+        'Wooden Comb Manufacturer In India',
+        'Guitar Horn Saddle Supplier',
+        'Bone Pen Blank Exporter',
+        'Bone Hair Pipe Bead Exporter In India',
+        'Drinking Horn and Mug Supplier',
+        'Wooden Cutlery Manufacturer',
+        'Bone Inlay Jewellery Box Supplier',
+        'Bull Horn Cutlery Supplier',
+        'Buffalo Horn Space Manufacturer',
         'cheap bone horn crafts',
         'cheap horn craft items',
         'cheap bone horn craft items',
@@ -24,7 +39,7 @@ const CommonMeta = ({ title = 'Create Next App', description, image = '/assets/'
             <title>{title}</title>
             <meta name="description" content={description} />
             <meta name="viewport" content="width=device-width, initial-scale=1" />
-            <link rel="icon" href="/favicon.ico" />
+            <link title="icon" rel="icon" href="/favicon.ico" />
             <meta name="description" content={description} />
             <meta name="keywords" content={k} />
             {/* Open Graph Meta Tags */}
@@ -34,6 +49,7 @@ const CommonMeta = ({ title = 'Create Next App', description, image = '/assets/'
             <meta property="og:url" content={url} />
             <meta property="og:site_name" content={siteName} />
             <meta property="og:type" content="website" />
+            <meta property="fb:app_id" content="https://www.facebook.com/A.SINTERNATIONAL252?mibextid=ZbWKwL" />
 
             {/* Twitter Meta Tags */}
             <meta name="twitter:title" content={title} />

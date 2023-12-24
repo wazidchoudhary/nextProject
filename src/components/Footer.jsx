@@ -10,7 +10,7 @@ const Footer = () => {
                         <div className="col-lg-5 col-md-6 col-sm-12">
                             <div className="single-footer pb--50">
                                 <div className="brand-footer mb--30">
-                                    <Image src="/assets/image/Logo2.png" alt="As International Logo" width={350} height={100} />
+                                    <Image title='Footer Logo' src="/assets/image/logo2.webp" alt="As International Logo" width={350} height={100} />
                                 </div>
                                 <p>
                                     Where masterful artistry in Bone, Horn, Acrylic, and Wood blends seamlessly with dependable quality, unmatched customer service, and the allure of unique
@@ -18,10 +18,10 @@ const Footer = () => {
                                 </p>
                                 <h3 className="footer-title mb--25 mt--25">Follow Us</h3>
                                 <div className="footer-social rounded-icons text-start">
-                                    <Link href="https://www.facebook.com/A.SINTERNATIONAL252?mibextid=ZbWKwL" target="_blank" className="single-icon">
+                                    <Link title='Facebook Link' href="https://www.facebook.com/A.SINTERNATIONAL252?mibextid=ZbWKwL" target="_blank" className="single-icon">
                                         <i className="fab fa-facebook-f" />
                                     </Link>
-                                    <Link href="https://instagram.com/a.s_international252?utm_source=qr&igshid=MzNlNGNkZWQ4Mg==" className="single-icon" target="_blank">
+                                    <Link title='Instagram Link' href="https://instagram.com/a.s_international252?utm_source=qr&igshid=MzNlNGNkZWQ4Mg==" className="single-icon" target="_blank">
                                         <i className="fab fa-instagram" />
                                     </Link>
                                 </div>
@@ -32,13 +32,13 @@ const Footer = () => {
                                 <h3 className="footer-title  mb--30">Products</h3>
                                 <ul className="footer-list">
                                     <li>
-                                        <Link href="/#featuredProducts">Featured Products</Link>
+                                        <Link title='Featured Product Section' href="/#featuredProducts">Featured Products</Link>
                                     </li>
                                     <li>
-                                        <Link href="/knifeHandles">Knife Handles</Link>
+                                        <Link title='Knife Handles Footer Link' href="/knifeHandles">Knife Handles</Link>
                                     </li>
                                     <li>
-                                        <Link href="/products">More Products</Link>
+                                        <Link title='Products Footer Link' href="/products">More Products</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -48,19 +48,19 @@ const Footer = () => {
                                 <h3 className="footer-title  mb--30">Our Company</h3>
                                 <ul className="footer-list">
                                     <li>
-                                        <Link href="https://www.fedex.com/en-us/tracking.html" target="_blank">
+                                        <Link title='Delivery' href="https://www.fedex.com/en-us/tracking.html" target="_blank">
                                             Delivery
                                         </Link>
                                     </li>
 
                                     <li>
-                                        <Link href="/about">About Us</Link>
+                                        <Link title='About Us Footer Link' href="/about">About Us</Link>
                                     </li>
                                     <li>
-                                        <Link href="/privacyPolicy">Privacy & Policy</Link>
+                                        <Link title='Privacy & Policy' href="/privacyPolicy">Privacy & Policy</Link>
                                     </li>
                                     <li>
-                                        <Link href="/termsConditions">Refund & Return Policy</Link>
+                                        <Link title='Terms & Conditions' href="/termsConditions">Refund & Return Policy</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -70,13 +70,13 @@ const Footer = () => {
                                 <h3 className="footer-title  mb--30">Your Account</h3>
                                 <ul className="footer-list">
                                     <li>
-                                        <Link href="/cart">Cart</Link>
+                                        <Link title='Cart Footer Link' href="/cart">Cart</Link>
                                     </li>
                                     <li>
-                                        <Link href="/checkout">Checkout</Link>
+                                        <Link title='Checkout Footer Link' href="/checkout">Checkout</Link>
                                     </li>
                                     <li>
-                                        <Link href="/contact">Contact us</Link>
+                                        <Link title='Contact' href="/contact">Contact us</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -92,7 +92,7 @@ const Footer = () => {
                                 <p>
                                     © AS International, 2023. Made with
                                     <i className="fa fa-heart text-danger ms-1" /> by{' '}
-                                    <Link href="https://krapton.com" target="_blank" className="author">
+                                    <Link title='Krapton Inc' href="https://krapton.com" target="_blank" className="author">
                                         Krapton Inc
                                     </Link>
                                     .
@@ -102,10 +102,10 @@ const Footer = () => {
                         <div className="col-md-6">
                             <ul className="footer-list--inline">
                                 <li>
-                                    <Link href="/privacyPolicy">Privacy & Policy</Link>
+                                    <Link title='Privacy Policy' href="/privacyPolicy">Privacy & Policy</Link>
                                 </li>
                                 <li>
-                                    <Link href="/termsConditions">Term &amp; Conditions</Link>
+                                    <Link title='Terms Conditions' href="/termsConditions">Term &amp; Conditions</Link>
                                 </li>
                                 {/* <li>
                                     <Link href="/affiliate">Affiliate</Link>
