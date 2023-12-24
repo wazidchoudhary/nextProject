@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import 'public/assets/css/plugins.min.css';
 import 'public/assets/css/main.css';
@@ -29,6 +29,7 @@ export default function App({ Component, pageProps }) {
                 <Header />
                 <Component {...pageProps} />
                 <Analytics />
+                <SpeedInsights />
                 <ToastContainer theme="dark" position="bottom-right" />
                 <Footer />
             </div>
