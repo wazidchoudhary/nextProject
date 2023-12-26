@@ -17,7 +17,6 @@ export const ProductSchema = ({ product }) => {
             name: 'AS International',
         },
         category: product.category,
-        price: product.oldPrice,
         offers: {
             '@type': 'Offer',
             url: url,
@@ -27,6 +26,8 @@ export const ProductSchema = ({ product }) => {
                 '@type': 'Organization',
                 name: 'AS International',
             },
+            itemCondition: 'http://schema.org/NewCondition',
+            availability: 'http://schema.org/InStock',
         },
     };
 
