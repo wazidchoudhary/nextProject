@@ -17,7 +17,7 @@ export default ({ products }) => {
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
     const title = 'Knife Handles for Custom and Replacement Needs - AS INTERNATIONAL';
-    const description = 'Explore our exclusive collection of high-quality knife handles at [Your Brand Name]. From elegant wooden handles to durable composite options, find the perfect match for your custom or replacement needs. Each handle is crafted with precision and designed for comfort and longevity. Upgrade your knife with our wide variety of styles and materials. Fast shipping and satisfaction guaranteed!';
+    const description = '"Discover top-quality knife handles at AS INTERNATIONAL ideal for both custom creations and replacements. Our range includes stylish wooden, sturdy composite, and ergonomic designs, ensuring durability and comfort. Perfect for culinary enthusiasts and professionals alike. Shop now for your ideal handle!';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Knife Handles' }];
 
     return (

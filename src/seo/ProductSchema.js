@@ -16,11 +16,11 @@ export const ProductSchema = ({ product }) => {
     const router = useRouter();
     const url = router.asPath;
     const schema = {
-        '@context': 'http://schema.org/',
+        '@context': 'https://schema.org/',
         '@type': 'Product',
         name: product.name,
         image: [product.image],
-        description: product.description,
+        description: product.description.replace(/<\/?[^>]+(>|$)/g, ""),
         sku: `as${product.id}`,
         mpn: `${product.id}`,
         brand: {
@@ -37,8 +37,8 @@ export const ProductSchema = ({ product }) => {
                 '@type': 'Organization',
                 name: 'AS International',
             },
-            itemCondition: 'http://schema.org/NewCondition',
-            availability: 'http://schema.org/InStock',
+            itemCondition: 'https://schema.org/NewCondition',
+            availability: 'https://schema.org/InStock',
         },
     };
 
