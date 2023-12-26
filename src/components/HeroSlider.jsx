@@ -31,7 +31,7 @@ const HeroSlider = () => {
               slider.classList.add('fade-in');
             }, 500); // This should match the transition time
       
-          }, 3000);// Change every 3 seconds
+          }, 5000);// Change every 3 seconds
     
         return () => clearInterval(intervalId); // Clean up interval on component unmount
       }, [index, backgroundImages]);
