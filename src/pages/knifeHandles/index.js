@@ -16,9 +16,9 @@ export default ({ products }) => {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
-    const title = 'KNIFE HANDLES';
-    const description = 'Knife Handles Category Product';
-    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
+    const title = 'Knife Handles for Custom and Replacement Needs - AS INTERNATIONAL';
+    const description = 'Explore our exclusive collection of high-quality knife handles at [Your Brand Name]. From elegant wooden handles to durable composite options, find the perfect match for your custom or replacement needs. Each handle is crafted with precision and designed for comfort and longevity. Upgrade your knife with our wide variety of styles and materials. Fast shipping and satisfaction guaranteed!';
+    const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Knife Handles' }];
 
     return (
         <>
@@ -34,7 +34,7 @@ export default ({ products }) => {
                         description: p.productDescription,
                         category: p.productCategory,
                         price: p.productPrice,
-                        oldPrice: p.productOldPrice,
+                        
                     }}
                 />
             ))}

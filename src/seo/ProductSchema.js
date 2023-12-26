@@ -1,7 +1,18 @@
+import { priceHelper } from '@/lib/price-helper';
 import { useRouter } from 'next/router';
 import React from 'react';
 
 export const ProductSchema = ({ product }) => {
+
+
+    const multiPrice = typeof product.price !== 'string';
+    console.log(multiPrice)
+    const setInitialPrice = () => {
+        const initialPrice = multiPrice && product.price != 0 ? priceHelper.lowestHighestPrice(product.price).lowest : product.price;
+        console.log(initialPrice)
+        return Number(initialPrice); 
+       
+    };
     const router = useRouter();
     const url = router.asPath;
     const schema = {
@@ -21,7 +32,7 @@ export const ProductSchema = ({ product }) => {
             '@type': 'Offer',
             url: url,
             priceCurrency: 'USD',
-            price: product.price,
+            price: setInitialPrice(),
             seller: {
                 '@type': 'Organization',
                 name: 'AS International',
