@@ -59,7 +59,9 @@ const CommonMeta = ({ title = 'Create Next App', description, image = '/assets/'
             {/* Twitter Meta Tags */}
             <meta name="twitter:title" content={title} />
             <meta name="twitter:description" content={description} />
-            <meta name="twitter:image" content={image} />
+            <meta name="twitter:image" content={'/assets/image/logo.webp'} />
+            <meta name='twitter:site' content='@ChodharyTanish' />
+            <meta name="twitter:url" content="https://twitter.com/ChodharyTanish" />
             <meta name="twitter:card" content="summary_large_image" />
         </Head>
     );
