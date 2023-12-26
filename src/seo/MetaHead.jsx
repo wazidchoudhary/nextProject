@@ -44,6 +44,8 @@ const CommonMeta = ({ title = 'Create Next App', description, image = '/assets/'
             <meta name="viewport" content="width=device-width, initial-scale=1" />
             <link title="icon" rel="icon" href="/favicon.ico" />
             <meta name="description" content={description} />
+            <meta name="robots" content="index, follow"></meta>
+            <meta name="author" content="AS INTERNATIONAL"></meta>
             <meta name="keywords" content={k} />
             {/* Open Graph Meta Tags */}
             <meta property="og:title" content={title} />
