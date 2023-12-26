@@ -50,7 +50,7 @@ const CommonMeta = ({ title = 'Create Next App', description, image = '/assets/'
             {/* Open Graph Meta Tags */}
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
-            <meta property="og:image" content={image} />
+            <meta property="og:image" content={'/assets/image/logo.webp'} />
             <meta property="og:url" content={url} />
             <meta property="og:site_name" content={siteName} />
             <meta property="og:type" content="website" />
