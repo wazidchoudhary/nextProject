@@ -23,7 +23,7 @@ export default function ({ products }) {
             />
             <CommonMeta
                 title="AS International – Manufacturer and supplier of handcraft Items."
-                description="Discover exquisite bone horn and teflon crafts at AS International. Renowned for quality, our craftsmen shape natural materials into timeless handcrafted goods like Bull Shoe Horns, Bone Inlay Boxes, and Guitar Horn Saddles. Embrace elegance and tradition with our sustainable and affordable range"
+                description="Bull Shoe Horn Supplier, Dyed Stabilized Bone Scales Exporter, Water Buffalo Horn Scale Manufacturer, Wooden Knife Handle Manufacturer, Bone Pen Blank Exporter, Bone Hair Pipe Bead Exporter In India, Drinking Horn and Mug Supplier, Wooden Cutlery Manufacturer, Teflon Bone Folder Manufacturer."
                 keywords=''
             />
             <HeroSlider />

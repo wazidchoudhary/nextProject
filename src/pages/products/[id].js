@@ -7,10 +7,11 @@ import BreadCrumb from '@/seo/BreadCrumb';
 export default function (props) {
     const { productId, productImage, productName, productDescription, productCategory, productPrice, productOldPrice } = props.product;
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/products', name: 'Products' }, { name: productName }];
+    const descString = productDescription.replace(/<\/?[^>]+(>|$)/g, "")
 
     return (
         <>
-            <CommonMeta title={props.product.productName} description={props.product.productCategory} />
+            <CommonMeta title={`${props.product.productName.split('-')[0]} - AS INTERNATIONAL`} description={descString.substring(0, 315)} />
            
             <ProductSchema
                 product={{
