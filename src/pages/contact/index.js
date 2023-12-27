@@ -66,7 +66,7 @@ export default function () {
                                         </div>
                                         <div className="contact-info-text">
                                             <p>
-                                                <span>Email: </span> support@example.com{' '}
+                                                <span>Email: </span> info@teflonbonehorncrafts.com,{' '}asinternational252@gmail.com
                                             </p>
                                         </div>
                                     </div>
