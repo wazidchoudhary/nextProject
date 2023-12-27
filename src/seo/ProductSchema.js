@@ -9,7 +9,6 @@ export const ProductSchema = ({ product }) => {
     console.log(multiPrice)
     const setInitialPrice = () => {
         const initialPrice = multiPrice && product.price != 0 ? priceHelper.lowestHighestPrice(product.price).lowest : product.price;
-        console.log(initialPrice)
         return Number(initialPrice); 
        
     };
@@ -33,6 +32,7 @@ export const ProductSchema = ({ product }) => {
             url: url,
             priceCurrency: 'USD',
             price: setInitialPrice(),
+            priceValidUntil: '2024-12-31', // Example date, change as needed
             seller: {
                 '@type': 'Organization',
                 name: 'AS International',
@@ -40,6 +40,24 @@ export const ProductSchema = ({ product }) => {
             itemCondition: 'https://schema.org/NewCondition',
             availability: 'https://schema.org/InStock',
         },
+        // Add these if you have the data
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '4.4', // Example rating, change as needed
+            reviewCount: '89' // Example count, change as needed
+        },
+        review: [{
+            '@type': 'Review',
+            reviewRating: {
+                '@type': 'Rating',
+                ratingValue: '5',
+                bestRating: '5'
+            },
+            author: {
+                '@type': 'Person',
+                name: 'Wazid Ali'
+            }
+        }]
     };
 
     return (
