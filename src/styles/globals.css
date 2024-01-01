@@ -219,3 +219,68 @@ th {
     color: white !important;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; /* Black outline for visibility */
 }
+
+
+.auth-container {
+    max-width: 1000px;
+    width: auto;
+    min-width: 375px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.login-form-admin {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group-admin {
+    margin-bottom: 15px;
+}
+
+.input-group-admin label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group-admin input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-button-admin {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.login-button-admin:hover {
+    background-color: #0056b3;
+}
+
+.options-admin {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.options-admin a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.options-admin a:hover {
+    text-decoration: underline;
+}
