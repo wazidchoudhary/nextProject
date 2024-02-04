@@ -8,6 +8,10 @@ import { FilterSection } from '@/components/FilterSection';
 import { Filters } from '@/utils/sort-filter';
 import ProductSchema from '@/seo/ProductSchema';
 import Container from '@/components/Layout/Container';
+import { webPageSchema } from '@/seo/webPageSchema';
+import { organizationSchema } from '@/seo/organizationSchema';
+import { siteNavigationElement } from '@/seo/siteNavigationElement';
+import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 
 export default ({ products }) => {
     const [search, setSearch] = useState('');
@@ -16,6 +20,8 @@ export default ({ products }) => {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
+    const HOST = 'http://www.teflonbonehorncrafts.com/';
+    const url = 'http://www.teflonbonehorncrafts.com/knifeHandles'
     const title = 'Knife Handles for Custom and Replacement Needs - AS INTERNATIONAL';
     const description = '"Discover top-quality knife handles at AS INTERNATIONAL ideal for both custom creations and replacements. Bone Bridge Pin Blank, Wooden Comb Manufacturer In India,Guitar Horn Saddle Supplier, Teflon Bone Folder Manufacturer, Bull Horn Cutlery Supplier, Buffalo Horn Space Manufacturer';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Knife Handles' }];
@@ -38,6 +44,10 @@ export default ({ products }) => {
                     }}
                 />
             ))}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, url) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadCrumbSchema(title, HOST, url) }} />
             <Container>
                 <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />
                 <div className={`row ${layoutClass}`}>

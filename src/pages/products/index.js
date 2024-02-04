@@ -16,6 +16,10 @@ import Container from '@/components/Layout/Container';
 import store from '@/lib/store/store';
 import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
+import { webPageSchema } from '@/seo/webPageSchema';
+import { organizationSchema } from '@/seo/organizationSchema';
+import { siteNavigationElement } from '@/seo/siteNavigationElement';
+import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 
 export default function ({ products }) {
     const [search, setSearch] = useState('');
@@ -26,12 +30,18 @@ export default function ({ products }) {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
-    const title = 'AS INTERNATIONAL - TEFLON BONE HORN HAND CRAFTS';
+    const HOST = 'http://www.teflonbonehorncrafts.com/';
+    const url = 'http://www.teflonbonehorncrafts.com/products'
+    const title = 'AS INTERNATIONAL - TEFLON BONE HORN HAND CRAFTS - PRODUCTS';
     const description = 'Bull Shoe Horn Supplier, Dyed Stabilized Bone Scales Exporter, Water Buffalo Horn Scale Manufacturer, Wooden Knife Handle Manufacturer, Bone Pen Blank Exporter, Bone Hair Pipe Bead Exporter In India, Drinking Horn and Mug Supplier, Wooden Cutlery Manufacturer, Teflon Bone Folder Manufacturer.';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
 
     return (
         <>
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, url) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadCrumbSchema(title, HOST, url) }} />
             <CommonMeta title={title} description={description} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             {products.map((p) => (

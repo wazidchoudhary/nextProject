@@ -12,6 +12,10 @@ import { Filters } from '@/utils/sort-filter';
 import Container from '@/components/Layout/Container';
 import useSelector from '@/hooks/useSelector';
 import { selectCartProduct } from '@/selector/cartSelector';
+import { webPageSchema } from '@/seo/webPageSchema';
+import { organizationSchema } from '@/seo/organizationSchema';
+import { siteNavigationElement } from '@/seo/siteNavigationElement';
+import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 
 export default function ({ products, category, url }) {
     const [search, setSearch] = useState('');
@@ -22,6 +26,9 @@ export default function ({ products, category, url }) {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
+    const HOST = 'http://www.teflonbonehorncrafts.com/';
+    let updatedUrl = HOST+'knifeHandles/'+url;
+    // const url = 'http://www.teflonbonehorncrafts.com/knifeHandles/'
     const title = `KNIFE HANDLES - ${category} - AS INTERNATIONAL`;
     const description = `Discover top-quality knife handles - ${category} at AS INTERNATIONAL, Bone Bridge Pin Blank, Wooden Comb Manufacturer In India,Guitar Horn Saddle Supplier, Teflon Bone Folder Manufacturer, Bull Horn Cutlery Supplier, Buffalo Horn Space Manufacturer.`;
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/knifeHandles', name: 'Knife Handles' }, { name: category }];
@@ -43,6 +50,10 @@ export default function ({ products, category, url }) {
                     }}
                 />
             ))}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, updatedUrl) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadCrumbSchema(title, HOST, updatedUrl) }} />
             {products.length > 0 ? (
                 <Container>
                     <FilterSection data={{ products, search, setSearch, setSorting, setLayout, layout }} />

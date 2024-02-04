@@ -1,10 +1,22 @@
 import React from 'react';
 import CommonMeta from '@/seo/MetaHead';
 import Image from 'next/image';
+import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
+import { siteNavigationElement } from '@/seo/siteNavigationElement';
+import { organizationSchema } from '@/seo/organizationSchema';
+import { webPageSchema } from '@/seo/webPageSchema';
+const title="About Us - AS INTERNATIONAL";
+const description="AS INTERNATIONAL COMPANY PROFILE";
+const HOST = 'http://www.teflonbonehorncrafts.com/';
+const url = 'http://www.teflonbonehorncrafts.com/about'
 export default function () {
     return (
         <>
             <CommonMeta title="About Us - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PROFILE" />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, url) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadCrumbSchema(title, HOST, url) }} />
             <main className="contact_area section-padding pt--40">
                 <div className="container-lg pt-5">
                     <div className="section-title" style={{ backgroundColor: '#f6f6f6', padding: '50px' }}>

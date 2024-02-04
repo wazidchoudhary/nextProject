@@ -1,10 +1,22 @@
 import React, { Fragment } from 'react';
 import Image from 'next/image';
 import CommonMeta from '@/seo/MetaHead';
+import { webPageSchema } from '@/seo/webPageSchema';
+import { organizationSchema } from '@/seo/organizationSchema';
+import { siteNavigationElement } from '@/seo/siteNavigationElement';
+import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
+const title = 'Privacy Policy - AS INTERNATIONAL'
+const description = 'AS INTERNATIONAL COMPANY PRIVACY AND POLICY'
+const HOST = 'http://www.teflonbonehorncrafts.com/';
+const url = 'http://www.teflonbonehorncrafts.com/privacyPolicy'
 export default function () {
     return (
         <Fragment>
             <CommonMeta title="Privacy Policy - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PRIVACY AND POLICY" />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, url) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadCrumbSchema(title, HOST, url) }} />
             <main className="policy_area section-padding pt--40">
                 <div className="container-lg pt-5">
                     <div className="section-title" style={{ backgroundColor: '#f6f6f6', padding: '50px' }}>

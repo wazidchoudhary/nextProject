@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { priceHelper } from '@/lib/price-helper';
 import { CartHelper } from '@/lib/cart';
 import Link from 'next/link';
-
+import StrUtils from '@/utils/str-utils';
 export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedInCart }) => {
     const { id, category, subCategory, name, priceOld, priceNew, image, description, color = '' } = content;
     const [image1, image2] = image;
@@ -68,9 +68,9 @@ export const Card = ({ content, handleClick = () => {}, layout = 'grid', addedIn
                         <h3 className="post-title ellipsis-1">{name}</h3>
                         <div className="description-header">
                             <h5 className="description-tag text--bold">
-                                <Link title={category} href={`/products/${category}`} className="ellipsis-1">
+                                {/* <Link title={category} href={`/products/${StrUtils.normalToSnake(category)}`} className="ellipsis-1"> */}
                                     {category}
-                                </Link>
+                                {/* </Link> */}
                             </h5>
                         </div>
 

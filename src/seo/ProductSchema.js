@@ -1,7 +1,7 @@
 import { priceHelper } from '@/lib/price-helper';
 import { useRouter } from 'next/router';
 import React from 'react';
-
+const host = 'https://www.teflonbonehorncraft.com' 
 export const ProductSchema = ({ product }) => {
 
 
@@ -13,7 +13,7 @@ export const ProductSchema = ({ product }) => {
        
     };
     const router = useRouter();
-    const url = router.asPath;
+    const url = host+router.asPath;
     const schema = {
         '@context': 'https://schema.org/',
         '@type': 'Product',

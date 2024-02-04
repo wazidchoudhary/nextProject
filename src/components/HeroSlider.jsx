@@ -13,28 +13,28 @@ const HeroSlider = () => {
         // Add more image URLs as needed
       ];
     
-      const [currentBackground, setCurrentBackground] = useState(backgroundImages[0]);
-      const [index, setIndex] = useState(0);
+    //   const [currentBackground, setCurrentBackground] = useState(backgroundImages[0]);
+    //   const [index, setIndex] = useState(0);
     
-      useEffect(() => {
-        const intervalId = setInterval(() => {
-            // Fade out current image
-            let slider = document.querySelector('.single-slider');
-            slider.classList.add('fade-out');
+    //   useEffect(() => {
+    //     const intervalId = setInterval(() => {
+    //         // Fade out current image
+    //         let slider = document.querySelector('.single-slider');
+    //         slider.classList.add('fade-out');
       
-            // After fade out, change image and fade in
-            setTimeout(() => {
-              const nextIndex = (index + 1) % backgroundImages.length;
-              setCurrentBackground(backgroundImages[nextIndex]);
-              setIndex(nextIndex);
-              slider.classList.remove('fade-out');
-              slider.classList.add('fade-in');
-            }, 500); // This should match the transition time
+    //         // After fade out, change image and fade in
+    //         setTimeout(() => {
+    //           const nextIndex = (index + 1) % backgroundImages.length;
+    //           setCurrentBackground(backgroundImages[nextIndex]);
+    //           setIndex(nextIndex);
+    //           slider.classList.remove('fade-out');
+    //           slider.classList.add('fade-in');
+    //         }, 500); // This should match the transition time
       
-          }, 5000);// Change every 3 seconds
+    //       }, 5000);// Change every 3 seconds
     
-        return () => clearInterval(intervalId); // Clean up interval on component unmount
-      }, [index, backgroundImages]);
+    //     return () => clearInterval(intervalId); // Clean up interval on component unmount
+    //   }, [index, backgroundImages]);
     
     return (
         <section className="hero-area section-margin">
@@ -43,17 +43,17 @@ const HeroSlider = () => {
                     <div className="slick-track" style={{ opacity: 1, width: '100%', transform: 'translate3d(0px, 0px, 0px)' }}>
                         <div
                             className="single-slider hero-content bg-image"
-                            style={{ width: '100%', objectFit: 'cover', backgroundImage: currentBackground , transition:'background-image 0.5s ease-in-out'}}
+                            style={{ width: '100%', objectFit: 'cover', backgroundImage: "url('assets/image/hero.webp')" , transition:'background-image 0.5s ease-in-out'}}
                         >
                             {/* <img src="assets/image/hero.webp"/> */}
                             <div className="container position-relative">
                                 <div className="row">
                                     <div className="col-lg-12 hero-slider-custom">
                                     <h1 className='d-none'>AS INTERNATIONAL</h1>
-                                        <h2 className='outlined-text'>
+                                        <h2 className='text-black'>
                                             AS <br /> INTERNATIONAL
                                         </h2>
-                                        <p className="outlined-text">
+                                        <p className="text-black">
                                             Discover the elegance of AS International: Where masterful artistry in Bone, Horn, Acrylic, and Wood blends seamlessly with dependable quality, unmatched
                                             customer service, and the allure of unique masterpieces. Dive into our world of timeless beauty and handcrafted perfection.
                                         </p>

@@ -4,8 +4,14 @@ import { useRouter } from 'next/router';
 import BreadCrumb from '@/seo/BreadCrumb';
 import { FirebaseHelper } from '@/lib/firebase-helpers';
 import { toast } from 'react-toastify';
+import { webPageSchema } from '@/seo/webPageSchema';
+import { organizationSchema } from '@/seo/organizationSchema';
+import { siteNavigationElement } from '@/seo/siteNavigationElement';
+import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 export default function () {
     const router = useRouter();
+    const HOST = 'http://www.teflonbonehorncrafts.com/';
+    const url = 'http://www.teflonbonehorncrafts.com/contact'
     const title = 'Contact Us - AS INTERNATIONAL';
     const description = 'Contact  As International If any enquiry';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Contact Us' }];
@@ -38,6 +44,10 @@ export default function () {
     return (
         <>
             <CommonMeta title={title} description={description} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, url) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadCrumbSchema(title, HOST, url) }} />
             <BreadCrumb items={breadCrumbItems} text={title} />
             <main className="contact_area section-padding pt--60">
             <h1 className='d-none'>Contact Us</h1>
