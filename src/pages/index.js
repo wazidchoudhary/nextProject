@@ -16,8 +16,8 @@ const description =
     'Bull Shoe Horn Supplier, Dyed Stabilized Bone Scales Exporter, Water Buffalo Horn Scale Manufacturer, Wooden Knife Handle Manufacturer, Bone Pen Blank Exporter, Bone Hair Pipe Bead Exporter In India, Drinking Horn and Mug Supplier, Wooden Cutlery Manufacturer, Teflon Bone Folder Manufacturer.';
 const keywords = '';
 
-const url = 'http://www.teflonbonehorncrafts.com/';
-const HOST = 'http://www.teflonbonehorncrafts.com/';
+const url = 'https://www.teflonbonehorncrafts.com/';
+const HOST = 'https://www.teflonbonehorncrafts.com/';
 export default function ({ products }) {
     return (
         <>

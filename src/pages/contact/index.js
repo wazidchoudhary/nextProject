@@ -10,8 +10,8 @@ import { siteNavigationElement } from '@/seo/siteNavigationElement';
 import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 export default function () {
     const router = useRouter();
-    const HOST = 'http://www.teflonbonehorncrafts.com/';
-    const url = 'http://www.teflonbonehorncrafts.com/contact'
+    const HOST = 'https://www.teflonbonehorncrafts.com/';
+    const url = 'https://www.teflonbonehorncrafts.com/contact'
     const title = 'Contact Us - AS INTERNATIONAL';
     const description = 'Contact  As International If any enquiry';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Contact Us' }];

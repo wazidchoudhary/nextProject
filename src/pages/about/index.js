@@ -7,8 +7,8 @@ import { organizationSchema } from '@/seo/organizationSchema';
 import { webPageSchema } from '@/seo/webPageSchema';
 const title="About Us - AS INTERNATIONAL";
 const description="AS INTERNATIONAL COMPANY PROFILE";
-const HOST = 'http://www.teflonbonehorncrafts.com/';
-const url = 'http://www.teflonbonehorncrafts.com/about'
+const HOST = 'https://www.teflonbonehorncrafts.com/';
+const url = 'https://www.teflonbonehorncrafts.com/about'
 export default function () {
     return (
         <>

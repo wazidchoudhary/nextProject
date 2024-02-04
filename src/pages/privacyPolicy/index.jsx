@@ -7,8 +7,8 @@ import { siteNavigationElement } from '@/seo/siteNavigationElement';
 import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 const title = 'Privacy Policy - AS INTERNATIONAL'
 const description = 'AS INTERNATIONAL COMPANY PRIVACY AND POLICY'
-const HOST = 'http://www.teflonbonehorncrafts.com/';
-const url = 'http://www.teflonbonehorncrafts.com/privacyPolicy'
+const HOST = 'https://www.teflonbonehorncrafts.com/';
+const url = 'https://www.teflonbonehorncrafts.com/privacyPolicy'
 export default function () {
     return (
         <Fragment>
