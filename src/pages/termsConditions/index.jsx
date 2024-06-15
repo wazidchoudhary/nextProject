@@ -44,7 +44,7 @@ export default function () {
                                 - Contacting your credit card company as processing might take time. <br />
                                 - Reaching out to your bank for refund status.
                                 <br />
-                                If you've followed the above steps and still haven't received your refund, please get in touch with us at [your_email@example.com].
+                                If you've followed the above steps and still haven't received your refund, please get in touch with us at info@teflonbonehorncrafts.com.
                             </p>
 
                             <h5>Sale Items</h5>
@@ -53,12 +53,12 @@ export default function () {
                             <h5>Exchange Policy</h5>
                             <p>
                                 Exchanges are limited to items that arrived in a faulty or damaged state. If you wish to replace such an item with a similar product, drop us an email at
-                                [your_email@example.com] and post your product to: [Your Address Here].
+                                info@teflonbonehorncrafts.com and post your product to: Khasra no 535-536, Garima Garden, Sahibabad, Postal-Code : (201001) Ghaziabad, UttarPradesh, India.
                             </p>
 
                             <h5>Shipping Instructions for Returns</h5>
                             <p>
-                                Products for return should be shipped to: [Your Address Here]. <br />
+                                Products for return should be shipped to: Khasra no 535-536, Garima Garden, Sahibabad, Postal-Code : (201001) Ghaziabad, UttarPradesh, India. <br />
                                 All shipping charges for returning the item will be borne by you. Furthermore, original shipping costs are non-refundable. In cases where a refund is sanctioned, the
                                 return shipping charges will be subtracted from it. Considering the unpredictable shipping durations based on regions, the time frame for your exchanged product to
                                 reach you can vary. For high-value returns, we advise opting for traceable shipping or even availing shipping insurance. We cannot affirmatively confirm the receipt of

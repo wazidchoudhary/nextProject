@@ -60,7 +60,7 @@ export default function () {
                             </p>
 
                             <h5>Contacting Us</h5>
-                            <p>If there are any questions regarding this privacy policy, you may contact us using the information below: [your_email@example.com]</p>
+                            <p>If there are any questions regarding this privacy policy, you may contact us using the information below: info@teflonbonehorncrafts.com</p>
                         </article>
                     </div>
                 </div>
