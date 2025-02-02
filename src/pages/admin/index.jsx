@@ -8,7 +8,7 @@ export default function () {
     const handleSubmit = (e) =>{
         e.preventDefault()
         if(username == user && password == pass){
-            window.location.href = 'https://asinternational.000webhostapp.com/index.php';
+            window.location.href = 'http://asinternationadmin.free.nf/products.php';
         }
     }
   return (
