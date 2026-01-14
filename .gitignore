@@ -2,3 +2,7 @@ node_modules/
 .next/
 .swc/
 .env
+
+# Generated sitemaps (regenerated on each build)
+public/sitemap*.xml
+public/robots.txt
