@@ -14,8 +14,8 @@ export default function (props) {
     const descString = productDescription.replace(/<\/?[^>]+(>|$)/g, "")
     const title = props.product.productName.split('-')[0]
     const description = descString.substring(0, 315)
-    const HOST = 'https://www.teflonbonehorncrafts.com/';
-    const url = 'https://www.teflonbonehorncrafts.com/products/'+productId
+    const HOST = 'https://www.vikingcraftstore.com';
+    const url = 'https://www.vikingcraftstore.com/products/'+productId
     return (
         <>
             <CommonMeta title={`${props.product.productName.split('-')[0]} - AS INTERNATIONAL`} description={descString.substring(0, 315)} />

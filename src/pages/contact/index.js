@@ -10,10 +10,10 @@ import { siteNavigationElement } from '@/seo/siteNavigationElement';
 import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 export default function () {
     const router = useRouter();
-    const HOST = 'https://www.teflonbonehorncrafts.com/';
-    const url = 'https://www.teflonbonehorncrafts.com/contact'
-    const title = 'Contact Us - AS INTERNATIONAL';
-    const description = 'Contact  As International If any enquiry';
+    const HOST = 'https://www.vikingcraftstore.com';
+    const url = 'https://www.vikingcraftstore.com/contact'
+    const title = 'Contact Us - Viking Craft Store | AS International';
+    const description = 'Contact Viking Craft Store for inquiries about knife handles, bone horn crafts, and handmade products. Quick response guaranteed from AS International.';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Contact Us' }];
     const [userData, setUserdata] = useState({
         name: '',
@@ -76,7 +76,7 @@ export default function () {
                                         </div>
                                         <div className="contact-info-text">
                                             <p>
-                                                <span>Email: </span> info@teflonbonehorncrafts.com,{' '}asinternational252@gmail.com
+                                                <span>Email: </span> info@vikingcraftstore.com,{' '}asinternational252@gmail.com
                                             </p>
                                         </div>
                                     </div>

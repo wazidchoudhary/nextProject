@@ -30,10 +30,10 @@ export default function ({ products }) {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
-    const HOST = 'https://www.teflonbonehorncrafts.com/';
-    const url = 'https://www.teflonbonehorncrafts.com/products'
-    const title = 'AS INTERNATIONAL - TEFLON BONE HORN HAND CRAFTS - PRODUCTS';
-    const description = 'Bull Shoe Horn Supplier, Dyed Stabilized Bone Scales Exporter, Water Buffalo Horn Scale Manufacturer, Wooden Knife Handle Manufacturer, Bone Pen Blank Exporter, Bone Hair Pipe Bead Exporter In India, Drinking Horn and Mug Supplier, Wooden Cutlery Manufacturer, Teflon Bone Folder Manufacturer.';
+    const HOST = 'https://www.vikingcraftstore.com';
+    const url = 'https://www.vikingcraftstore.com/products'
+    const title = 'All Products - Viking Craft Store | Handcrafted Bone & Horn Items';
+    const description = 'Browse our complete collection of handcrafted products. Knife Handle Scales, Bone & Horn Beads, Drinking Horns, Guitar Parts, Pen Blanks, Combs and more. Premium quality from AS International.';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: title }];
 
     return (

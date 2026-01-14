@@ -1,25 +1,42 @@
 export const organizationSchema = () => {
     return JSON.stringify({
-        '@context': 'http://schema.org',
+        '@context': 'https://schema.org',
         '@type': 'Organization',
-        name: 'Krapton',
-        url: 'https://www.teflonbonehorncrafts.com',
+        name: 'Viking Craft Store - AS International',
+        legalName: 'AS International',
+        url: 'https://www.vikingcraftstore.com',
+        description: 'Premium manufacturer and supplier of handcrafted bone, horn, and wood products including knife handles, drinking horns, guitar parts, and artisan crafts.',
+        foundingDate: '2020',
         contactPoint: [
             {
                 '@type': 'ContactPoint',
                 telephone: '+91-9990510321',
-                contactType: 'Customer service',
+                contactType: 'customer service',
+                areaServed: 'Worldwide',
+                availableLanguage: ['English', 'Hindi']
             },
             {
                 '@type': 'ContactPoint',
-                telephone: '+91-78385 00700',
-                contactType: 'Customer support',
+                telephone: '+91-7838500700',
+                contactType: 'sales',
+                areaServed: 'Worldwide',
+                availableLanguage: ['English', 'Hindi']
             },
         ],
-        logo: 'https://www.teflonbonehorncrafts.com/assets/image/logo.webp',
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: 'Khasra no 535-536, Garima Garden, Sahibabad',
+            addressLocality: 'Ghaziabad',
+            addressRegion: 'Uttar Pradesh',
+            postalCode: '201001',
+            addressCountry: 'IN'
+        },
+        logo: 'https://www.vikingcraftstore.com/assets/image/logo.webp',
+        image: 'https://www.vikingcraftstore.com/assets/image/logo.webp',
         sameAs: [
-            'https://www.facebook.com/A.SINTERNATIONAL252?mibextid=ZbWKwL',
-            'https://twitter.com/ChodharyTanish',
+            'https://www.facebook.com/A.SINTERNATIONAL252',
+            'https://www.instagram.com/a.s_international252'
         ],
+        priceRange: '$$'
     });
 };

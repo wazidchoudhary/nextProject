@@ -5,14 +5,14 @@ import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 import { siteNavigationElement } from '@/seo/siteNavigationElement';
 import { organizationSchema } from '@/seo/organizationSchema';
 import { webPageSchema } from '@/seo/webPageSchema';
-const title="About Us - AS INTERNATIONAL";
-const description="AS INTERNATIONAL COMPANY PROFILE";
-const HOST = 'https://www.teflonbonehorncrafts.com/';
-const url = 'https://www.teflonbonehorncrafts.com/about'
+const title="About Us - Viking Craft Store | AS International";
+const description="Learn about Viking Craft Store (AS International) - Premium manufacturer of handcrafted bone, horn and wood products. Our artisans create knife handles, drinking horns, guitar parts and more.";
+const HOST = 'https://www.vikingcraftstore.com';
+const url = 'https://www.vikingcraftstore.com/about'
 export default function () {
     return (
         <>
-            <CommonMeta title="About Us - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PROFILE" />
+            <CommonMeta title="About Us - Viking Craft Store | AS International" description="Learn about Viking Craft Store (AS International) - Premium manufacturer of handcrafted bone, horn and wood products. Our artisans create knife handles, drinking horns, guitar parts and more." />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, url) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />

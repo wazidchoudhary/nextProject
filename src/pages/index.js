@@ -11,13 +11,13 @@ import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
 import { webPageSchema } from '@/seo/webPageSchema';
 
 const inter = Inter({ subsets: ['latin'] });
-const title = 'AS International – Manufacturer and supplier of handcraft Items.';
+const title = 'Viking Craft Store - Premium Handcrafted Bone & Horn Products | AS International';
 const description =
-    'Bull Shoe Horn Supplier, Dyed Stabilized Bone Scales Exporter, Water Buffalo Horn Scale Manufacturer, Wooden Knife Handle Manufacturer, Bone Pen Blank Exporter, Bone Hair Pipe Bead Exporter In India, Drinking Horn and Mug Supplier, Wooden Cutlery Manufacturer, Teflon Bone Folder Manufacturer.';
-const keywords = '';
+    'Shop premium knife handle scales, drinking horns, guitar parts & handcrafted bone horn products. Bull Shoe Horn, Dyed Stabilized Bone Scales, Water Buffalo Horn Scales, Viking Drinking Horns & more. Worldwide shipping from AS International.';
+const keywords = 'knife handles, bone scales, horn scales, viking drinking horn, guitar saddle, handcrafted products';
 
-const url = 'https://www.teflonbonehorncrafts.com/';
-const HOST = 'https://www.teflonbonehorncrafts.com/';
+const url = 'https://www.vikingcraftstore.com/';
+const HOST = 'https://www.vikingcraftstore.com';
 export default function ({ products }) {
     return (
         <>
@@ -37,9 +37,9 @@ export default function ({ products }) {
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: breadCrumbSchema(title, HOST, url) }} />
             <CommonMeta
-                title="AS International – Manufacturer and supplier of handcraft Items."
-                description="Bull Shoe Horn Supplier, Dyed Stabilized Bone Scales Exporter, Water Buffalo Horn Scale Manufacturer, Wooden Knife Handle Manufacturer, Bone Pen Blank Exporter, Bone Hair Pipe Bead Exporter In India, Drinking Horn and Mug Supplier, Wooden Cutlery Manufacturer, Teflon Bone Folder Manufacturer."
-                keywords=""
+                title="Viking Craft Store - Premium Handcrafted Bone & Horn Products | AS International"
+                description="Shop premium knife handle scales, drinking horns, guitar parts & handcrafted bone horn products. Bull Shoe Horn, Dyed Stabilized Bone Scales, Water Buffalo Horn Scales, Viking Drinking Horns & more. Worldwide shipping from AS International."
+                keywords="knife handles, bone scales, horn scales, viking drinking horn, guitar saddle, handcrafted products"
             />
             <HeroSlider />
             <Intro />

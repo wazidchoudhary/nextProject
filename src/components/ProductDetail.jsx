@@ -58,24 +58,36 @@ const ProductDetail = ({ product, categoryProducts }) => {
 
     const setProductImages = () => {
         const images = [];
+        const categoryText = productCategory ? ` - ${productCategory}` : '';
 
-        productImage.map((image) => {
+        productImage.map((image, index) => {
+            const imageAlt = index === 0 
+                ? `${productName}${categoryText} | Buy Online at Viking Craft Store`
+                : `${productName} - Image ${index + 1}${categoryText} | Viking Craft Store`;
             images.push({
                 original: image,
                 thumbnail: image,
                 originalHeight: '400',
                 originalWidth: '100',
-                originalAlt: productName,
-                originalTitle:productName,
-                thumbnailTitle:productName+' thumbnail',
-                thumbnailAlt:productName+' thumbnail',
+                originalAlt: imageAlt,
+                originalTitle: `${productName} - Premium ${productCategory} from Viking Craft Store`,
+                thumbnailTitle: `${productName} thumbnail - View ${productCategory}`,
+                thumbnailAlt: `${productName} thumbnail${categoryText}`,
                 thumbnailLoading: 'eager',
             });
         });
         return productImage.length > 1 ? (
-            <ImageGallery title={productName} thumbnailPosition="bottom" items={images} autoPlay={true} />
+            <ImageGallery title={`${productName} - ${productCategory}`} thumbnailPosition="bottom" items={images} autoPlay={true} />
         ) : (
-            <Image title={productName} src={productImage[0]} width={150} alt={productName} loading="lazy" height={150} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+            <Image 
+                title={`${productName} - Premium ${productCategory} from Viking Craft Store`} 
+                src={productImage[0]} 
+                width={150} 
+                alt={`${productName} - ${productCategory} | Buy Online at Viking Craft Store`} 
+                loading="lazy" 
+                height={150} 
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+            />
         );
     };
 

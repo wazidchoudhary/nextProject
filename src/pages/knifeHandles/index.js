@@ -20,10 +20,10 @@ export default ({ products }) => {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
-    const HOST = 'https://www.teflonbonehorncrafts.com/';
-    const url = 'https://www.teflonbonehorncrafts.com/knifeHandles'
-    const title = 'Knife Handles for Custom and Replacement Needs - AS INTERNATIONAL';
-    const description = '"Discover top-quality knife handles at AS INTERNATIONAL ideal for both custom creations and replacements. Bone Bridge Pin Blank, Wooden Comb Manufacturer In India,Guitar Horn Saddle Supplier, Teflon Bone Folder Manufacturer, Bull Horn Cutlery Supplier, Buffalo Horn Space Manufacturer';
+    const HOST = 'https://www.vikingcraftstore.com';
+    const url = 'https://www.vikingcraftstore.com/knifeHandles'
+    const title = 'Premium Knife Handle Scales - Bone, Horn & Wood | Viking Craft Store';
+    const description = 'Shop premium knife handle scales in bone, horn, wood and acrylic. Custom knife making supplies including Buffalo Horn Scales, Camel Bone Scales, Stag Bone Scales. Free worldwide shipping available.';
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { name: 'Knife Handles' }];
 
     return (

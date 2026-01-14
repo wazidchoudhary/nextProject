@@ -26,11 +26,10 @@ export default function ({ products, category, url }) {
     const layoutClass = layout === 'grid' ? '' : 'shop-product-wrap list';
     const filterOperation = Filters(search, products, sorting);
     const router = useRouter();
-    const HOST = 'https://www.teflonbonehorncrafts.com/';
-    let updatedUrl = HOST+'knifeHandles/'+url;
-    // const url = 'https://www.teflonbonehorncrafts.com/knifeHandles/'
-    const title = `KNIFE HANDLES - ${category} - AS INTERNATIONAL`;
-    const description = `Discover top-quality knife handles - ${category} at AS INTERNATIONAL, Bone Bridge Pin Blank, Wooden Comb Manufacturer In India,Guitar Horn Saddle Supplier, Teflon Bone Folder Manufacturer, Bull Horn Cutlery Supplier, Buffalo Horn Space Manufacturer.`;
+    const HOST = 'https://www.vikingcraftstore.com';
+    let updatedUrl = HOST+'/knifeHandles/'+url;
+    const title = `${category} - Premium Knife Handle Scales | Viking Craft Store`;
+    const description = `Shop premium ${category} knife handle scales at Viking Craft Store. High-quality handcrafted knife making supplies from AS International with worldwide shipping.`;
     const breadCrumbItems = [{ url: '/', name: 'Home' }, { url: '/knifeHandles', name: 'Knife Handles' }, { name: category }];
 
     return (

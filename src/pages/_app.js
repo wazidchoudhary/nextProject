@@ -7,8 +7,6 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
-import 'public/assets/css/plugins.min.css';
-import 'public/assets/css/main.css';
 import '@/styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/custom.css';

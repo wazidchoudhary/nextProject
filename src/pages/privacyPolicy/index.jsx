@@ -5,14 +5,14 @@ import { webPageSchema } from '@/seo/webPageSchema';
 import { organizationSchema } from '@/seo/organizationSchema';
 import { siteNavigationElement } from '@/seo/siteNavigationElement';
 import { breadCrumbSchema } from '@/seo/breadCrumbSchema';
-const title = 'Privacy Policy - AS INTERNATIONAL'
-const description = 'AS INTERNATIONAL COMPANY PRIVACY AND POLICY'
-const HOST = 'https://www.teflonbonehorncrafts.com/';
-const url = 'https://www.teflonbonehorncrafts.com/privacyPolicy'
+const title = 'Privacy Policy - Viking Craft Store'
+const description = 'Privacy Policy for Viking Craft Store (AS International). Learn how we collect, use, and protect your personal information.'
+const HOST = 'https://www.vikingcraftstore.com';
+const url = 'https://www.vikingcraftstore.com/privacyPolicy'
 export default function () {
     return (
         <Fragment>
-            <CommonMeta title="Privacy Policy - AS INTERNATIONAL" description="AS INTERNATIONAL COMPANY PRIVACY AND POLICY" />
+            <CommonMeta title="Privacy Policy - Viking Craft Store" description="Privacy Policy for Viking Craft Store (AS International). Learn how we collect, use, and protect your personal information." />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: webPageSchema(title, description, url) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: organizationSchema() }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteNavigationElement() }} />
@@ -60,7 +60,7 @@ export default function () {
                             </p>
 
                             <h5>Contacting Us</h5>
-                            <p>If there are any questions regarding this privacy policy, you may contact us using the information below: info@teflonbonehorncrafts.com</p>
+                            <p>If there are any questions regarding this privacy policy, you may contact us using the information below: info@vikingcraftstore.com</p>
                         </article>
                     </div>
                 </div>

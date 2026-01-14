@@ -44,7 +44,7 @@ export default function () {
                                 - Contacting your credit card company as processing might take time. <br />
                                 - Reaching out to your bank for refund status.
                                 <br />
-                                If you've followed the above steps and still haven't received your refund, please get in touch with us at info@teflonbonehorncrafts.com.
+                                If you've followed the above steps and still haven't received your refund, please get in touch with us at info@vikingcraftstore.com.
                             </p>
 
                             <h5>Sale Items</h5>
@@ -53,7 +53,7 @@ export default function () {
                             <h5>Exchange Policy</h5>
                             <p>
                                 Exchanges are limited to items that arrived in a faulty or damaged state. If you wish to replace such an item with a similar product, drop us an email at
-                                info@teflonbonehorncrafts.com and post your product to: Khasra no 535-536, Garima Garden, Sahibabad, Postal-Code : (201001) Ghaziabad, UttarPradesh, India.
+                                info@vikingcraftstore.com and post your product to: Khasra no 535-536, Garima Garden, Sahibabad, Postal-Code : (201001) Ghaziabad, UttarPradesh, India.
                             </p>
 
                             <h5>Shipping Instructions for Returns</h5>
