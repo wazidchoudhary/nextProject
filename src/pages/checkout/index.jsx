@@ -174,7 +174,7 @@ export default function ({PAYPAL_KEY}) {
                                         placeholder="Address line 2"
                                     />
                                 </div>
-                                <div className="col-12 col-12 mb--20">
+                                <div className="col-12 mb--20">
                                     <label>Country*</label>
                                     <select onChange={(e) => setShippingData((s) => ({ ...s, country: e.target.value }))} value={shippingData.country} className="nice-select">
                                         {countries.map((country, i) => (
@@ -239,13 +239,6 @@ export default function ({PAYPAL_KEY}) {
                                     <h4>
                                         Grand Total <span>${total}</span>
                                     </h4>
-                                    <div className="method-notice mt--25">
-                                        <article>
-                                            <h3 className="d-none sr-only">blog-article</h3>
-                                            Sorry, it seems that there are no available payment methods for your state. Please contact us if you require assistance or wish to make alternate
-                                            arrangements.
-                                        </article>
-                                    </div>
                                     <div className="term-block">
                                         <input
                                             type="checkbox"
@@ -295,7 +288,7 @@ export default function ({PAYPAL_KEY}) {
 
 
 export const getStaticProps = async (context) => {
-    const paypalKey = process.env.PAYPAL || null;
+    const paypalKey = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || null;
     return {
         props: {
             PAYPAL_KEY: paypalKey,
