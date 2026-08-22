@@ -5,10 +5,10 @@
  * checkout (including a deliberate postcode failure) → order received, plus the
  * wishlist and the AJAX filter.
  */
-import { chromium } from 'playwright';
+import { launchBrowser, BASE_URL } from './browser.mjs';
 
-const base = process.env.BHC_URL || 'http://localhost:8088';
-const browser = await chromium.launch( { executablePath: '/opt/pw-browsers/chromium', args: [ '--no-sandbox' ] } );
+const base = BASE_URL;
+const browser = await launchBrowser();
 const context = await browser.newContext( { viewport: { width: 1280, height: 900 } } );
 const page = await context.newPage();
 

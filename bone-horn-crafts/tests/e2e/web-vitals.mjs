@@ -8,9 +8,9 @@
  * here immediately and is cheap to catch before it ships.
  */
 
-import { chromium } from 'playwright';
+import { launchBrowser, BASE_URL } from './browser.mjs';
 
-const BASE = process.env.BHC_BASE_URL || 'http://localhost:8088';
+const BASE = BASE_URL;
 
 const BUDGETS = {
 	cls: 0.1,
@@ -31,10 +31,7 @@ const VIEWPORTS = [
 	[ 'mobile', 390, 844 ],
 ];
 
-const browser = await chromium.launch( {
-	executablePath: '/opt/pw-browsers/chromium',
-	args: [ '--no-sandbox' ],
-} );
+const browser = await launchBrowser();
 
 let failures = 0;
 

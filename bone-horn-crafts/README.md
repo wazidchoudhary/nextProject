@@ -37,6 +37,7 @@ three levels.
 | Document | Covers |
 |---|---|
 | [docs/architecture.md](docs/architecture.md) | Plugin and theme architecture, the container, service providers, the OOP inventory |
+| [docs/local-development.md](docs/local-development.md) | Day-to-day loop, debugging, conventions, how to add a service/route/job |
 | [docs/database.md](docs/database.md) | Custom tables, why each exists, indexes, and what deliberately stays in core tables |
 | [docs/performance.md](docs/performance.md) | Caching layers, the N+1 work, measured query counts, asset budget, Core Web Vitals |
 | [docs/seo.md](docs/seo.md) | Structured data, canonicals, robots policy, sitemaps |

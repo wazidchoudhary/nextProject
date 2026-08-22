@@ -1,0 +1,149 @@
+name: Bone Horn Crafts
+
+# Scoped to the WooCommerce reference build. Nothing here touches the Next.js
+# application at the repository root.
+on:
+  push:
+    paths:
+      - 'bone-horn-crafts/**'
+      - '.github/workflows/bone-horn-crafts.yml'
+  pull_request:
+    paths:
+      - 'bone-horn-crafts/**'
+      - '.github/workflows/bone-horn-crafts.yml'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: bone-horn-crafts
+
+jobs:
+  # Everything that needs neither WordPress nor a database. Fast, so it gates
+  # the expensive job below.
+  static:
+    name: Standards and unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: gd, mbstring, intl, zip
+          coverage: none
+          tools: composer
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: composer-${{ hashFiles('bone-horn-crafts/wp-content/plugins/bhc-commerce-core/composer.lock') }}
+
+      - name: Install PHP dependencies
+        working-directory: bone-horn-crafts/wp-content/plugins/bhc-commerce-core
+        run: composer install --no-interaction --no-progress
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: bone-horn-crafts/package-lock.json
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: PHP lint every file
+        run: find bin wp-content -name '*.php' -not -path '*/vendor/*' -print0 | xargs -0 -n1 php -l
+
+      - name: WordPress coding standards
+        run: npm run lint:php
+
+      - name: Unit tests
+        run: npm run test:unit
+
+      - name: Build assets
+        run: npm run build
+
+      # The compiled stylesheets are committed so a fresh clone runs without a
+      # Node toolchain. If a build produces something different from what was
+      # committed, the two have drifted.
+      - name: Assert committed CSS matches the SCSS
+        run: git diff --exit-code -- wp-content/themes/bhc-theme/assets/css
+
+  # Builds a real store and exercises it. Everything the fast job cannot see.
+  store:
+    name: Integration and end-to-end
+    runs-on: ubuntu-latest
+    needs: static
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: bhc_demo
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: gd, mbstring, intl, zip, mysqli, pdo_mysql
+          coverage: none
+          tools: composer, wp-cli
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: bone-horn-crafts/package-lock.json
+
+      - name: Build the demo store
+        env:
+          DB_HOST: 127.0.0.1
+          DB_NAME: bhc_demo
+          DB_USER: root
+          DB_PASSWORD: root
+          SITE_URL: http://localhost:8088
+        run: bin/setup-demo.sh "${HOME}/wp-demo"
+
+      - name: Health check
+        run: wp --path="${HOME}/wp-demo" --allow-root bhc health-check --strict
+
+      - name: Integration assertions
+        run: wp --path="${HOME}/wp-demo" --allow-root eval-file bin/integration-tests.php
+
+      - name: Serve the store
+        run: |
+          php -S localhost:8088 -t "${HOME}/wp-demo" "${HOME}/wp-demo/router.php" &
+          for i in $(seq 1 30); do
+            if curl -fsS -o /dev/null http://localhost:8088/; then exit 0; fi
+            sleep 1
+          done
+          echo "Store did not come up" >&2
+          exit 1
+
+      - name: Install Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      # tests/e2e/browser.mjs uses an explicit binary only when one exists at
+      # BHC_CHROMIUM or PLAYWRIGHT_BROWSERS_PATH, and otherwise lets Playwright
+      # resolve the browser it just installed.
+      - name: Purchase flow
+        run: npm run test:e2e
+
+      - name: Admin screens
+        run: npm run test:admin
+
+      - name: Core Web Vitals
+        run: npm run test:vitals

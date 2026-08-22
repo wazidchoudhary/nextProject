@@ -114,16 +114,59 @@ final class DemoState {
 	/**
 	 * Summary counts for `wp bhc demo status`.
 	 *
+	 * Counts objects that still exist, not ids that were ever created. The
+	 * distinction matters: the state is an append-only record, so something
+	 * deleted since — a product removed by hand, a variation the seeder
+	 * withdrew — would otherwise still be counted and the command would report
+	 * a store that is not there. `product` and `product_variation` are also
+	 * reported separately, because "252 products" for a 60-product catalogue is
+	 * exactly the kind of number nobody checks.
+	 *
 	 * @return array<string, int>
 	 */
 	public function summary(): array {
 		$summary = [];
 
 		foreach ( $this->all() as $bucket => $ids ) {
-			$summary[ $bucket ] = count( $ids );
+			if ( 'products' === $bucket ) {
+				$summary['products']   = 0;
+				$summary['variations'] = 0;
+
+				foreach ( $ids as $id ) {
+					$type = get_post_type( $id );
+
+					if ( 'product' === $type ) {
+						++$summary['products'];
+					} elseif ( 'product_variation' === $type ) {
+						++$summary['variations'];
+					}
+				}
+
+				continue;
+			}
+
+			$summary[ $bucket ] = count( array_filter( $ids, fn ( int $id ): bool => $this->exists( $bucket, $id ) ) );
 		}
 
 		return $summary;
+	}
+
+	/**
+	 * Whether a tracked object still exists.
+	 *
+	 * @param string $bucket Bucket name.
+	 * @param int    $id     Object id.
+	 */
+	private function exists( string $bucket, int $id ): bool {
+		return match ( $bucket ) {
+			'orders'    => function_exists( 'wc_get_order' ) && false !== wc_get_order( $id ),
+			'customers' => false !== get_userdata( $id ),
+			'comments'  => null !== get_comment( $id ),
+			'terms', 'menus' => ! is_wp_error( get_term( $id ) ) && null !== get_term( $id ),
+			'zones'     => class_exists( \WC_Shipping_Zones::class )
+				&& null !== \WC_Shipping_Zones::get_zone( $id ),
+			default     => null !== get_post( $id ),
+		};
 	}
 
 	/**
