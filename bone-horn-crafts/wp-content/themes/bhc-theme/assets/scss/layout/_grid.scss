@@ -1,0 +1,53 @@
+// -----------------------------------------------------------------------------
+// Grids
+//
+// One auto-fit grid drives the product catalogue at every breakpoint. Column
+// counts come from available width rather than device queries, so a 4-column
+// desktop grid becomes 2 columns on a tablet and 1 on a phone with no extra
+// rules — and no reflow surprises inside the WooCommerce templates.
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.bhc-grid {
+	display: grid;
+	gap: f.space('md');
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+
+	@include m.from('md') {
+		gap: f.space('lg');
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	@include m.from('lg') {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+}
+
+.bhc-grid--2 {
+	@include m.from('md') {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	@include m.from('lg') {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+.bhc-grid--3 {
+	@include m.from('lg') {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+.layout-sidebar {
+	display: grid;
+	gap: f.space('lg');
+	align-items: start;
+
+	@include m.from('lg') {
+		grid-template-columns: 16rem minmax(0, 1fr);
+		gap: f.space('xl');
+	}
+}

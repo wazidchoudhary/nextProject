@@ -1,0 +1,294 @@
+/**
+ * Bone Horn Crafts — plugin component styles.
+ *
+ * Deliberately small. The theme owns the visual design; this file only carries
+ * the structural styling the plugin's own components need in order to work in
+ * ANY theme (badge chips, wishlist button states, filter panel layout,
+ * estimator, tier table). Every colour and spacing value reads from a custom
+ * property with a neutral fallback, so the theme restyles the components by
+ * setting tokens rather than by overriding selectors.
+ */
+
+:root {
+	--bhc-color-ink: #241f1a;
+	--bhc-color-muted: #6c6259;
+	--bhc-color-line: #ddd3c4;
+	--bhc-color-surface: #fbf8f3;
+	--bhc-color-accent: #7a5c3e;
+	--bhc-color-sale: #8a3f2c;
+	--bhc-color-stock: #7a6a2f;
+	--bhc-radius: 2px;
+	--bhc-space: 1rem;
+	--bhc-font-ui: inherit;
+}
+
+/* Badges ---------------------------------------------------------------- */
+
+.bhc-badges {
+	position: absolute;
+	inset-block-start: 0.75rem;
+	inset-inline-start: 0.75rem;
+	/* Stacked rather than inline: badge labels are variable length and an
+	   inline row clips "Bulk / Wholesale" inside a narrow card. */
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 0.3rem;
+	margin: 0;
+	padding: 0;
+	max-inline-size: calc(100% - 3.75rem);
+	list-style: none;
+	z-index: 2;
+}
+
+.bhc-badge {
+	font-family: var(--bhc-font-ui);
+	font-size: 0.6875rem;
+	white-space: nowrap;
+	max-inline-size: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	padding: 0.3rem 0.55rem;
+	border-radius: var(--bhc-radius);
+	background: var(--bhc-color-surface);
+	color: var(--bhc-color-ink);
+	border: 1px solid var(--bhc-color-line);
+	line-height: 1;
+}
+
+.bhc-badge--sale {
+	background: var(--bhc-color-sale);
+	border-color: var(--bhc-color-sale);
+	color: #fff;
+}
+
+.bhc-badge--accent {
+	background: var(--bhc-color-accent);
+	border-color: var(--bhc-color-accent);
+	color: #fff;
+}
+
+.bhc-badge--warm {
+	background: #f0e3cf;
+	border-color: #e0cdb0;
+}
+
+.bhc-badge--stock {
+	color: var(--bhc-color-stock);
+	border-color: currentColor;
+}
+
+/* Wishlist -------------------------------------------------------------- */
+
+.bhc-wishlist-form {
+	margin: 0;
+}
+
+.bhc-wishlist-form--compact {
+	position: absolute;
+	inset-block-start: 0.65rem;
+	inset-inline-end: 0.65rem;
+	z-index: 2;
+}
+
+.bhc-wishlist-toggle {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	min-height: 44px;
+	min-width: 44px;
+	justify-content: center;
+	padding: 0.5rem 0.7rem;
+	background: var(--bhc-color-surface);
+	border: 1px solid var(--bhc-color-line);
+	border-radius: var(--bhc-radius);
+	color: var(--bhc-color-ink);
+	cursor: pointer;
+	font: inherit;
+	line-height: 1;
+}
+
+.bhc-wishlist-toggle:hover,
+.bhc-wishlist-toggle:focus-visible {
+	border-color: var(--bhc-color-accent);
+	color: var(--bhc-color-accent);
+}
+
+.bhc-wishlist-toggle.is-saved {
+	color: var(--bhc-color-sale);
+	border-color: currentColor;
+}
+
+.bhc-wishlist-toggle.is-saved svg path {
+	fill: currentColor;
+}
+
+.bhc-wishlist-count.is-empty {
+	display: none;
+}
+
+/* Filters --------------------------------------------------------------- */
+
+.bhc-filters__group {
+	border: 0;
+	border-block-end: 1px solid var(--bhc-color-line);
+	margin: 0 0 var(--bhc-space);
+	padding: 0 0 var(--bhc-space);
+}
+
+.bhc-filters__legend {
+	font-size: 0.8125rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--bhc-color-muted);
+	margin-block-end: 0.6rem;
+	padding: 0;
+}
+
+.bhc-filters__options {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.4rem;
+}
+
+.bhc-filters__option {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-height: 32px;
+}
+
+.bhc-filters__option label {
+	display: flex;
+	gap: 0.35rem;
+	align-items: baseline;
+	cursor: pointer;
+}
+
+.bhc-filters__option-count {
+	color: var(--bhc-color-muted);
+	font-size: 0.8125rem;
+}
+
+.bhc-filters__price {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.bhc-filters__price input {
+	inline-size: 100%;
+	min-height: 44px;
+}
+
+.bhc-filters__actions {
+	display: flex;
+	align-items: center;
+	gap: var(--bhc-space);
+	flex-wrap: wrap;
+}
+
+/* Tier table ------------------------------------------------------------ */
+
+.bhc-tiers {
+	margin-block: 1.5rem;
+}
+
+.bhc-tiers__table {
+	inline-size: 100%;
+	border-collapse: collapse;
+}
+
+.bhc-tiers__table th,
+.bhc-tiers__table td {
+	text-align: start;
+	padding: 0.55rem 0.65rem;
+	border-block-end: 1px solid var(--bhc-color-line);
+	font-size: 0.9375rem;
+}
+
+.bhc-tiers__note {
+	color: var(--bhc-color-muted);
+	font-size: 0.875rem;
+}
+
+/* Estimator ------------------------------------------------------------- */
+
+.bhc-estimator {
+	border: 1px solid var(--bhc-color-line);
+	border-radius: var(--bhc-radius);
+	padding: var(--bhc-space);
+	margin-block: 1.5rem;
+	background: var(--bhc-color-surface);
+}
+
+.bhc-estimator__controls {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	flex-wrap: wrap;
+}
+
+.bhc-estimator__select {
+	min-height: 44px;
+	max-inline-size: 20rem;
+	flex: 1 1 12rem;
+}
+
+.bhc-estimator__note {
+	color: var(--bhc-color-muted);
+	font-size: 0.8125rem;
+	margin-block-end: 0;
+}
+
+/* Frequently bought together -------------------------------------------- */
+
+.bhc-fbt__list {
+	list-style: none;
+	margin: 0 0 0.75rem;
+	padding: 0;
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
+.bhc-fbt__link {
+	display: grid;
+	gap: 0.25rem;
+	max-inline-size: 9rem;
+	text-decoration: none;
+	color: inherit;
+}
+
+.bhc-fbt__name {
+	font-size: 0.8125rem;
+	line-height: 1.3;
+}
+
+.bhc-fbt__price {
+	font-size: 0.8125rem;
+	color: var(--bhc-color-muted);
+}
+
+/* Utility --------------------------------------------------------------- */
+
+.bhc-no-scroll {
+	overflow: hidden;
+}
+
+.bhc-price__unit {
+	display: block;
+	font-size: 0.8125rem;
+	color: var(--bhc-color-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.bhc-wishlist-toggle,
+	.bhc-card {
+		transition: none !important;
+	}
+}

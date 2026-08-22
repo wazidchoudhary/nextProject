@@ -1,0 +1,90 @@
+// -----------------------------------------------------------------------------
+// Reset
+//
+// A short, opinionated reset. Everything here earns its place; there is no
+// vendor normalise bundled because most of it is dead weight in 2026.
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+	scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html:focus-within {
+		scroll-behavior: smooth;
+	}
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd,
+ul,
+ol {
+	margin: 0;
+}
+
+ul[class],
+ol[class] {
+	padding: 0;
+	list-style: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+// Images and iframes must never be the reason a layout shifts. Width and
+// height attributes are required in markup; this keeps the intrinsic ratio.
+img[width][height] {
+	height: auto;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	background: none;
+	border: 0;
+	cursor: pointer;
+}
+
+table {
+	border-collapse: collapse;
+	width: 100%;
+}
+
+:target {
+	scroll-margin-block-start: 6rem;
+}
+
+[hidden] {
+	display: none !important;
+}

@@ -1,0 +1,439 @@
+// -----------------------------------------------------------------------------
+// WooCommerce component styling
+//
+// The theme dequeues WooCommerce's three stylesheets (`woocommerce-layout`,
+// `woocommerce-smallscreen`, `woocommerce-general` — roughly 60KB) because they
+// impose a float-based grid and a purple button palette that fight a custom
+// design, and because two thirds of their rules target markup this theme
+// replaces. Everything WooCommerce still needs to look right is defined here.
+//
+// The rule of thumb: if WooCommerce emits the markup, this file styles it.
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+// Notices --------------------------------------------------------------------
+
+.woocommerce-notices-wrapper:empty {
+	display: none;
+}
+
+.woocommerce-message .button,
+.woocommerce-error .button,
+.woocommerce-info .button {
+	margin-inline-start: f.space('2xs');
+	padding: 0.35rem 0.75rem;
+	min-height: 36px;
+}
+
+// Star rating ----------------------------------------------------------------
+// WooCommerce ships an icon font for stars. This renders them from a gradient
+// instead: no font request, no FOUT, and it scales with the type size.
+
+.star-rating {
+	position: relative;
+	display: inline-block;
+	width: 5.5rem;
+	height: 1.1rem;
+	overflow: hidden;
+	line-height: 1;
+	font-size: 0;
+	vertical-align: middle;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.05 1.1-6.5-4.7-4.6 6.5-.95z' fill='%23cfc2aa'/%3E%3C/svg%3E");
+	background-size: 1.1rem 1.1rem;
+	background-repeat: repeat-x;
+
+	span {
+		position: absolute;
+		inset-block-start: 0;
+		inset-inline-start: 0;
+		height: 100%;
+		overflow: hidden;
+		// WooCommerce puts "Rated 4.5 out of 5" inside the span; the accessible
+		// name comes from the element's aria-label, so the text itself is
+		// pushed out of view rather than removed.
+		text-indent: -999em;
+		white-space: nowrap;
+		color: transparent;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.05 1.1-6.5-4.7-4.6 6.5-.95z' fill='%23a9832f'/%3E%3C/svg%3E");
+		background-size: 1.1rem 1.1rem;
+		background-repeat: repeat-x;
+
+		strong,
+		&::before {
+			@include m.visually-hidden;
+		}
+	}
+}
+
+.woocommerce-product-rating {
+	display: flex;
+	align-items: center;
+	gap: f.space('2xs');
+	font-size: v.$size-sm;
+
+	a {
+		color: v.$color-ink-muted;
+	}
+}
+
+// Price ----------------------------------------------------------------------
+
+.price,
+.woocommerce-Price-amount {
+	color: v.$color-ink;
+}
+
+.price del {
+	color: v.$color-ink-muted;
+	margin-inline-end: f.space('3xs');
+}
+
+.price ins {
+	text-decoration: none;
+	font-weight: v.$weight-semibold;
+}
+
+// Default sale flash is replaced by the plugin's badge system.
+span.onsale {
+	display: none;
+}
+
+// Quantity + add to cart -----------------------------------------------------
+
+.quantity {
+	display: inline-flex;
+	align-items: stretch;
+}
+
+.quantity .qty {
+	width: 5rem;
+	text-align: center;
+}
+
+form.cart {
+	display: grid;
+	gap: f.space('2xs');
+	margin-block: f.space('sm');
+
+	.button,
+	.single_add_to_cart_button {
+		flex: 1 1 12rem;
+	}
+}
+
+form.cart .product-actions,
+.woocommerce-variation-add-to-cart {
+	display: flex;
+	flex-wrap: wrap;
+	gap: f.space('2xs');
+	align-items: stretch;
+}
+
+// Variations -----------------------------------------------------------------
+
+.variations {
+	width: 100%;
+	margin-block-end: f.space('2xs');
+	border: 0;
+
+	th,
+	td {
+		padding: 0 0 f.space('2xs');
+		border: 0;
+		text-align: start;
+		vertical-align: middle;
+	}
+
+	.label label {
+		margin: 0;
+		font-size: v.$size-sm;
+		color: v.$color-ink-muted;
+	}
+
+	select {
+		min-width: 12rem;
+	}
+}
+
+.reset_variations {
+	display: inline-block;
+	margin-block-start: f.space('3xs');
+	font-size: v.$size-xs;
+	color: v.$color-ink-muted;
+}
+
+.woocommerce-variation-price {
+	margin-block-end: f.space('2xs');
+	font-family: v.$font-display;
+	font-size: v.$size-lg;
+	color: v.$color-ink;
+}
+
+// Stock ----------------------------------------------------------------------
+
+.stock {
+	font-size: v.$size-sm;
+	margin: 0;
+
+	&.in-stock {
+		color: v.$color-success;
+	}
+
+	&.low-stock {
+		color: v.$color-brass;
+	}
+
+	&.out-of-stock {
+		color: v.$color-sale;
+	}
+}
+
+// Tabs -----------------------------------------------------------------------
+
+.woocommerce-tabs {
+	margin-block-start: f.space('2xl');
+	border-block-start: 1px solid v.$color-line;
+
+	ul.tabs {
+		display: flex;
+		flex-wrap: wrap;
+		gap: f.space('md');
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		border-block-end: 1px solid v.$color-line;
+
+		li a {
+			@include m.label;
+
+			display: inline-block;
+			padding-block: f.space('sm');
+			border-block-end: 2px solid transparent;
+			text-decoration: none;
+		}
+
+		li.active a {
+			color: v.$color-ink;
+			border-block-end-color: v.$color-ink;
+		}
+	}
+
+	.panel {
+		padding-block: f.space('md');
+		max-width: 62rem;
+
+		h2 {
+			font-size: v.$size-lg;
+		}
+	}
+}
+
+// Reviews --------------------------------------------------------------------
+
+#review_form_wrapper {
+	background-color: v.$color-surface;
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+	padding: f.space('md');
+}
+
+.comment-form-rating .stars {
+	display: flex;
+	gap: f.space('3xs');
+	margin: 0 0 f.space('2xs');
+	padding: 0;
+	list-style: none;
+
+	a {
+		font-size: v.$size-sm;
+		text-decoration: none;
+		color: v.$color-ink-muted;
+	}
+
+	.active a,
+	a:hover {
+		color: v.$color-brass;
+	}
+}
+
+// Cart -----------------------------------------------------------------------
+
+.woocommerce-cart-form {
+	margin-block-end: f.space('lg');
+}
+
+.cart_totals h2,
+.cross-sells h2 {
+	@include m.display(v.$size-lg);
+}
+
+.cart-collaterals {
+	display: grid;
+	gap: f.space('lg');
+
+	@include m.from('lg') {
+		grid-template-columns: minmax(0, 1fr) 22rem;
+		align-items: start;
+	}
+}
+
+.coupon {
+	display: flex;
+	gap: f.space('2xs');
+	flex-wrap: wrap;
+	margin-block-end: f.space('sm');
+
+	input[type='text'] {
+		flex: 1 1 12rem;
+	}
+}
+
+.product-remove a.remove {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border-radius: 50%;
+	background-color: v.$color-paper-warm;
+	color: v.$color-sale;
+	text-decoration: none;
+	font-size: v.$size-md;
+	line-height: 1;
+}
+
+// Checkout -------------------------------------------------------------------
+
+.woocommerce-checkout .form-row label,
+.woocommerce-form-row label {
+	display: block;
+}
+
+.required {
+	color: v.$color-sale;
+	text-decoration: none;
+	border: 0;
+}
+
+#payment .payment_methods {
+	list-style: none;
+	margin: 0 0 f.space('sm');
+	padding: 0;
+
+	li {
+		padding-block: f.space('2xs');
+		border-block-end: 1px solid v.$color-line;
+	}
+
+	label {
+		display: inline-flex;
+		gap: f.space('3xs');
+		align-items: center;
+		margin: 0;
+	}
+}
+
+#payment .payment_box {
+	margin-block-start: f.space('2xs');
+	padding: f.space('2xs');
+	background-color: v.$color-paper-warm;
+	border-radius: v.$radius-sm;
+	font-size: v.$size-sm;
+}
+
+.woocommerce-terms-and-conditions-wrapper {
+	margin-block: f.space('sm');
+	font-size: v.$size-sm;
+}
+
+// Account --------------------------------------------------------------------
+
+.woocommerce-form-login,
+.woocommerce-form-register,
+.woocommerce-EditAccountForm,
+.woocommerce-address-fields {
+	background-color: v.$color-surface;
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+	padding: f.space('md');
+	max-width: 34rem;
+}
+
+.woocommerce-form-login__rememberme {
+	display: inline-flex;
+	gap: f.space('3xs');
+	align-items: center;
+}
+
+.woocommerce-Addresses {
+	display: grid;
+	gap: f.space('md');
+
+	@include m.from('md') {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+// Order confirmation ---------------------------------------------------------
+
+.woocommerce-order-overview {
+	display: grid;
+	gap: f.space('2xs');
+	margin: f.space('md') 0;
+	padding: f.space('md');
+	list-style: none;
+	background-color: v.$color-surface;
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+
+	@include m.from('md') {
+		grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+	}
+
+	li {
+		font-size: v.$size-xs;
+		letter-spacing: v.$tracking-wide;
+		text-transform: uppercase;
+		color: v.$color-ink-muted;
+
+		strong {
+			display: block;
+			margin-block-start: f.space('3xs');
+			font-size: v.$size-base;
+			letter-spacing: 0;
+			text-transform: none;
+			color: v.$color-ink;
+		}
+	}
+}
+
+.woocommerce-order-details,
+.woocommerce-customer-details {
+	margin-block-start: f.space('lg');
+}
+
+// Layout resets --------------------------------------------------------------
+// WooCommerce's own grid is float based; the theme uses CSS grid throughout.
+
+.woocommerce ul.products {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.woocommerce ul.products li.product {
+	float: none;
+	width: auto;
+	margin: 0;
+}
+
+.woocommerce-result-count {
+	margin: 0;
+}
+
+.woocommerce-ordering {
+	margin: 0;
+}

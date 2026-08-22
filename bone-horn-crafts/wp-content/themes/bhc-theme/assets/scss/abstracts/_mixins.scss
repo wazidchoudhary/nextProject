@@ -1,0 +1,118 @@
+// -----------------------------------------------------------------------------
+// Mixins
+// -----------------------------------------------------------------------------
+
+@use 'variables' as v;
+@use 'functions' as f;
+
+/// Mobile-first media query.
+/// @param {String} $name - Breakpoint key.
+@mixin from($name) {
+	@media (min-width: f.breakpoint($name)) {
+		@content;
+	}
+}
+
+/// Max-width query, for the rare mobile-only rule.
+/// @param {String} $name - Breakpoint key.
+@mixin until($name) {
+	@media (max-width: calc(#{f.breakpoint($name)} - 0.0625em)) {
+		@content;
+	}
+}
+
+/// Centred content column.
+/// @param {Length} $max - Maximum width.
+@mixin container($max: v.$container-max) {
+	width: 100%;
+	max-width: $max;
+	margin-inline: auto;
+	padding-inline: v.$gutter;
+}
+
+/// Visually hidden but available to assistive technology.
+@mixin visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip-path: inset(50%);
+	white-space: nowrap;
+	border: 0;
+}
+
+/// Consistent, high-contrast focus ring on every interactive element.
+@mixin focus-ring($offset: 2px) {
+	outline: 2px solid v.$color-focus;
+	outline-offset: $offset;
+}
+
+/// Small caps label used for eyebrows and section labels.
+@mixin label {
+	font-family: v.$font-body;
+	font-size: v.$size-xs;
+	font-weight: v.$weight-semibold;
+	letter-spacing: v.$tracking-wider;
+	text-transform: uppercase;
+	color: v.$color-ink-muted;
+}
+
+/// Editorial heading defaults.
+/// @param {Length} $size - Font size token.
+@mixin display($size: v.$size-xl) {
+	font-family: v.$font-display;
+	font-size: $size;
+	font-weight: v.$weight-regular;
+	line-height: v.$leading-tight;
+	letter-spacing: -0.01em;
+	color: v.$color-ink;
+	text-wrap: balance;
+}
+
+/// Touch-friendly target. 44px is the WCAG 2.2 target-size guidance.
+@mixin touch-target($size: 44px) {
+	min-height: $size;
+	min-width: $size;
+}
+
+/// Fixed aspect ratio media box that reserves space before the image loads,
+/// which is what keeps CLS at zero in the product grid.
+/// @param {Number} $ratio - Width / height ratio.
+@mixin media-box($ratio: 1) {
+	position: relative;
+	aspect-ratio: #{$ratio};
+	overflow: hidden;
+	background-color: v.$color-paper-warm;
+
+	img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+/// Horizontal scroller used by rails on small screens.
+@mixin scroll-rail {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: minmax(15rem, 1fr);
+	gap: f.space('md');
+	overflow-x: auto;
+	scroll-snap-type: x mandatory;
+	scrollbar-width: thin;
+	padding-block-end: f.space('2xs');
+
+	> * {
+		scroll-snap-align: start;
+	}
+}
+
+/// Respects the user's motion preference in one place.
+@mixin motion-safe {
+	@media (prefers-reduced-motion: no-preference) {
+		@content;
+	}
+}

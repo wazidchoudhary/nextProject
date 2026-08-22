@@ -1,0 +1,126 @@
+// -----------------------------------------------------------------------------
+// Buttons
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.bhc-button,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce #respond input#submit,
+.wp-element-button {
+	@include m.touch-target;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: f.space('3xs');
+	padding: 0.75rem 1.5rem;
+	border: 1px solid v.$color-ink;
+	border-radius: v.$radius-sm;
+	background-color: v.$color-ink;
+	color: v.$color-paper;
+	font-family: v.$font-body;
+	font-size: v.$size-sm;
+	font-weight: v.$weight-semibold;
+	letter-spacing: v.$tracking-wide;
+	text-transform: uppercase;
+	text-decoration: none;
+	text-align: center;
+	line-height: 1.1;
+	transition: background-color v.$duration-fast v.$ease, border-color v.$duration-fast v.$ease, color v.$duration-fast v.$ease;
+
+	&:hover {
+		background-color: v.$color-accent-dark;
+		border-color: v.$color-accent-dark;
+		color: v.$color-paper;
+	}
+
+	&:focus-visible {
+		@include m.focus-ring;
+	}
+
+	&[disabled],
+	&.disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+}
+
+.bhc-button--ghost,
+.woocommerce a.button.alt--ghost {
+	background-color: transparent;
+	color: v.$color-ink;
+
+	&:hover {
+		background-color: v.$color-ink;
+		color: v.$color-paper;
+	}
+}
+
+.bhc-button--quiet {
+	border-color: v.$color-line-strong;
+	background-color: transparent;
+	color: v.$color-ink-soft;
+	text-transform: none;
+	letter-spacing: 0;
+	font-weight: v.$weight-medium;
+
+	&:hover {
+		border-color: v.$color-ink;
+		background-color: transparent;
+		color: v.$color-ink;
+	}
+}
+
+.bhc-button--full {
+	width: 100%;
+}
+
+.bhc-icon-button {
+	@include m.touch-target;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: f.space('3xs');
+	padding: 0.4rem 0.55rem;
+	border-radius: v.$radius-sm;
+	color: v.$color-ink;
+	position: relative;
+
+	&:hover {
+		color: v.$color-accent-dark;
+	}
+
+	&:focus-visible {
+		@include m.focus-ring(0);
+	}
+
+	svg {
+		width: 22px;
+		height: 22px;
+	}
+}
+
+.bhc-icon-button__count {
+	position: absolute;
+	inset-block-start: 2px;
+	inset-inline-end: 0;
+	min-width: 1.15rem;
+	padding: 0 0.25rem;
+	border-radius: v.$radius-pill;
+	background-color: v.$color-accent;
+	color: v.$color-surface;
+	font-size: 0.6875rem;
+	font-weight: v.$weight-semibold;
+	line-height: 1.15rem;
+	text-align: center;
+
+	&.is-empty {
+		display: none;
+	}
+}

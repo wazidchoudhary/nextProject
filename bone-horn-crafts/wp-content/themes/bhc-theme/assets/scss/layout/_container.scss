@@ -1,0 +1,18 @@
+// -----------------------------------------------------------------------------
+// Containers
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/mixins' as m;
+
+.container {
+	@include m.container;
+}
+
+.container--narrow {
+	@include m.container(v.$container-narrow);
+}
+
+.container--wide {
+	@include m.container(v.$container-wide);
+}

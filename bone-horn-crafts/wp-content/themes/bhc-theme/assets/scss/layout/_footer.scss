@@ -1,0 +1,57 @@
+// -----------------------------------------------------------------------------
+// Site footer layout
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.site-footer {
+	background-color: v.$color-horn;
+	color: rgba(247, 242, 232, 0.78);
+	padding-block: f.space('2xl') f.space('lg');
+	margin-block-start: f.space('3xl');
+}
+
+.site-footer a {
+	color: rgba(247, 242, 232, 0.86);
+	text-decoration: none;
+
+	&:hover,
+	&:focus-visible {
+		color: #fff;
+		text-decoration: underline;
+	}
+}
+
+.site-footer__inner {
+	@include m.container(v.$container-wide);
+
+	display: grid;
+	gap: f.space('xl');
+
+	@include m.from('md') {
+		grid-template-columns: 1.4fr 1fr 1fr;
+	}
+
+	@include m.from('lg') {
+		grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+	}
+}
+
+.site-footer__bottom {
+	@include m.container(v.$container-wide);
+
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: f.space('2xs');
+	margin-block-start: f.space('xl');
+	padding-block-start: f.space('sm');
+	border-block-start: 1px solid rgba(247, 242, 232, 0.16);
+	font-size: v.$size-xs;
+}
+
+.site-footer__credit {
+	color: rgba(247, 242, 232, 0.6);
+}

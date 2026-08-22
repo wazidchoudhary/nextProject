@@ -1,0 +1,106 @@
+// -----------------------------------------------------------------------------
+// Shop and archive pages
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.page-header {
+	padding-block: f.space('xl') f.space('md');
+	border-block-end: 1px solid v.$color-line;
+	margin-block-end: f.space('lg');
+
+	&__title {
+		@include m.display(v.$size-2xl);
+
+		margin-block-end: f.space('2xs');
+	}
+
+	&__description {
+		max-width: 62ch;
+		color: v.$color-ink-muted;
+		margin: 0;
+	}
+}
+
+.bhc-filters {
+	background-color: v.$color-surface;
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+	padding: f.space('md');
+
+	@include m.from('lg') {
+		position: sticky;
+		inset-block-start: calc(var(--bhc-header-height) + 1rem);
+		max-height: calc(100vh - var(--bhc-header-height) - 2rem);
+		overflow-y: auto;
+	}
+
+	&__title {
+		@include m.display(v.$size-lg);
+
+		margin-block-end: f.space('sm');
+	}
+}
+
+.filter-toggle {
+	@include m.from('lg') {
+		display: none;
+	}
+}
+
+.catalog-toolbar {
+	display: flex;
+	flex-wrap: wrap;
+	gap: f.space('2xs');
+	align-items: center;
+	justify-content: space-between;
+	margin-block-end: f.space('md');
+
+	select {
+		width: auto;
+		min-width: 12rem;
+	}
+}
+
+.woocommerce-pagination {
+	margin-block-start: f.space('xl');
+
+	ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: f.space('3xs');
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+
+	a,
+	span {
+		@include m.touch-target(40px);
+
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding-inline: f.space('2xs');
+		border: 1px solid v.$color-line-strong;
+		border-radius: v.$radius-sm;
+		text-decoration: none;
+		color: v.$color-ink;
+		font-size: v.$size-sm;
+	}
+
+	.current {
+		background-color: v.$color-ink;
+		border-color: v.$color-ink;
+		color: v.$color-paper;
+	}
+}
+
+.search-summary {
+	font-size: v.$size-sm;
+	color: v.$color-ink-muted;
+	margin-block-end: f.space('md');
+}

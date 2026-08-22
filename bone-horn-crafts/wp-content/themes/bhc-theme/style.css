@@ -1,0 +1,18 @@
+/*
+Theme Name: Bone Horn Crafts
+Theme URI: https://www.bonehorncrafts.com/
+Author: Bone Horn Crafts
+Author URI: https://www.bonehorncrafts.com/
+Description: Editorial WooCommerce theme for the Bone Horn Crafts materials workshop. Mobile-first, no page builder, no jQuery dependency, system fonts only, with a hand-curated critical CSS path.
+Version: 1.0.0
+Requires at least: 6.5
+Tested up to: 7.0
+Requires PHP: 8.2
+License: GNU General Public License v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: bhc-theme
+Tags: e-commerce, woocommerce, custom-menu, featured-images, translation-ready, accessibility-ready
+
+This file carries the theme header only. The compiled stylesheet lives at
+assets/css/main.css and is built from assets/scss with `npm run build`.
+*/

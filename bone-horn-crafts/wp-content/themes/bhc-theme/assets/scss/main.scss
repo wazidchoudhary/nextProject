@@ -1,0 +1,32 @@
+// -----------------------------------------------------------------------------
+// Bone Horn Crafts — main stylesheet
+//
+// Load order matters: tokens, then reset, then base elements, then layout,
+// then components, then page compositions. Nothing below layout may introduce
+// a new colour or spacing value; everything references the token layer.
+//
+// Built with: npm run build:css  (dart-sass, compressed, no source map)
+// -----------------------------------------------------------------------------
+
+@use 'base/reset';
+@use 'base/base';
+@use 'base/typography';
+
+@use 'layout/container';
+@use 'layout/grid';
+@use 'layout/header' as layout-header;
+@use 'layout/footer' as layout-footer;
+
+@use 'components/buttons';
+@use 'components/forms';
+@use 'components/cards' as component-cards;
+@use 'components/header' as component-header;
+@use 'components/footer' as component-footer;
+@use 'components/product' as component-product;
+@use 'components/modal';
+@use 'components/woocommerce';
+
+@use 'pages/home';
+@use 'pages/shop';
+@use 'pages/product' as page-product;
+@use 'pages/checkout';

@@ -1,0 +1,43 @@
+// -----------------------------------------------------------------------------
+// Footer components
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.footer-column__title {
+	@include m.label;
+
+	color: rgba(247, 242, 232, 0.6);
+	margin-block-end: f.space('2xs');
+}
+
+.footer-menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: f.space('3xs');
+	font-size: v.$size-sm;
+}
+
+.footer-brand__name {
+	font-family: v.$font-display;
+	font-size: v.$size-lg;
+	color: v.$color-paper;
+	margin-block-end: f.space('2xs');
+}
+
+.footer-brand__body {
+	max-width: 34ch;
+	font-size: v.$size-sm;
+}
+
+.footer-social {
+	display: flex;
+	gap: f.space('2xs');
+	margin-block-start: f.space('sm');
+	list-style: none;
+	padding: 0;
+}

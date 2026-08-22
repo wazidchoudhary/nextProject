@@ -1,0 +1,43 @@
+// -----------------------------------------------------------------------------
+// Functions
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+@use 'sass:math';
+@use 'variables' as v;
+
+/// Returns a spacing value from the scale.
+/// @param {String} $step - Scale key.
+@function space($step) {
+	@if not map.has-key(v.$space, $step) {
+		@error 'Unknown spacing step: #{$step}';
+	}
+
+	@return map.get(v.$space, $step);
+}
+
+/// Returns a breakpoint value.
+/// @param {String} $name - Breakpoint key.
+@function breakpoint($name) {
+	@if not map.has-key(v.$breakpoints, $name) {
+		@error 'Unknown breakpoint: #{$name}';
+	}
+
+	@return map.get(v.$breakpoints, $name);
+}
+
+/// Returns a z-index from the scale, so stacking order stays auditable.
+/// @param {String} $layer - Layer key.
+@function z($layer) {
+	@if not map.has-key(v.$z, $layer) {
+		@error 'Unknown z-index layer: #{$layer}';
+	}
+
+	@return map.get(v.$z, $layer);
+}
+
+/// Converts a pixel value to rem against a 16px root.
+/// @param {Number} $px - Pixel value.
+@function rem($px) {
+	@return math.div($px, 16) * 1rem;
+}

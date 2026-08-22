@@ -1,0 +1,25 @@
+{
+	"name": "bone-horn-crafts",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Build tooling for the Bone Horn Crafts theme assets.",
+	"license": "GPL-2.0-or-later",
+	"scripts": {
+		"build": "npm run build:css && npm run build:critical",
+		"build:css": "sass wp-content/themes/bhc-theme/assets/scss/main.scss wp-content/themes/bhc-theme/assets/css/main.css --style=compressed --no-source-map --load-path=wp-content/themes/bhc-theme/assets/scss",
+		"build:critical": "sass wp-content/themes/bhc-theme/assets/scss/critical.scss wp-content/themes/bhc-theme/assets/css/critical.css --style=compressed --no-source-map --load-path=wp-content/themes/bhc-theme/assets/scss",
+		"watch": "sass --watch wp-content/themes/bhc-theme/assets/scss/main.scss:wp-content/themes/bhc-theme/assets/css/main.css --load-path=wp-content/themes/bhc-theme/assets/scss",
+		"lint:css": "stylelint \"wp-content/themes/bhc-theme/assets/scss/**/*.scss\"",
+		"lint:js": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js",
+		"test:e2e": "node tests/e2e/purchase-flow.mjs",
+		"test:admin": "node tests/e2e/admin-screens.mjs",
+		"screenshots": "node tools/screenshots.mjs"
+	},
+	"devDependencies": {
+		"sass": "^1.77.0",
+		"playwright": "^1.48.0"
+	},
+	"engines": {
+		"node": ">=18"
+	}
+}

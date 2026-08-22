@@ -1,0 +1,87 @@
+/**
+ * Bone Horn Crafts — admin screens.
+ */
+
+.bhc-admin__tiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+	gap: 12px;
+	margin: 20px 0;
+}
+
+.bhc-admin__tile {
+	display: block;
+	padding: 16px 18px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	text-decoration: none;
+	color: #1d2327;
+}
+
+a.bhc-admin__tile:hover,
+a.bhc-admin__tile:focus {
+	border-color: #7a5c3e;
+	box-shadow: 0 0 0 1px #7a5c3e;
+}
+
+.bhc-admin__tile-value {
+	display: block;
+	font-size: 26px;
+	font-weight: 600;
+	line-height: 1.2;
+}
+
+.bhc-admin__tile-label {
+	display: block;
+	margin-top: 4px;
+	color: #646970;
+	font-size: 13px;
+}
+
+.bhc-admin__columns {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+	gap: 20px;
+	align-items: start;
+}
+
+.bhc-admin__panel {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 16px 18px;
+}
+
+.bhc-admin__panel h2 {
+	margin-top: 0;
+}
+
+.bhc-status {
+	display: inline-block;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+}
+
+.bhc-status--pass {
+	background: #edf7ed;
+	color: #1e6b23;
+}
+
+.bhc-status--warn {
+	background: #fcf3e3;
+	color: #8a5a12;
+}
+
+.bhc-status--fail {
+	background: #fbeaea;
+	color: #9c2b2b;
+}
+
+.bhc-tier-row input {
+	margin-right: 8px;
+}

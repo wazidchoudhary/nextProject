@@ -1,0 +1,95 @@
+// -----------------------------------------------------------------------------
+// Single product page composition
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.single-product-main {
+	padding-block: f.space('lg') f.space('2xl');
+}
+
+.bhc-rail {
+	margin-block-start: f.space('2xl');
+
+	&__header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: f.space('2xs');
+		margin-block-end: f.space('md');
+	}
+
+	&__track {
+		@include m.scroll-rail;
+
+		@include m.from('lg') {
+			display: grid;
+			grid-auto-flow: row;
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			overflow: visible;
+		}
+	}
+}
+
+.bhc-fbt {
+	margin-block: f.space('md');
+	padding: f.space('sm');
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+	background-color: v.$color-surface;
+
+	&__title {
+		@include m.label;
+
+		margin-block-end: f.space('2xs');
+	}
+
+	&__total {
+		font-size: v.$size-sm;
+		color: v.$color-ink;
+		margin: 0;
+	}
+}
+
+.woocommerce-Reviews {
+	display: grid;
+	gap: f.space('lg');
+
+	@include m.from('lg') {
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+	}
+}
+
+.commentlist {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: f.space('md');
+}
+
+.commentlist .comment_container {
+	display: grid;
+	grid-template-columns: 3rem minmax(0, 1fr);
+	gap: f.space('2xs');
+	padding-block-end: f.space('md');
+	border-block-end: 1px solid v.$color-line;
+
+	img.avatar {
+		border-radius: 50%;
+	}
+}
+
+.comment-text .meta {
+	font-size: v.$size-sm;
+	color: v.$color-ink-muted;
+	margin-block-end: f.space('3xs');
+}
+
+.star-rating {
+	font-size: v.$size-sm;
+	color: v.$color-brass;
+}

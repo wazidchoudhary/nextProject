@@ -1,0 +1,91 @@
+// -----------------------------------------------------------------------------
+// Overlays: filter drawer, dialogs, notices.
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.bhc-notice,
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error {
+	padding: f.space('2xs') f.space('sm');
+	border: 1px solid v.$color-line-strong;
+	border-inline-start-width: 3px;
+	border-radius: v.$radius-sm;
+	background-color: v.$color-surface;
+	font-size: v.$size-sm;
+	margin-block-end: f.space('sm');
+	list-style: none;
+}
+
+.woocommerce-message {
+	border-inline-start-color: v.$color-success;
+}
+
+.woocommerce-error {
+	border-inline-start-color: v.$color-sale;
+}
+
+.woocommerce-info {
+	border-inline-start-color: v.$color-accent;
+}
+
+.bhc-empty {
+	text-align: center;
+	padding-block: f.space('2xl');
+	border: 1px dashed v.$color-line-strong;
+	border-radius: v.$radius-sm;
+
+	&__title {
+		@include m.display(v.$size-lg);
+	}
+
+	&__body {
+		max-width: 44ch;
+		margin-inline: auto;
+		color: v.$color-ink-muted;
+	}
+}
+
+// Filter drawer on small screens.
+@media (max-width: 63.99em) {
+	.bhc-filters {
+		position: fixed;
+		inset: 0;
+		z-index: f.z('drawer');
+		overflow-y: auto;
+		padding: f.space('md') f.space('sm') f.space('2xl');
+		background-color: v.$color-surface;
+		transform: translateY(100%);
+		transition: transform v.$duration-base v.$ease;
+
+		&.is-open {
+			transform: translateY(0);
+		}
+	}
+
+	.bhc-filters__actions {
+		position: sticky;
+		inset-block-end: 0;
+		padding-block: f.space('2xs');
+		background-color: v.$color-surface;
+	}
+}
+
+.filter-bar {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: f.space('2xs');
+	margin-block-end: f.space('md');
+	padding-block-end: f.space('2xs');
+	border-block-end: 1px solid v.$color-line;
+
+	&__count {
+		font-size: v.$size-sm;
+		color: v.$color-ink-muted;
+	}
+}

@@ -1,0 +1,93 @@
+// -----------------------------------------------------------------------------
+// Base element styling and design-token custom properties.
+//
+// The tokens are re-published as custom properties so the commerce plugin's
+// stylesheet — which knows nothing about this theme's Sass — inherits the same
+// palette. That is the contract between the two packages.
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+:root {
+	--bhc-color-ink: #{v.$color-ink};
+	--bhc-color-muted: #{v.$color-ink-muted};
+	--bhc-color-line: #{v.$color-line};
+	--bhc-color-surface: #{v.$color-surface};
+	--bhc-color-accent: #{v.$color-accent};
+	--bhc-color-sale: #{v.$color-sale};
+	--bhc-color-stock: #{v.$color-brass};
+	--bhc-radius: #{v.$radius-sm};
+	--bhc-space: #{f.space('sm')};
+	--bhc-font-ui: #{v.$font-body};
+	--bhc-header-height: 4.5rem;
+}
+
+body {
+	background-color: v.$color-paper;
+	-webkit-font-smoothing: antialiased;
+	overflow-x: hidden;
+}
+
+::selection {
+	background-color: v.$color-accent;
+	color: v.$color-surface;
+}
+
+:focus-visible {
+	@include m.focus-ring;
+}
+
+.site-main {
+	display: block;
+	min-height: 50vh;
+}
+
+.section {
+	padding-block: f.space('2xl');
+
+	@include m.from('lg') {
+		padding-block: f.space('3xl');
+	}
+
+	&--tight {
+		padding-block: f.space('xl');
+	}
+
+	&--paper {
+		background-color: v.$color-paper-warm;
+	}
+
+	&--surface {
+		background-color: v.$color-surface;
+	}
+}
+
+.section__header {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: end;
+	justify-content: space-between;
+	gap: f.space('sm');
+	margin-block-end: f.space('lg');
+}
+
+.section__title {
+	@include m.display(v.$size-2xl);
+
+	margin: 0;
+}
+
+.section__lede {
+	color: v.$color-ink-muted;
+	max-width: 52ch;
+	margin: 0;
+}
+
+.section__link {
+	@include m.label;
+
+	color: v.$color-accent-dark;
+	white-space: nowrap;
+}

@@ -1,0 +1,53 @@
+// -----------------------------------------------------------------------------
+// Site header layout
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.site-header {
+	position: sticky;
+	inset-block-start: 0;
+	z-index: f.z('header');
+	background-color: rgba(247, 242, 232, 0.94);
+	border-block-end: 1px solid v.$color-line;
+	backdrop-filter: saturate(1.4) blur(8px);
+}
+
+.site-header__announcement {
+	background-color: v.$color-horn;
+	color: v.$color-paper;
+	font-size: v.$size-xs;
+	letter-spacing: v.$tracking-wide;
+	text-align: center;
+	padding-block: f.space('3xs');
+	padding-inline: f.space('sm');
+	margin: 0;
+	max-width: none;
+}
+
+.site-header__inner {
+	@include m.container(v.$container-wide);
+
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: f.space('sm');
+	min-height: var(--bhc-header-height);
+}
+
+.site-header__nav {
+	display: none;
+
+	@include m.from('lg') {
+		display: block;
+		flex: 1 1 auto;
+	}
+}
+
+.site-header__actions {
+	display: flex;
+	align-items: center;
+	gap: f.space('3xs');
+}

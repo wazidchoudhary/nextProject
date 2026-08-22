@@ -1,0 +1,11 @@
+# Dependencies
+/wp-content/plugins/bhc-commerce-core/vendor/
+/node_modules/
+
+# Build caches
+.phpunit.cache/
+.sass-cache/
+*.log
+
+# Local environment
+/.env

@@ -1,0 +1,266 @@
+// -----------------------------------------------------------------------------
+// Product detail components
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.bhc-breadcrumbs {
+	font-size: v.$size-xs;
+	color: v.$color-ink-muted;
+	margin-block-end: f.space('md');
+
+	&__list {
+		display: flex;
+		flex-wrap: wrap;
+		gap: f.space('3xs');
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	&__item + &__item::before {
+		content: '/';
+		margin-inline-end: f.space('3xs');
+		color: v.$color-line-strong;
+	}
+
+	a {
+		color: inherit;
+		text-decoration: none;
+
+		&:hover {
+			color: v.$color-ink;
+			text-decoration: underline;
+		}
+	}
+}
+
+.product-layout {
+	display: grid;
+	gap: f.space('lg');
+
+	@include m.from('lg') {
+		grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+		gap: f.space('2xl');
+		align-items: start;
+	}
+}
+
+.product-gallery {
+	display: grid;
+	gap: f.space('2xs');
+	position: sticky;
+	inset-block-start: calc(var(--bhc-header-height) + 1rem);
+
+	@include m.until('lg') {
+		position: static;
+	}
+}
+
+.product-gallery__main {
+	@include m.media-box(1);
+
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+	background-color: v.$color-surface;
+}
+
+.product-gallery__thumbs {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: f.space('2xs');
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.product-gallery__thumb {
+	@include m.media-box(1);
+
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+	cursor: pointer;
+	padding: 0;
+	background: none;
+	width: 100%;
+
+	&[aria-current='true'] {
+		border-color: v.$color-ink;
+	}
+
+	&:focus-visible {
+		@include m.focus-ring(1px);
+	}
+}
+
+.product-summary {
+	display: grid;
+	gap: f.space('sm');
+}
+
+// On a card the badge list is an overlay on the image; in the product summary
+// it is part of the text flow, so the absolute positioning is reset here.
+.product-summary .bhc-badges {
+	position: static;
+	flex-direction: row;
+	flex-wrap: wrap;
+	max-inline-size: none;
+	margin-block-end: f.space('3xs');
+}
+
+.product-summary__title {
+	@include m.display(v.$size-2xl);
+
+	margin: 0;
+}
+
+.product-summary__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: f.space('2xs');
+	font-size: v.$size-sm;
+	color: v.$color-ink-muted;
+}
+
+.product-summary__price {
+	font-size: v.$size-xl;
+	font-family: v.$font-display;
+	color: v.$color-ink;
+
+	del {
+		font-size: v.$size-md;
+		color: v.$color-ink-muted;
+		margin-inline-end: f.space('2xs');
+	}
+
+	ins {
+		text-decoration: none;
+	}
+}
+
+.product-summary__excerpt {
+	font-size: v.$size-md;
+	color: v.$color-ink;
+	line-height: v.$leading-relaxed;
+}
+
+.product-specs {
+	width: 100%;
+	font-size: v.$size-sm;
+	border-block-start: 1px solid v.$color-line;
+
+	th,
+	td {
+		text-align: start;
+		padding: f.space('2xs') 0;
+		border-block-end: 1px solid v.$color-line;
+		vertical-align: top;
+	}
+
+	th {
+		width: 40%;
+		font-weight: v.$weight-medium;
+		color: v.$color-ink-muted;
+	}
+}
+
+.product-assurances {
+	display: grid;
+	gap: f.space('2xs');
+	margin: 0;
+	padding: f.space('sm') 0 0;
+	list-style: none;
+	border-block-start: 1px solid v.$color-line;
+	font-size: v.$size-sm;
+
+	li {
+		display: flex;
+		gap: f.space('2xs');
+		align-items: baseline;
+	}
+
+	strong {
+		font-weight: v.$weight-semibold;
+	}
+}
+
+.product-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: f.space('2xs');
+	align-items: stretch;
+}
+
+.quantity input[type='number'] {
+	width: 5.5rem;
+	text-align: center;
+}
+
+// Sticky mobile add-to-cart. Height is reserved via padding on the body so the
+// bar can never cover the footer or shift content when it appears.
+.sticky-cart {
+	position: fixed;
+	inset-inline: 0;
+	inset-block-end: 0;
+	z-index: f.z('sticky');
+	display: none;
+	gap: f.space('2xs');
+	align-items: center;
+	justify-content: space-between;
+	padding: f.space('2xs') f.space('sm');
+	background-color: rgba(255, 253, 249, 0.97);
+	border-block-start: 1px solid v.$color-line;
+	box-shadow: 0 -6px 20px rgba(34, 29, 24, 0.08);
+
+	@include m.until('lg') {
+		&[data-visible='true'] {
+			display: flex;
+		}
+	}
+
+	&__price {
+		font-family: v.$font-display;
+		font-size: v.$size-md;
+		color: v.$color-ink;
+	}
+}
+
+.product-tabs {
+	margin-block-start: f.space('2xl');
+	border-block-start: 1px solid v.$color-line;
+}
+
+.product-tabs__nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: f.space('sm');
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-block-end: 1px solid v.$color-line;
+}
+
+.product-tabs__tab {
+	@include m.label;
+
+	appearance: none;
+	padding-block: f.space('sm');
+	border-block-end: 2px solid transparent;
+	color: v.$color-ink-muted;
+
+	&[aria-selected='true'] {
+		color: v.$color-ink;
+		border-block-end-color: v.$color-ink;
+	}
+}
+
+.product-tabs__panel {
+	padding-block: f.space('md');
+
+	&[hidden] {
+		display: none;
+	}
+}

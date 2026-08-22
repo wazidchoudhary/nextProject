@@ -1,0 +1,185 @@
+// -----------------------------------------------------------------------------
+// Product and content cards
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+.bhc-card {
+	display: flex;
+	flex-direction: column;
+	gap: f.space('2xs');
+	background-color: transparent;
+	position: relative;
+}
+
+.bhc-card__media {
+	@include m.media-box(1);
+
+	border: 1px solid v.$color-line;
+	border-radius: v.$radius-sm;
+
+	img {
+		transition: transform 400ms v.$ease;
+	}
+
+	.bhc-card:hover & img {
+		@include m.motion-safe {
+			transform: scale(1.03);
+		}
+	}
+}
+
+.bhc-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: f.space('3xs');
+}
+
+.bhc-card__title {
+	font-family: v.$font-display;
+	font-size: v.$size-md;
+	line-height: v.$leading-snug;
+	margin: 0;
+
+	a {
+		color: v.$color-ink;
+		text-decoration: none;
+
+		// Expands the click target to the whole card without nesting links,
+		// which keeps the tab order to one stop per product.
+		&::after {
+			content: '';
+			position: absolute;
+			inset: 0;
+		}
+
+		&:hover {
+			color: v.$color-accent-dark;
+		}
+	}
+}
+
+.bhc-card__price {
+	font-size: v.$size-base;
+	color: v.$color-ink;
+	margin: 0;
+
+	del {
+		color: v.$color-ink-muted;
+		margin-inline-end: f.space('3xs');
+	}
+
+	ins {
+		text-decoration: none;
+		font-weight: v.$weight-semibold;
+	}
+}
+
+.bhc-card__unit,
+.bhc-card__reviews {
+	font-size: v.$size-xs;
+	color: v.$color-ink-muted;
+	margin: 0;
+}
+
+.bhc-card__rating {
+	display: flex;
+	align-items: center;
+	gap: f.space('3xs');
+	margin: 0;
+}
+
+.bhc-card__actions {
+	margin-block-start: f.space('3xs');
+
+	// The card link already covers the whole card; the button is a redundant
+	// affordance for pointer users and is hidden from the tab order.
+	.bhc-button {
+		position: relative;
+		z-index: 1;
+	}
+}
+
+.bhc-stars {
+	--bhc-rating: 0;
+
+	// Stars are drawn from an inline SVG data URI rather than an icon font:
+	// no extra request, no FOUT, and the shape scales with the type size.
+	display: inline-block;
+	width: 5.5rem;
+	height: 1.1rem;
+	position: relative;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.05 1.1-6.5-4.7-4.6 6.5-.95z' fill='%23cfc2aa'/%3E%3C/svg%3E");
+	background-size: 1.1rem 1.1rem;
+	background-repeat: repeat-x;
+
+	&::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		width: calc(var(--bhc-rating) / 5 * 100%);
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2.6l2.9 5.9 6.5.95-4.7 4.6 1.1 6.5L12 17.5l-5.8 3.05 1.1-6.5-4.7-4.6 6.5-.95z' fill='%23a9832f'/%3E%3C/svg%3E");
+		background-size: 1.1rem 1.1rem;
+		background-repeat: repeat-x;
+	}
+}
+
+.bhc-post-card {
+	display: flex;
+	flex-direction: column;
+	gap: f.space('2xs');
+
+	.bhc-post-card__media {
+		@include m.media-box(1.5);
+
+		border-radius: v.$radius-sm;
+	}
+
+	h3 {
+		font-size: v.$size-md;
+		margin: 0;
+
+		a {
+			color: v.$color-ink;
+			text-decoration: none;
+
+			&:hover {
+				color: v.$color-accent-dark;
+			}
+		}
+	}
+
+	time {
+		@include m.label;
+	}
+}
+
+.bhc-category-card {
+	position: relative;
+	display: block;
+	text-decoration: none;
+	color: v.$color-ink;
+
+	.bhc-category-card__media {
+		@include m.media-box(0.82);
+
+		border-radius: v.$radius-sm;
+	}
+
+	h3 {
+		font-size: v.$size-md;
+		margin-block: f.space('2xs') 0;
+	}
+
+	p {
+		margin: 0;
+		font-size: v.$size-sm;
+		color: v.$color-ink-muted;
+	}
+
+	&:hover h3 {
+		color: v.$color-accent-dark;
+	}
+}

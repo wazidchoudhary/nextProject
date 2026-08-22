@@ -1,0 +1,118 @@
+// -----------------------------------------------------------------------------
+// Design tokens
+//
+// Every value the design uses lives here once. Components reference tokens, not
+// raw values, so a palette or scale change is a one-file edit — and the same
+// tokens are emitted as CSS custom properties in `base/_base.scss` so the
+// plugin's own components inherit the theme without importing any Sass.
+// -----------------------------------------------------------------------------
+
+@use 'sass:map';
+
+// Colour ---------------------------------------------------------------------
+// A natural-materials palette: bone paper, walnut ink, horn black, brass accent.
+
+$color-ink:          #221d18;
+$color-ink-soft:     #5f564b;
+$color-ink-muted:    #857a6c;
+$color-paper:        #f7f2e8;
+$color-paper-warm:   #f1e9db;
+$color-surface:      #fffdf9;
+$color-line:         #e3d8c6;
+$color-line-strong:  #cfc2aa;
+$color-accent:       #7a5c3e;
+$color-accent-dark:  #5b4229;
+$color-brass:        #a9832f;
+$color-horn:         #2b2724;
+$color-sale:         #8a3f2c;
+$color-success:      #4c6640;
+$color-focus:        #1f6feb;
+
+// Typography -----------------------------------------------------------------
+// System stacks only. No webfont means no third-party connection, no FOIT and
+// no render-blocking font CSS — worth more to LCP than any typeface choice.
+
+$font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, 'Times New Roman', serif;
+$font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+$font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+$weight-regular: 400;
+$weight-medium: 500;
+$weight-semibold: 600;
+
+// Fluid type scale. `clamp()` keeps headings proportionate from 360px to 1440px
+// without a single media query, which also keeps CLS at zero on resize.
+$size-xs:   clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+$size-sm:   clamp(0.8125rem, 0.79rem + 0.15vw, 0.875rem);
+$size-base: clamp(0.9375rem, 0.91rem + 0.2vw, 1rem);
+$size-md:   clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+$size-lg:   clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+$size-xl:   clamp(1.5rem, 1.3rem + 1vw, 2rem);
+$size-2xl:  clamp(1.875rem, 1.5rem + 1.8vw, 2.75rem);
+$size-3xl:  clamp(2.25rem, 1.7rem + 2.6vw, 3.75rem);
+
+$leading-tight: 1.15;
+$leading-snug: 1.3;
+$leading-normal: 1.6;
+$leading-relaxed: 1.75;
+
+$tracking-wide: 0.08em;
+$tracking-wider: 0.14em;
+
+// Space ----------------------------------------------------------------------
+
+$space: (
+	'3xs': 0.25rem,
+	'2xs': 0.5rem,
+	'xs':  0.75rem,
+	'sm':  1rem,
+	'md':  1.5rem,
+	'lg':  2rem,
+	'xl':  3rem,
+	'2xl': 4rem,
+	'3xl': 6rem,
+	'4xl': 8rem,
+);
+
+// Layout ---------------------------------------------------------------------
+
+$container-max: 78rem;
+$container-narrow: 44rem;
+$container-wide: 90rem;
+$gutter: clamp(1rem, 4vw, 2.5rem);
+
+$radius-sm: 2px;
+$radius-md: 3px;
+$radius-pill: 999px;
+
+// Elevation ------------------------------------------------------------------
+// Shadows are deliberately faint: an artisan catalogue should look printed, not
+// like a dashboard.
+
+$shadow-sm: 0 1px 2px rgba(34, 29, 24, 0.06);
+$shadow-md: 0 6px 18px rgba(34, 29, 24, 0.08);
+$shadow-lg: 0 18px 40px rgba(34, 29, 24, 0.12);
+
+// Motion ---------------------------------------------------------------------
+
+$duration-fast: 120ms;
+$duration-base: 200ms;
+$ease: cubic-bezier(0.2, 0, 0.2, 1);
+
+// Breakpoints ----------------------------------------------------------------
+
+$breakpoints: (
+	'sm': 40em,   // 640px
+	'md': 48em,   // 768px
+	'lg': 64em,   // 1024px
+	'xl': 80em,   // 1280px
+);
+
+$z: (
+	'base': 1,
+	'sticky': 40,
+	'header': 50,
+	'drawer': 60,
+	'modal': 70,
+	'toast': 80,
+);

@@ -1,0 +1,128 @@
+// -----------------------------------------------------------------------------
+// Forms
+// -----------------------------------------------------------------------------
+
+@use '../abstracts/variables' as v;
+@use '../abstracts/functions' as f;
+@use '../abstracts/mixins' as m;
+
+label {
+	display: inline-block;
+	font-size: v.$size-sm;
+	font-weight: v.$weight-medium;
+	color: v.$color-ink;
+	margin-block-end: f.space('3xs');
+}
+
+input[type='text'],
+input[type='email'],
+input[type='tel'],
+input[type='url'],
+input[type='number'],
+input[type='search'],
+input[type='password'],
+input[type='date'],
+textarea,
+select,
+.select2-container .select2-selection--single {
+	@include m.touch-target;
+
+	width: 100%;
+	padding: 0.65rem 0.85rem;
+	background-color: v.$color-surface;
+	border: 1px solid v.$color-line-strong;
+	border-radius: v.$radius-sm;
+	color: v.$color-ink;
+	font-size: v.$size-base;
+	transition: border-color v.$duration-fast v.$ease, box-shadow v.$duration-fast v.$ease;
+
+	&::placeholder {
+		color: v.$color-ink-muted;
+	}
+
+	&:focus {
+		border-color: v.$color-accent;
+		box-shadow: 0 0 0 3px rgba(122, 92, 62, 0.16);
+		outline: none;
+	}
+
+	&:focus-visible {
+		@include m.focus-ring(1px);
+	}
+}
+
+textarea {
+	min-height: 8rem;
+	resize: vertical;
+}
+
+select {
+	appearance: none;
+	background-image: linear-gradient(45deg, transparent 50%, #{v.$color-ink-soft} 50%), linear-gradient(135deg, #{v.$color-ink-soft} 50%, transparent 50%);
+	background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+	background-size: 5px 5px, 5px 5px;
+	background-repeat: no-repeat;
+	padding-inline-end: 2.5rem;
+}
+
+input[type='checkbox'],
+input[type='radio'] {
+	width: 1.05rem;
+	height: 1.05rem;
+	accent-color: v.$color-accent;
+}
+
+fieldset {
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.bhc-field {
+	margin-block-end: f.space('sm');
+}
+
+.bhc-field__hint {
+	display: block;
+	margin-block-start: f.space('3xs');
+	font-size: v.$size-xs;
+	color: v.$color-ink-muted;
+}
+
+.bhc-search {
+	position: relative;
+	display: flex;
+	gap: f.space('3xs');
+	align-items: center;
+
+	input[type='search'] {
+		padding-inline-end: 3rem;
+	}
+
+	button {
+		@include m.touch-target;
+
+		position: absolute;
+		inset-inline-end: 0;
+		inset-block-start: 0;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		color: v.$color-ink-soft;
+
+		&:hover {
+			color: v.$color-ink;
+		}
+	}
+}
+
+.bhc-newsletter__form {
+	display: flex;
+	flex-wrap: wrap;
+	gap: f.space('2xs');
+	max-width: 32rem;
+
+	input[type='email'] {
+		flex: 1 1 14rem;
+	}
+}
