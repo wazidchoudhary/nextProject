@@ -54,7 +54,7 @@ defined( 'ABSPATH' ) || exit;
 
 		<div class="site-header__actions">
 			<div class="header-search">
-				<?php get_search_form(); ?>
+				<?php get_search_form( [ 'aria_label' => __( 'Search the catalogue', 'bhc-theme' ) ] ); ?>
 			</div>
 
 			<a class="bhc-icon-button" href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
@@ -98,7 +98,7 @@ defined( 'ABSPATH' ) || exit;
 			</button>
 		</div>
 
-		<?php get_search_form(); ?>
+		<?php get_search_form( [ 'aria_label' => __( 'Search the catalogue (menu)', 'bhc-theme' ) ] ); ?>
 
 		<nav aria-label="<?php esc_attr_e( 'Mobile', 'bhc-theme' ); ?>">
 			<?php

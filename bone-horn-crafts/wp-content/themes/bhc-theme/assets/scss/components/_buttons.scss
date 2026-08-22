@@ -43,9 +43,15 @@
 		@include m.focus-ring;
 	}
 
+	// `opacity` is the obvious way to say "disabled" and the wrong one: it drags
+	// the label and its background toward each other, and the solid accent
+	// button landed at 3.15:1. An explicit pair reads as disabled and still
+	// measures 4.81:1.
 	&[disabled],
 	&.disabled {
-		opacity: 0.5;
+		background-color: v.$color-disabled;
+		border-color: v.$color-disabled;
+		color: v.$color-paper;
 		cursor: not-allowed;
 	}
 }

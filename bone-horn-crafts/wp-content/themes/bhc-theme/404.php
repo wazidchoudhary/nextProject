@@ -24,7 +24,7 @@ get_header();
 				<a class="bhc-button" href="<?php echo esc_url( bhc_wc_page_url( 'shop' ) ); ?>"><?php esc_html_e( 'Browse the catalogue', 'bhc-theme' ); ?></a>
 			</p>
 
-			<?php get_search_form(); ?>
+			<?php get_search_form( [ 'aria_label' => __( 'Search from this page', 'bhc-theme' ) ] ); ?>
 		</div>
 
 		<?php

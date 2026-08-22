@@ -39,10 +39,12 @@ $search_term = get_search_query();
 				?>
 			</p>
 
-			<?php get_search_form(); ?>
+			<?php get_search_form( [ 'aria_label' => __( 'Refine this search', 'bhc-theme' ) ] ); ?>
 		</header>
 
 		<?php if ( have_posts() ) : ?>
+			<h2 class="screen-reader-text"><?php esc_html_e( 'Search results', 'bhc-theme' ); ?></h2>
+
 			<div class="bhc-grid bhc-grid--3" data-bhc-product-grid>
 				<?php
 				while ( have_posts() ) :

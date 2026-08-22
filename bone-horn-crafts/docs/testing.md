@@ -6,7 +6,7 @@ Three layers, each answering a question the others cannot.
 |---|---:|---:|---|
 | **Unit** (PHPUnit) | 71 tests, 133 assertions | ~0.02 s | Is the logic correct in isolation? |
 | **Integration** (`wp eval-file`) | 59 assertions | ~2 s | Does it behave correctly *inside a real WooCommerce store*? |
-| **End-to-end** (Playwright) | 3 suites, 26 checks | ~40 s | Can a person actually buy something? |
+| **End-to-end** (Playwright) | 4 suites, 50 checks | ~90 s | Can a person actually buy something, and can everyone? |
 
 Plus **WPCS** across the plugin, theme and harness, at zero violations.
 
@@ -135,6 +135,33 @@ inline SVG monograms generated locally — no request, no third party.
 
 Override the target with `BHC_BASE_URL`.
 
+### `accessibility.mjs` — 24 checks
+
+Runs **axe-core** over twelve pages — home, shop, product, category, cart,
+my-account, wishlist, blog, about, FAQ, search, 404 — at 1440 px and 390 px,
+against `wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa` and `best-practice`. It fails
+on any violation at serious or critical impact and prints everything else.
+
+Current result: **no violations at any impact level, on all 24 renders.**
+
+It did not start there. The first run reported **686 serious colour-contrast
+violations** from a single root cause: the muted text token `#857a6c` measured
+3.49–4.14:1 against the three paper tones, failing AA for body text everywhere
+it appeared. Three real defects came out of that run:
+
+* the muted token, now `#706557` (4.72–5.60:1), with a separate inverse token
+  for the same role on the dark banner;
+* disabled buttons, which used `opacity: 0.5` — the obvious way to say
+  "disabled" and the wrong one, since it drags label and background toward each
+  other and put the disabled add-to-cart at 3.15:1. An explicit colour pair
+  reads the same and measures 4.81:1;
+* heading order on the blog and search listings, where `h3` card titles followed
+  the page `h1` with nothing between them.
+
+Automated checks cover roughly a third of WCAG. This is the mechanical third —
+labels, contrast, landmarks, heading structure, ARIA misuse. It does not replace
+a keyboard and screen-reader pass, and this build has not had one.
+
 ---
 
 ## Coding standards
@@ -174,6 +201,9 @@ follow.
 * **Visual regression.** No baseline screenshots. The CLS measurement and the
   admin-notice checks catch the failures that matter most here; pixel diffing a
   demo store would mostly generate churn.
+* **Manual accessibility.** axe-core covers what a machine can check. Keyboard
+  traps, focus order, screen-reader announcements and the actual usability of
+  the filter drawer have not been tested by a person.
 * **Load testing.** Query counts are measured; concurrency is not.
 * **Cross-browser.** Playwright runs Chromium only.
 * **Payment gateways.** Checkout is exercised with cash-on-delivery. Testing a
@@ -188,6 +218,7 @@ wp eval-file bin/integration-tests.php
 npm run test:e2e
 npm run test:admin
 npm run test:vitals
+npm run test:a11y
 ```
 
 The e2e suites need the store running (`php -S localhost:8088 -t ~/wp-demo

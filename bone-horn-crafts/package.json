@@ -18,11 +18,13 @@
 		"lint:php:fix": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpcbf --standard=phpcs.xml.dist",
 		"test:unit": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpunit --configuration wp-content/plugins/bhc-commerce-core/phpunit.xml.dist",
 		"lint": "npm run lint:css && npm run lint:js && npm run lint:php",
-		"test:vitals": "node tests/e2e/web-vitals.mjs"
+		"test:vitals": "node tests/e2e/web-vitals.mjs",
+		"test:a11y": "node tests/e2e/accessibility.mjs"
 	},
 	"devDependencies": {
-		"sass": "^1.77.0",
-		"playwright": "^1.48.0"
+		"axe-core": "^4.13.0",
+		"playwright": "^1.48.0",
+		"sass": "^1.77.0"
 	},
 	"engines": {
 		"node": ">=18"

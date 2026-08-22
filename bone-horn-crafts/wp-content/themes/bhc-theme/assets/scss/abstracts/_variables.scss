@@ -14,7 +14,13 @@
 
 $color-ink:          #221d18;
 $color-ink-soft:     #5f564b;
-$color-ink-muted:    #857a6c;
+// Muted text is the one token that has to be argued for rather than picked.
+// #857a6c read well but measured 3.49-4.14:1 against the three paper tones,
+// which fails WCAG AA for body-size text everywhere it was used. #706557 keeps
+// the same warm grey character at 4.72-5.60:1. The inverse token exists because
+// the same muted role on the dark banner needs to move the other way.
+$color-ink-muted:    #706557;
+$color-ink-muted-inv: #b5a996;
 $color-paper:        #f7f2e8;
 $color-paper-warm:   #f1e9db;
 $color-surface:      #fffdf9;
@@ -27,6 +33,7 @@ $color-horn:         #2b2724;
 $color-sale:         #8a3f2c;
 $color-success:      #4c6640;
 $color-focus:        #1f6feb;
+$color-disabled:     #6f6a62;
 
 // Typography -----------------------------------------------------------------
 // System stacks only. No webfont means no third-party connection, no FOIT and

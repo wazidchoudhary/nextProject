@@ -29,7 +29,7 @@ three levels.
 | **REST API** | 9 routes under `bhc/v1`, every one with a real permission callback |
 | **WP-CLI** | `wp bhc` with 9 subcommands |
 | **Background jobs** | 4 Action Scheduler jobs, idempotent, with retry and structured logging |
-| **Tests** | 71 unit tests, 59 integration assertions, 3 Playwright suites |
+| **Tests** | 71 unit tests, 59 integration assertions, 4 Playwright suites, zero axe-core violations |
 | **Standards** | WPCS + PHPCompatibility, zero violations |
 
 ## Documentation
@@ -84,7 +84,8 @@ bone-horn-crafts/
 ├── tests/e2e/
 │   ├── purchase-flow.mjs              Playwright: shop → filter → cart → checkout
 │   ├── admin-screens.mjs              Playwright: admin screens, PHP and JS notices
-│   └── web-vitals.mjs                 Playwright: CLS and LCP budgets
+│   ├── web-vitals.mjs                 Playwright: CLS and LCP budgets
+│   └── accessibility.mjs              Playwright: axe-core, 12 pages × 2 viewports
 ├── tools/
 │   ├── dev-mu-plugins/                Development-only mu-plugins (never deployed)
 │   ├── router.php                     Router for PHP's built-in server
@@ -120,6 +121,7 @@ npm run test:unit          # 71 PHPUnit tests, no WordPress needed
 npm run test:e2e           # Playwright purchase flow
 npm run test:admin         # Playwright admin screens
 npm run test:vitals        # Playwright CLS/LCP budgets
+npm run test:a11y          # axe-core over 12 pages × 2 viewports
 wp eval-file bin/integration-tests.php   # 59 assertions against the live store
 
 # Standards

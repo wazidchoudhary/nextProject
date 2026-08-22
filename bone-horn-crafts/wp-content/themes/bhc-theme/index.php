@@ -27,6 +27,13 @@ get_header();
 		);
 
 		if ( have_posts() ) :
+			// Card titles are h3. Without a heading between them and the page
+			// h1, the document jumps a level.
+			printf(
+				'<h2 class="screen-reader-text">%s</h2>',
+				esc_html__( 'Journal articles', 'bhc-theme' )
+			);
+
 			echo '<div class="bhc-grid bhc-grid--3">';
 
 			while ( have_posts() ) :
