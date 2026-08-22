@@ -359,6 +359,64 @@ final class ProductRepository {
 	}
 
 	/**
+	 * Cover image ids for a set of category slugs, resolved in one batch.
+	 *
+	 * A category card needs one image: the term's own thumbnail when it has
+	 * one, otherwise the newest product in that category. Resolving the
+	 * fallback per card meant hydrating a `WC_Product` just to read an
+	 * attachment id, which cost a post, meta, term and attachment query for
+	 * every card on the page. Here the newest id per category is collected
+	 * first, primed together, and only then read.
+	 *
+	 * @param string[] $slugs Category slugs.
+	 *
+	 * @return array<string, int> slug => attachment id (0 when there is none).
+	 */
+	public function category_cover_ids( array $slugs ): array {
+		$slugs = array_values( array_unique( array_filter( array_map( 'sanitize_title', $slugs ) ) ) );
+
+		if ( [] === $slugs ) {
+			return [];
+		}
+
+		$product_ids = [];
+
+		foreach ( $slugs as $slug ) {
+			$ids = $this->category_ids( $slug, 1 );
+
+			if ( isset( $ids[0] ) ) {
+				$product_ids[ $slug ] = (int) $ids[0];
+			}
+		}
+
+		if ( [] === $product_ids ) {
+			return array_fill_keys( $slugs, 0 );
+		}
+
+		// One posts query and one meta query for every card on the page. The
+		// thumbnail ids then come out of the meta cache for free.
+		_prime_post_caches( array_values( $product_ids ), false, true );
+
+		$covers      = array_fill_keys( $slugs, 0 );
+		$attachments = [];
+
+		foreach ( $product_ids as $slug => $product_id ) {
+			$thumbnail_id = (int) get_post_thumbnail_id( $product_id );
+
+			if ( $thumbnail_id > 0 ) {
+				$covers[ $slug ] = $thumbnail_id;
+				$attachments[]   = $thumbnail_id;
+			}
+		}
+
+		if ( [] !== $attachments ) {
+			_prime_post_caches( array_values( array_unique( $attachments ) ), false, true );
+		}
+
+		return $covers;
+	}
+
+	/**
 	 * Published product count, cached for the dashboard and sitemap.
 	 */
 	public function published_count(): int {

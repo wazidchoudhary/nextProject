@@ -16,9 +16,9 @@ use WC_Product;
 /**
  * Single source of truth for the plugin's product meta keys.
  *
- * Reads go through the WooCommerce CRUD layer (`$product->get_meta()`), which
- * is already primed when the product object was loaded — so a template that
- * asks for five meta values costs zero extra queries. Writes go through
+ * Reads go through WordPress's post meta cache, which ProductRepository::prime()
+ * warms for a whole grid in one query — see read() for why the WooCommerce CRUD
+ * accessor is not used on that path. Writes still go through
  * `update_meta_data()` + `save()` so HPOS, caches and CRUD hooks stay correct.
  */
 final class ProductMeta {
@@ -62,6 +62,39 @@ final class ProductMeta {
 	}
 
 	/**
+	 * Reads one meta value for a product.
+	 *
+	 * WooCommerce's `$product->get_meta()` loads the object's meta through
+	 * WC_Data_Store_WP::read_meta(), which is an uncached
+	 * `SELECT ... WHERE post_id = %d` run once per object. On a listing page
+	 * that is one query per card: a twelve-card grid asking for a badge list
+	 * costs twelve queries no matter how well the page is otherwise primed.
+	 *
+	 * `get_post_meta()` reads the same rows out of WordPress's post meta cache,
+	 * which ProductRepository::prime() fills for every product on the page in a
+	 * single query.
+	 *
+	 * The CRUD accessor is still used whenever it may hold something the
+	 * database does not: an unsaved product, or one that is still being built
+	 * (`get_object_read()` is false until WooCommerce has loaded it). Writers
+	 * therefore keep full CRUD semantics; only settled reads take the fast path.
+	 *
+	 * @param WC_Product $product Product.
+	 * @param string     $key     Meta key.
+	 *
+	 * @return mixed Stored value, or an empty string when absent.
+	 */
+	private static function read( WC_Product $product, string $key ): mixed {
+		$id = $product->get_id();
+
+		if ( $id > 0 && $product->get_object_read() ) {
+			return get_post_meta( $id, $key, true );
+		}
+
+		return $product->get_meta( $key, true );
+	}
+
+	/**
 	 * Manually assigned badge slugs.
 	 *
 	 * @param WC_Product $product Product.
@@ -69,7 +102,7 @@ final class ProductMeta {
 	 * @return string[]
 	 */
 	public static function badges( WC_Product $product ): array {
-		$value = $product->get_meta( self::BADGES, true );
+		$value = self::read( $product, self::BADGES );
 
 		if ( is_string( $value ) && '' !== $value ) {
 			$value = array_map( 'trim', explode( ',', $value ) );
@@ -84,7 +117,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function is_limited_batch( WC_Product $product ): bool {
-		return 'yes' === $product->get_meta( self::LIMITED_BATCH, true );
+		return 'yes' === self::read( $product, self::LIMITED_BATCH );
 	}
 
 	/**
@@ -93,7 +126,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function is_pair_matched( WC_Product $product ): bool {
-		return 'yes' === $product->get_meta( self::PAIR_MATCHED, true );
+		return 'yes' === self::read( $product, self::PAIR_MATCHED );
 	}
 
 	/**
@@ -102,7 +135,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function wholesale_enabled( WC_Product $product ): bool {
-		return 'yes' === $product->get_meta( self::WHOLESALE_ENABLED, true );
+		return 'yes' === self::read( $product, self::WHOLESALE_ENABLED );
 	}
 
 	/**
@@ -113,7 +146,7 @@ final class ProductMeta {
 	 * @return array<int, array{min_qty:int, price:float}>
 	 */
 	public static function price_tiers( WC_Product $product ): array {
-		$tiers = $product->get_meta( self::PRICE_TIERS, true );
+		$tiers = self::read( $product, self::PRICE_TIERS );
 
 		if ( ! is_array( $tiers ) ) {
 			return [];
@@ -150,7 +183,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function hsn_code( WC_Product $product ): string {
-		return (string) $product->get_meta( self::HSN_CODE, true );
+		return (string) self::read( $product, self::HSN_CODE );
 	}
 
 	/**
@@ -159,7 +192,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function gst_rate( WC_Product $product ): float {
-		return (float) $product->get_meta( self::GST_RATE, true );
+		return (float) self::read( $product, self::GST_RATE );
 	}
 
 	/**
@@ -168,7 +201,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function batch_reference( WC_Product $product ): string {
-		return (string) $product->get_meta( self::BATCH_REFERENCE, true );
+		return (string) self::read( $product, self::BATCH_REFERENCE );
 	}
 
 	/**
@@ -177,7 +210,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function care_instructions( WC_Product $product ): string {
-		return (string) $product->get_meta( self::CARE_INSTRUCTIONS, true );
+		return (string) self::read( $product, self::CARE_INSTRUCTIONS );
 	}
 
 	/**
@@ -186,7 +219,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function lead_time_days( WC_Product $product ): int {
-		return absint( $product->get_meta( self::LEAD_TIME_DAYS, true ) );
+		return absint( self::read( $product, self::LEAD_TIME_DAYS ) );
 	}
 
 	/**
@@ -195,7 +228,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function origin_country( WC_Product $product ): string {
-		$code = strtoupper( (string) $product->get_meta( self::ORIGIN_COUNTRY, true ) );
+		$code = strtoupper( (string) self::read( $product, self::ORIGIN_COUNTRY ) );
 
 		return 2 === strlen( $code ) ? $code : 'IN';
 	}
@@ -206,7 +239,7 @@ final class ProductMeta {
 	 * @param WC_Product $product Product.
 	 */
 	public static function unit_of_sale( WC_Product $product ): string {
-		return (string) $product->get_meta( self::UNIT_OF_SALE, true );
+		return (string) self::read( $product, self::UNIT_OF_SALE );
 	}
 
 	/**

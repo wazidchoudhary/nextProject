@@ -77,6 +77,35 @@ function bhc_product_cards( array $products, int $columns = 4 ): void {
 }
 
 /**
+ * Returns the product ids behind a merchandising source.
+ *
+ * Every branch is a cached, bounded repository call, so resolving a rail's ids
+ * without rendering it is cheap. That is what lets a page prime all its rails
+ * in one pass — see bhc_prime_product_rails().
+ *
+ * @param string $source One of new|bestsellers|sale|category|tag.
+ * @param int    $limit  Maximum products.
+ * @param string $value  Category or tag slug where relevant.
+ *
+ * @return int[]
+ */
+function bhc_product_ids_for( string $source, int $limit = 8, string $value = '' ): array {
+	$repository = bhc_service( \BoneHornCrafts\Core\Product\ProductRepository::class );
+
+	if ( null === $repository ) {
+		return [];
+	}
+
+	return match ( $source ) {
+		'bestsellers' => $repository->bestseller_ids( $limit ),
+		'sale'        => $repository->on_sale_ids( $limit ),
+		'category'    => $repository->category_ids( $value, $limit ),
+		'tag'         => $repository->tag_ids( $value, $limit ),
+		default       => $repository->new_arrival_ids( $limit ),
+	};
+}
+
+/**
  * Returns hydrated products for a merchandising source.
  *
  * @param string $source One of new|bestsellers|sale|category|tag.
@@ -92,15 +121,38 @@ function bhc_products_for( string $source, int $limit = 8, string $value = '' ):
 		return [];
 	}
 
-	$ids = match ( $source ) {
-		'bestsellers' => $repository->bestseller_ids( $limit ),
-		'sale'        => $repository->on_sale_ids( $limit ),
-		'category'    => $repository->category_ids( $value, $limit ),
-		'tag'         => $repository->tag_ids( $value, $limit ),
-		default       => $repository->new_arrival_ids( $limit ),
-	};
+	return $repository->hydrate( bhc_product_ids_for( $source, $limit, $value ) );
+}
 
-	return $repository->hydrate( $ids );
+/**
+ * Warms the caches for every product rail a page is about to render.
+ *
+ * ProductRepository::prime() batches its lookups, but it can only batch what it
+ * is given. Called once per rail it issues a term-relationship query per rail;
+ * called once with every rail's ids it issues one, and each rail's own prime()
+ * then finds the caches already warm. On the homepage that is the difference
+ * between ten term queries and two.
+ *
+ * @param array<int, array{0:string, 1?:int, 2?:string}> $rails Rail definitions,
+ *                                                              each [ source, limit, value ].
+ */
+function bhc_prime_product_rails( array $rails ): void {
+	$repository = bhc_service( \BoneHornCrafts\Core\Product\ProductRepository::class );
+
+	if ( null === $repository ) {
+		return;
+	}
+
+	$ids = [];
+
+	foreach ( $rails as $rail ) {
+		$ids = array_merge(
+			$ids,
+			bhc_product_ids_for( (string) $rail[0], (int) ( $rail[1] ?? 8 ), (string) ( $rail[2] ?? '' ) )
+		);
+	}
+
+	$repository->prime( array_values( array_unique( $ids ) ) );
 }
 
 /**

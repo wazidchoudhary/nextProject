@@ -23,6 +23,13 @@ $categories = get_terms(
 if ( ! is_array( $categories ) || [] === $categories ) {
 	return;
 }
+
+// Resolve every card's fallback image in one batch. Doing it per card meant
+// loading a product object just to read an attachment id.
+$repository = bhc_service( \BoneHornCrafts\Core\Product\ProductRepository::class );
+$covers     = null === $repository
+	? []
+	: $repository->category_cover_ids( wp_list_pluck( $categories, 'slug' ) );
 ?>
 <section class="section section--paper" aria-labelledby="home-categories">
 	<div class="container">
@@ -36,14 +43,12 @@ if ( ! is_array( $categories ) || [] === $categories ) {
 		<div class="category-grid">
 			<?php foreach ( $categories as $category ) : ?>
 				<?php
-				$thumbnail_id = (int) get_term_meta( $category->term_id, 'thumbnail_id', true );
-				$image_id     = $thumbnail_id;
+				$image_id = (int) get_term_meta( $category->term_id, 'thumbnail_id', true );
 
 				if ( $image_id <= 0 ) {
 					// Fall back to the newest product in the category so the
 					// grid never renders an empty box.
-					$fallback = bhc_products_for( 'category', 1, $category->slug );
-					$image_id = isset( $fallback[0] ) ? (int) $fallback[0]->get_image_id() : 0;
+					$image_id = (int) ( $covers[ $category->slug ] ?? 0 );
 				}
 				?>
 				<a class="bhc-category-card" href="<?php echo esc_url( (string) get_term_link( $category ) ); ?>">

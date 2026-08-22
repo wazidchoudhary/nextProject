@@ -19,6 +19,15 @@ get_header();
 $bhc_home_copy = class_exists( \BoneHornCrafts\Core\Demo\ContentLibrary::class )
 	? \BoneHornCrafts\Core\Demo\ContentLibrary::homepage()
 	: [];
+
+// Warm every rail on the page in one pass, before the first one renders.
+bhc_prime_product_rails(
+	[
+		[ 'new', 8 ],
+		[ 'bestsellers', 8 ],
+		[ 'category', 4, 'workshop-essentials' ],
+	]
+);
 ?>
 
 <main id="main" class="site-main" role="main">
