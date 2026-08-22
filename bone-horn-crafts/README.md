@@ -29,7 +29,7 @@ three levels.
 | **REST API** | 9 routes under `bhc/v1`, every one with a real permission callback |
 | **WP-CLI** | `wp bhc` with 9 subcommands |
 | **Background jobs** | 4 Action Scheduler jobs, idempotent, with retry and structured logging |
-| **Tests** | 71 unit tests, 59 integration assertions, 4 Playwright suites, zero axe-core violations |
+| **Tests** | 71 unit tests, 62 integration assertions, 4 Playwright suites, zero axe-core violations |
 | **Standards** | WPCS + PHPCompatibility, zero violations |
 
 ## Documentation
@@ -122,7 +122,7 @@ npm run test:e2e           # Playwright purchase flow
 npm run test:admin         # Playwright admin screens
 npm run test:vitals        # Playwright CLS/LCP budgets
 npm run test:a11y          # axe-core over 12 pages × 2 viewports
-wp eval-file bin/integration-tests.php   # 59 assertions against the live store
+wp eval-file bin/integration-tests.php   # 62 assertions against the live store
 
 # Standards
 npm run lint               # stylelint + eslint + phpcs

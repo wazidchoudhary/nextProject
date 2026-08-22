@@ -475,6 +475,36 @@ if ( null !== $product_for_schema ) {
 		$t->assert( 'graph includes BreadcrumbList', str_contains( $body, 'BreadcrumbList' ) );
 		$t->assert( 'canonical URL is emitted once', 1 === substr_count( $body, 'rel="canonical"' ) );
 		$t->assert( 'Open Graph product price present', str_contains( $body, 'product:price:amount' ) );
+
+		// WooCommerce prints its own Product/Review/BreadcrumbList JSON-LD in
+		// the footer. Two graphs describing the same page under different @id
+		// values is worse than one, so SchemaGraph opts WooCommerce out.
+		$blocks = substr_count( $body, 'application/ld+json' );
+
+		$t->assert( 'exactly one JSON-LD block on the page', 1 === $blocks, $blocks . ' block(s)' );
+
+		// The graph must reference the canonical host, not whatever hostname
+		// the request happened to arrive on.
+		$canonical_host = wp_parse_url(
+			(string) $container->get( BoneHornCrafts\Core\Support\Options::class )->string( 'canonical_host' ),
+			PHP_URL_HOST
+		);
+
+		if ( is_string( $canonical_host ) && '' !== $canonical_host ) {
+			$t->assert(
+				'schema @id uses the canonical host',
+				str_contains( $body, '"@id":"https://' . $canonical_host . '/#organization"' ),
+				$canonical_host
+			);
+		}
+
+		$t->assert(
+			'wishlist page is excluded from the index',
+			str_contains(
+				(string) wp_remote_retrieve_body( wp_remote_get( home_url( '/wishlist/' ), [ 'timeout' => 20 ] ) ),
+				'noindex'
+			)
+		);
 	} else {
 		$t->assert( 'product page fetched for SEO assertions', false, $response->get_error_message() );
 	}

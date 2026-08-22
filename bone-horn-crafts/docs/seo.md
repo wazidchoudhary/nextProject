@@ -17,6 +17,16 @@ per document, never several competing blocks — search engines resolve one grap
 far more reliably than five islands, and cross-references between nodes (`@id`)
 only work inside one.
 
+That means opting WooCommerce out. WooCommerce prints its own Product, Review and
+BreadcrumbList JSON-LD in the footer, describing the same page under different
+`@id` values and built from the raw site URL rather than the canonical host, so
+the two disagree about which node is which. `SchemaGraph` empties WooCommerce's
+type list through `woocommerce_structured_data_type_for_page` — its own supported
+opt-out — keeping only `order`, which drives markup inside transactional e-mails
+that this graph does not cover. Switching structured data off in the settings
+hands the job straight back to WooCommerce rather than leaving the page with
+none. The integration suite asserts there is exactly one block.
+
 | Piece | Emitted on | Notable |
 |---|---|---|
 | `OrganizationSchema` | every page | Name, logo, contact point, `manufacturer` |
@@ -83,6 +93,7 @@ canonicals pointing at itself, which is how staging sites end up in an index.
 `SEO\RobotsPolicy` sets `noindex, follow` on:
 
 * cart, checkout, my-account and every WooCommerce endpoint URL,
+* the wishlist page, whose content is whatever this visitor saved,
 * internal search results,
 * 404s,
 * filtered catalogue views.
@@ -98,8 +109,11 @@ pages, journal posts — is indexable.
 `SEO\SitemapIntegration` works with WordPress core's sitemap provider rather than
 replacing it — three filters, no bespoke XML:
 
-* `wp_sitemaps_posts_query_args` excludes the cart, checkout, my-account and
-  wishlist pages. A sitemap that lists the cart is a crawl-budget leak.
+* `wp_sitemaps_posts_query_args` excludes the cart, checkout and my-account
+  pages, plus the wishlist page — located by its shortcode, since a store can
+  put it anywhere and nothing records where. A sitemap that lists the cart is a
+  crawl-budget leak; one that lists a page rendering the visitor's own saved
+  list is worse.
 * `wp_sitemaps_taxonomies` drops every `pa_*` attribute taxonomy and
   `product_visibility`. Attribute archives are thin, near-duplicate pages.
 * `wp_sitemaps_post_types` makes sure `product` is included.
@@ -134,6 +148,11 @@ their primary category, journal posts, and nested pages. It is filterable throug
 * Product copy is written per product — 60 distinct short descriptions, intros
   and bullet lists in the demo dataset, not one template with the name
   substituted.
+
+`robots.txt` adds the store's own rules through the `robots_txt` filter, and
+appends a `Sitemap:` line only when core has not already written the same one —
+a robots.txt that repeats itself is the sort of thing that gets copied into the
+next project and grows.
 
 ## Verifying
 

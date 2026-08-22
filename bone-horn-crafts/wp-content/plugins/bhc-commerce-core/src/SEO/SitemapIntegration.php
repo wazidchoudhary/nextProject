@@ -11,6 +11,8 @@ namespace BoneHornCrafts\Core\SEO;
 
 defined( 'ABSPATH' ) || exit;
 
+use BoneHornCrafts\Core\Wishlist\WishlistRenderer;
+
 use BoneHornCrafts\Core\Contracts\HookableInterface;
 
 /**
@@ -54,6 +56,13 @@ final class SitemapIntegration implements HookableInterface {
 				static fn ( int $id ): bool => $id > 0
 			)
 		);
+
+		// The wishlist page is per-visitor; there is nothing to crawl.
+		$wishlist_page = WishlistRenderer::page_id();
+
+		if ( $wishlist_page > 0 ) {
+			$excluded[] = $wishlist_page;
+		}
 
 		if ( [] === $excluded ) {
 			return $args;

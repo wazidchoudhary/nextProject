@@ -37,6 +37,36 @@ final class SchemaGraph implements HookableInterface {
 	 */
 	public function register_hooks(): void {
 		add_action( 'wp_head', [ $this, 'render' ], 20 );
+		add_filter( 'woocommerce_structured_data_type_for_page', [ $this, 'suppress_woocommerce_data' ], 20, 1 );
+	}
+
+	/**
+	 * Stops WooCommerce emitting its own JSON-LD alongside this graph.
+	 *
+	 * WooCommerce prints a second `<script type="application/ld+json">` in the
+	 * footer with its own Product, Review and BreadcrumbList nodes. They
+	 * describe the same page as this graph, under different `@id` values and
+	 * built from the raw site URL rather than the canonical host, so the two
+	 * disagree about which node is which. Two competing descriptions of one
+	 * product is worse than either alone.
+	 *
+	 * Emptying the type list is WooCommerce's own supported way to opt out; it
+	 * only takes effect while this graph is enabled, so switching structured
+	 * data off in the settings hands the job straight back to WooCommerce
+	 * rather than leaving the page with none.
+	 *
+	 * @param string[] $types Structured data types WooCommerce is about to build.
+	 *
+	 * @return string[]
+	 */
+	public function suppress_woocommerce_data( array $types ): array {
+		if ( ! $this->options->bool( 'schema_enabled' ) ) {
+			return $types;
+		}
+
+		// `order` drives the markup inside transactional e-mails, which this
+		// graph does not cover.
+		return array_values( array_intersect( $types, [ 'order' ] ) );
 	}
 
 	/**

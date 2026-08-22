@@ -12,6 +12,7 @@ namespace BoneHornCrafts\Core\SEO;
 defined( 'ABSPATH' ) || exit;
 
 use BoneHornCrafts\Core\Contracts\HookableInterface;
+use BoneHornCrafts\Core\Wishlist\WishlistRenderer;
 
 /**
  * Keeps transactional and infinite-permutation URLs out of the index.
@@ -110,9 +111,18 @@ final class RobotsPolicy implements HookableInterface {
 			'Disallow: /*?s=',
 			'Disallow: /*?orderby=',
 			'Allow: /wp-content/uploads/',
-			'',
-			'Sitemap: ' . esc_url_raw( home_url( '/wp-sitemap.xml' ) ),
 		];
+
+		// WordPress core already advertises its sitemap. Appending a second
+		// identical `Sitemap:` line is not harmful, but a robots.txt that
+		// repeats itself is the sort of thing that gets copied into the next
+		// project and grows.
+		$sitemap = esc_url_raw( home_url( '/wp-sitemap.xml' ) );
+
+		if ( ! str_contains( $output, 'Sitemap: ' . $sitemap ) ) {
+			$rules[] = '';
+			$rules[] = 'Sitemap: ' . $sitemap;
+		}
 
 		return $output . implode( "\n", $rules ) . "\n";
 	}
@@ -125,7 +135,15 @@ final class RobotsPolicy implements HookableInterface {
 			return false;
 		}
 
-		return is_cart() || is_checkout() || is_account_page() || is_wc_endpoint_url();
+		if ( is_cart() || is_checkout() || is_account_page() || is_wc_endpoint_url() ) {
+			return true;
+		}
+
+		// The wishlist page renders whatever this visitor saved. There is
+		// nothing stable there to index, and what it does show is personal.
+		$wishlist_page = WishlistRenderer::page_id();
+
+		return $wishlist_page > 0 && is_page( $wishlist_page );
 	}
 
 	/**

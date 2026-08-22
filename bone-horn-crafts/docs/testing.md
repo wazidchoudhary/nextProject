@@ -5,7 +5,7 @@ Three layers, each answering a question the others cannot.
 | Layer | Count | Runtime | Question it answers |
 |---|---:|---:|---|
 | **Unit** (PHPUnit) | 71 tests, 133 assertions | ~0.02 s | Is the logic correct in isolation? |
-| **Integration** (`wp eval-file`) | 59 assertions | ~2 s | Does it behave correctly *inside a real WooCommerce store*? |
+| **Integration** (`wp eval-file`) | 62 assertions | ~2 s | Does it behave correctly *inside a real WooCommerce store*? |
 | **End-to-end** (Playwright) | 4 suites, 50 checks | ~90 s | Can a person actually buy something, and can everyone? |
 
 Plus **WPCS** across the plugin, theme and harness, at zero violations.
@@ -82,7 +82,7 @@ Groups:
 | **REST API** | Every route registered, every route has a permission callback, anonymous 401/403, nonce rejection, input validation |
 | Checkout services | Postcode validation per country, delivery window, workshop lead time |
 | Merchandising index | Stats rows exist, bestseller ranking populated |
-| **SEO output** | JSON-LD emitted, `Product` node present, `BreadcrumbList` present, exactly one canonical, OG price tags |
+| **SEO output** | JSON-LD emitted, `Product` node present, `BreadcrumbList` present, exactly one canonical, OG price tags, **exactly one JSON-LD block on the page**, `@id` uses the canonical host, wishlist page carries `noindex` |
 
 The query-efficiency assertions are written as **relationships, not fixed
 numbers** — "primed must cost materially less than unprimed, and under three

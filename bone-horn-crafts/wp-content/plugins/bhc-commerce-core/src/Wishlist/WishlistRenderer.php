@@ -25,6 +25,43 @@ use WC_Product;
 final class WishlistRenderer implements HookableInterface {
 
 	/**
+	 * Shortcode that marks a page as the wishlist page.
+	 */
+	public const SHORTCODE = 'bhc_wishlist';
+
+	/**
+	 * Finds the page holding the wishlist shortcode.
+	 *
+	 * A saved list is per-visitor, so the page that renders it must be kept out
+	 * of the index and out of the sitemap — but a store can put the shortcode on
+	 * any page, and there is no setting recording which. Locating it by its
+	 * shortcode is the one thing that stays true however the page is named or
+	 * moved. Cached for the request; a page that changes invalidates it on save.
+	 */
+	public static function page_id(): int {
+		static $page_id = null;
+
+		if ( null !== $page_id ) {
+			return $page_id;
+		}
+
+		$pages = get_posts(
+			[
+				'post_type'        => 'page',
+				'post_status'      => 'publish',
+				'numberposts'      => 1,
+				'fields'           => 'ids',
+				's'                => '[' . self::SHORTCODE,
+				'suppress_filters' => false,
+			]
+		);
+
+		$page_id = isset( $pages[0] ) ? (int) $pages[0] : 0;
+
+		return $page_id;
+	}
+
+	/**
 	 * Constructor.
 	 *
 	 * @param WishlistService $wishlist Wishlist service.
@@ -44,7 +81,7 @@ final class WishlistRenderer implements HookableInterface {
 		// instead of toggling the wishlist.
 		add_action( 'woocommerce_after_add_to_cart_form', [ $this, 'render_single_button' ], 8 );
 
-		add_shortcode( 'bhc_wishlist', [ $this, 'render_page' ] );
+		add_shortcode( self::SHORTCODE, [ $this, 'render_page' ] );
 		add_shortcode( 'bhc_wishlist_count', [ $this, 'render_count' ] );
 
 		add_action( 'admin_post_bhc_wishlist_toggle', [ $this, 'handle_form_submission' ] );
