@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<ruleset name="Bone Horn Crafts">
+	<description>WordPress coding standards for the Bone Horn Crafts plugin and theme.</description>
+
+	<file>wp-content/plugins/bhc-commerce-core</file>
+	<file>wp-content/themes/bhc-theme</file>
+	<file>bin</file>
+
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+	<exclude-pattern>*/node_modules/*</exclude-pattern>
+	<exclude-pattern>*/assets/css/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+	<arg name="parallel" value="8"/>
+
+	<config name="minimum_wp_version" value="6.5"/>
+	<config name="testVersion" value="8.2-"/>
+
+	<rule ref="WordPress">
+		<!-- The plugin is namespaced and PSR-4 autoloaded, so WordPress's
+		     file-naming and class-naming rules (class-my-thing.php,
+		     My_Thing) do not apply. -->
+		<exclude name="WordPress.Files.FileName"/>
+		<exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase"/>
+
+		<!-- Short array syntax is used throughout, which WPCS still flags. -->
+		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
+
+		<!-- Escaping is enforced; the "late escaping" sniff produces false
+		     positives on renderers that escape inside a builder method and are
+		     annotated at the call site. -->
+		<exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped"/>
+
+		<!-- WordPress hook callbacks have a fixed arity: `add_filter( $h, $cb, 10, 4 )`
+		     passes four arguments whether or not the callback reads them all, and
+		     dropping a trailing parameter changes the signature WordPress calls. -->
+		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+
+		<!-- `?:` is unambiguous on a PHP 8.2+ codebase and is used for
+		     "value or documented fallback" throughout. -->
+		<exclude name="Universal.Operators.DisallowShortTernary"/>
+
+		<!-- `$default`, `$class` and `$object` are the natural parameter names for
+		     `get( $key, $default )`-style APIs; PHP allows reserved words here. -->
+		<exclude name="Universal.NamingConventions.NoReservedKeywordParameterNames"/>
+
+		<!-- tax_query/meta_query are how a WooCommerce catalogue is queried at all.
+		     These call sites are the product read model: they are bounded (`limit`,
+		     `fields => ids`), joined against wc_product_meta_lookup where possible,
+		     and their results are cached in ProductRepository. See
+		     docs/performance.md for the measured query counts. -->
+		<exclude name="WordPress.DB.SlowDBQuery"/>
+	</rule>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="bhc-commerce-core"/>
+				<element value="bhc-theme"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.WP.Capabilities">
+		<properties>
+			<!-- WooCommerce capabilities plus the two this plugin registers in
+			     Security\Capabilities. -->
+			<property name="custom_capabilities" type="array">
+				<element value="edit_shop_order"/>
+				<element value="edit_products"/>
+				<element value="manage_woocommerce"/>
+				<element value="bhc_manage_store"/>
+				<element value="bhc_wholesale"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="PHPCompatibility"/>
+
+	<!-- Inline `/** @var Type $var */` annotations are type assertions for static
+	     analysis and IDEs, not prose docblocks; requiring a short description in
+	     them would mean deleting the annotation or padding it with noise.
+	     Property, class and function docblocks are still required. -->
+	<rule ref="Generic.Commenting.DocComment">
+		<exclude name="Generic.Commenting.DocComment.MissingShort"/>
+	</rule>
+
+	<!-- Template files intentionally mix logic and markup. -->
+	<rule ref="Squiz.PHP.EmbeddedPhp.ContentAfterOpen">
+		<exclude-pattern>*/templates/*</exclude-pattern>
+		<exclude-pattern>*/template-parts/*</exclude-pattern>
+		<exclude-pattern>*/woocommerce/*</exclude-pattern>
+	</rule>
+
+	<!-- The container is deliberately WordPress-free: it is unit tested with no
+	     WordPress loaded, and its exception messages are built from class names in
+	     source, never from a request. Escaping them would add a WordPress
+	     dependency to the one class that must not have one. -->
+	<rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+		<exclude-pattern>*/src/Container.php</exclude-pattern>
+	</rule>
+
+	<!-- Test harnesses: PHPUnit method names are the documentation, fixtures are
+	     declared inline next to the test that uses them, and tests/bootstrap.php
+	     *implements* the WordPress functions the AlternativeFunctions sniff wants
+	     it to call. bin/integration-tests.php is a diagnostic runner. -->
+	<rule ref="Squiz.Commenting.FunctionComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+		<exclude-pattern>bin/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.VariableComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+		<exclude-pattern>bin/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.Commenting.ClassComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+		<exclude-pattern>bin/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Commenting.DocComment">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+		<exclude-pattern>bin/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Files.OneObjectStructurePerFile">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>*/tests/bootstrap.php</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.PHP.DevelopmentFunctions">
+		<exclude-pattern>bin/*</exclude-pattern>
+	</rule>
+	<rule ref="Squiz.PHP.DisallowMultipleAssignments">
+		<exclude-pattern>*/tests/*</exclude-pattern>
+	</rule>
+</ruleset>

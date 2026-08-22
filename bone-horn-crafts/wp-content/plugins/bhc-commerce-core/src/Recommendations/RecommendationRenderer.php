@@ -146,10 +146,10 @@ final class RecommendationRenderer implements HookableInterface {
 		return $this->template->render(
 			'recommendations/rail.php',
 			[
-				'products'  => $this->service->products_for( $product, absint( $atts['limit'] ), sanitize_key( (string) $atts['placement'] ) ),
-				'title'     => sanitize_text_field( (string) $atts['title'] ),
-				'subtitle'  => '',
-				'modifier'  => sanitize_html_class( (string) $atts['placement'] ),
+				'products' => $this->service->products_for( $product, absint( $atts['limit'] ), sanitize_key( (string) $atts['placement'] ) ),
+				'title'    => sanitize_text_field( (string) $atts['title'] ),
+				'subtitle' => '',
+				'modifier' => sanitize_html_class( (string) $atts['placement'] ),
 			]
 		);
 	}

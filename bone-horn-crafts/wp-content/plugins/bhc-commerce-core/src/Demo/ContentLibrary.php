@@ -362,30 +362,30 @@ final class ContentLibrary {
 	 */
 	public static function homepage(): array {
 		return [
-			'hero'        => [
-				'eyebrow'  => 'Cut, graded and finished in our own workshop',
-				'title'    => 'Materials Made for Makers',
-				'body'     => 'Bone, horn and wood handle stock, matched in pairs and finished so your build starts right. Shipped worldwide from the bench that cut it.',
-				'cta'      => 'Shop New Arrivals',
-				'cta_alt'  => 'Browse the full catalogue',
+			'hero'       => [
+				'eyebrow' => 'Cut, graded and finished in our own workshop',
+				'title'   => 'Materials Made for Makers',
+				'body'    => 'Bone, horn and wood handle stock, matched in pairs and finished so your build starts right. Shipped worldwide from the bench that cut it.',
+				'cta'     => 'Shop New Arrivals',
+				'cta_alt' => 'Browse the full catalogue',
 			],
-			'why'         => [
+			'why'        => [
 				'title' => 'Why Bone Horn Crafts',
 				'body'  => 'Four things decide whether material is worth buying twice.',
 			],
-			'newsletter'  => [
+			'newsletter' => [
 				'title' => 'New material, first',
 				'body'  => 'One email when a batch is cut — bark-edge horn and rams horn sell out before most people see the listing. No campaigns, no resends.',
 			],
-			'gallery'     => [
+			'gallery'    => [
 				'title' => 'From the bench',
 				'body'  => 'Work in progress, batches drying and finished pieces before they are packed.',
 			],
-			'collection'  => [
+			'collection' => [
 				'title' => 'Viking &amp; Medieval Collection',
 				'body'  => 'Drinking horns, bark-edge scales and horn beads for reenactment kit and Norse-styled builds.',
 			],
-			'essentials'  => [
+			'essentials' => [
 				'title' => 'Workshop Essentials',
 				'body'  => 'Pin stock, spacer sheet and bolster blocks — the parts that finish a build once the scales are shaped.',
 			],

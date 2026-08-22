@@ -32,6 +32,8 @@ final class MerchandisingIndexer {
 
 	/**
 	 * Database handle.
+	 *
+	 * @var wpdb
 	 */
 	private wpdb $db;
 
@@ -237,7 +239,7 @@ final class MerchandisingIndexer {
 		$since        = gmdate( 'Y-m-d H:i:s', time() - ( max( 1, $window_days ) * DAY_IN_SECONDS ) );
 		$placeholders = implode( ',', array_fill( 0, count( $product_ids ), '%d' ) );
 
-		$values = $product_ids;
+		$values   = $product_ids;
 		$values[] = $since;
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Placeholders built from integer ids.

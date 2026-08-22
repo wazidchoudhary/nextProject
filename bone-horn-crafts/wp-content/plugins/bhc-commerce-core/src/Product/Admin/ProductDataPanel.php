@@ -166,7 +166,12 @@ final class ProductDataPanel implements HookableInterface {
 
 		echo '<div class="bhc-tiers" data-bhc-tiers>';
 
-		$rows = [] === $tiers ? [ [ 'min_qty' => '', 'price' => '' ] ] : $tiers;
+		$rows = [] === $tiers ? [
+			[
+				'min_qty' => '',
+				'price'   => '',
+			],
+		] : $tiers;
 
 		foreach ( $rows as $index => $tier ) {
 			printf(
@@ -271,46 +276,54 @@ final class ProductDataPanel implements HookableInterface {
 		ProductMeta::set(
 			$product,
 			ProductMeta::UNIT_OF_SALE,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			Sanitizer::text( wp_unslash( $_POST[ ProductMeta::UNIT_OF_SALE ] ?? '' ), 60 )
 		);
 
 		ProductMeta::set(
 			$product,
 			ProductMeta::LEAD_TIME_DAYS,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			min( 60, Sanitizer::id( wp_unslash( $_POST[ ProductMeta::LEAD_TIME_DAYS ] ?? 0 ) ) )
 		);
 
 		ProductMeta::set(
 			$product,
 			ProductMeta::CARE_INSTRUCTIONS,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			Sanitizer::rich_text( wp_unslash( $_POST[ ProductMeta::CARE_INSTRUCTIONS ] ?? '' ) )
 		);
 
 		ProductMeta::set(
 			$product,
 			ProductMeta::HSN_CODE,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			preg_replace( '/[^0-9]/', '', Sanitizer::text( wp_unslash( $_POST[ ProductMeta::HSN_CODE ] ?? '' ), 12 ) ) ?? ''
 		);
 
 		ProductMeta::set(
 			$product,
 			ProductMeta::GST_RATE,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			(float) Sanitizer::amount( wp_unslash( $_POST[ ProductMeta::GST_RATE ] ?? 0 ) )
 		);
 
 		ProductMeta::set(
 			$product,
 			ProductMeta::BATCH_REFERENCE,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			Sanitizer::text( wp_unslash( $_POST[ ProductMeta::BATCH_REFERENCE ] ?? '' ), 40 )
 		);
 
 		ProductMeta::set(
 			$product,
 			ProductMeta::ORIGIN_COUNTRY,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			Sanitizer::country( wp_unslash( $_POST[ ProductMeta::ORIGIN_COUNTRY ] ?? 'IN' ) ) ?: 'IN'
 		);
 
-		ProductMeta::set( $product, ProductMeta::PRICE_TIERS, $this->sanitize_tiers( $_POST['bhc_price_tiers'] ?? [] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised in helper.
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each row is sanitised in sanitize_tiers().
+		ProductMeta::set( $product, ProductMeta::PRICE_TIERS, $this->sanitize_tiers( wp_unslash( $_POST['bhc_price_tiers'] ?? [] ) ) );
 	}
 
 	/**

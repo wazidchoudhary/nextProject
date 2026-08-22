@@ -34,9 +34,9 @@ $wishlist = Plugin::resolve( WishlistRenderer::class )->button( $product, 'compa
 				$product->get_image(
 					'woocommerce_thumbnail',
 					[
-						'loading'  => $eager ? 'eager' : 'lazy',
-						'decoding' => 'async',
-						'class'    => 'bhc-card__image',
+						'loading'       => $eager ? 'eager' : 'lazy',
+						'decoding'      => 'async',
+						'class'         => 'bhc-card__image',
 						// fetchpriority on the first card helps the LCP candidate
 						// start downloading before the rest of the grid.
 						'fetchpriority' => $eager ? 'high' : 'auto',

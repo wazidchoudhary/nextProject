@@ -28,6 +28,8 @@ final class Requirements {
 
 	/**
 	 * Whether the checks have run.
+	 *
+	 * @var bool
 	 */
 	private bool $checked = false;
 

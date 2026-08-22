@@ -61,8 +61,8 @@ final class HealthReport {
 	public function build(): array {
 		return [
 			'plugin'      => [
-				'version'    => BHC_CORE_VERSION,
-				'db_version' => $this->installer->installed_version(),
+				'version'             => BHC_CORE_VERSION,
+				'db_version'          => $this->installer->installed_version(),
 				'expected_db_version' => Installer::DB_VERSION,
 				'tables_installed'    => Schema::is_installed(),
 			],
@@ -83,7 +83,7 @@ final class HealthReport {
 			// no external object cache in front of the database.
 			'cache'       => array_merge(
 				[
-					'store'                 => $this->cache->store_name(),
+					'store'                  => $this->cache->store_name(),
 					'store_survives_request' => $this->cache->is_persistent(),
 				],
 				$this->redis->summary()

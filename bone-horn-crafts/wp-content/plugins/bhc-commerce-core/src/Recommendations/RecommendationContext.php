@@ -46,6 +46,8 @@ final class RecommendationContext {
 
 	/**
 	 * Seed product price.
+	 *
+	 * @var float
 	 */
 	public readonly float $price;
 

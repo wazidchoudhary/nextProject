@@ -24,12 +24,12 @@ namespace BoneHornCrafts\Core;
 
 defined( 'ABSPATH' ) || exit;
 
-const VERSION      = '1.0.0';
-const MIN_PHP      = '8.2';
-const MIN_WP       = '6.5';
-const MIN_WC       = '8.0';
-const PLUGIN_FILE  = __FILE__;
-const TEXT_DOMAIN  = 'bhc-commerce-core';
+const VERSION     = '1.0.0';
+const MIN_PHP     = '8.2';
+const MIN_WP      = '6.5';
+const MIN_WC      = '8.0';
+const PLUGIN_FILE = __FILE__;
+const TEXT_DOMAIN = 'bhc-commerce-core';
 
 if ( ! defined( 'BHC_CORE_VERSION' ) ) {
 	define( 'BHC_CORE_VERSION', VERSION );

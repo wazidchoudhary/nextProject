@@ -15,13 +15,13 @@ defined( 'ABSPATH' ) || exit;
 
 $reviews = get_comments(
 	[
-		'status'      => 'approve',
-		'type'        => 'review',
-		'number'      => 3,
-		'post_type'   => 'product',
-		'orderby'     => 'comment_date_gmt',
-		'order'       => 'DESC',
-		'meta_query'  => [
+		'status'     => 'approve',
+		'type'       => 'review',
+		'number'     => 3,
+		'post_type'  => 'product',
+		'orderby'    => 'comment_date_gmt',
+		'order'      => 'DESC',
+		'meta_query' => [
 			[
 				'key'     => 'rating',
 				'value'   => 4,

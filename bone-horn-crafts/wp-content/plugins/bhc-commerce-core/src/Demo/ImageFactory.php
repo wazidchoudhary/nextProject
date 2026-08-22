@@ -31,8 +31,8 @@ use BoneHornCrafts\Core\Contracts\LoggerInterface;
  */
 final class ImageFactory {
 
-	private const CANVAS      = 1200;
-	private const TEXTURE     = 320;
+	private const CANVAS       = 1200;
+	private const TEXTURE      = 320;
 	private const JPEG_QUALITY = 82;
 
 	/**
@@ -174,7 +174,10 @@ final class ImageFactory {
 	private function render( string $sku, string $material, string $shape, int $view ): string {
 		$seed = crc32( $sku . '|' . $view );
 
-		mt_srand( $seed );
+		// Deterministic imagery: the same SKU and view must always regenerate the
+		// same texture so reseeding the demo store does not churn every file.
+		// wp_rand() is a CSPRNG and cannot be seeded, which is the point here.
+		mt_srand( $seed ); // phpcs:ignore WordPress.WP.AlternativeFunctions.rand_seeding_mt_srand -- Reproducible demo textures, not security.
 
 		$canvas = imagecreatetruecolor( self::CANVAS, self::CANVAS );
 
@@ -204,7 +207,7 @@ final class ImageFactory {
 
 		imagedestroy( $canvas );
 
-		mt_srand();
+		mt_srand(); // phpcs:ignore WordPress.WP.AlternativeFunctions.rand_seeding_mt_srand -- Restores PHP's own seeding for the rest of the request.
 
 		return $binary;
 	}
@@ -231,8 +234,8 @@ final class ImageFactory {
 		$horizon = (int) ( self::CANVAS * 0.72 );
 
 		for ( $offset = -18; $offset <= 18; $offset++ ) {
-			$fade   = 1 - ( abs( $offset ) / 19 );
-			$shade  = imagecolorallocatealpha( $canvas, 178, 165, 142, (int) ( 127 - ( 34 * $fade ) ) );
+			$fade  = 1 - ( abs( $offset ) / 19 );
+			$shade = imagecolorallocatealpha( $canvas, 178, 165, 142, (int) ( 127 - ( 34 * $fade ) ) );
 
 			imageline( $canvas, 0, $horizon + $offset, self::CANVAS, $horizon + $offset, $shade );
 		}
@@ -270,7 +273,7 @@ final class ImageFactory {
 				// term breaks up the regularity so it does not read as CGI.
 				$wave  = sin( ( $x * $stripe_scale ) + sin( $y * 0.03 ) * 2.2 );
 				$band  = sin( ( $y * $band_scale ) + ( $seed % 7 ) );
-				$noise = ( mt_rand( 0, 100 ) - 50 ) / 900;
+				$noise = ( mt_rand( 0, 100 ) - 50 ) / 900; // phpcs:ignore WordPress.WP.AlternativeFunctions.rand_mt_rand -- Seeded by render() so the same SKU always yields the same texture; wp_rand() cannot be seeded.
 
 				$mix = 0.5 + ( $wave * 0.28 ) + ( $band * 0.16 ) + $noise;
 				$mix = max( 0.0, min( 1.0, $mix ) );
@@ -280,7 +283,7 @@ final class ImageFactory {
 					: $this->mix_rgb( $dark, $base, $mix * 2 );
 
 				// Speckle: bone and horn both carry fine mineral flecks.
-				if ( mt_rand( 0, 220 ) === 1 ) {
+				if ( mt_rand( 0, 220 ) === 1 ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.rand_mt_rand -- Seeded; see above.
 					$target = $this->mix_rgb( $target, $grain, 0.55 );
 				}
 
@@ -303,7 +306,7 @@ final class ImageFactory {
 	/**
 	 * Adds a jigged groove pattern to a texture.
 	 *
-	 * @param \GdImage      $texture Texture image.
+	 * @param \GdImage                 $texture Texture image.
 	 * @param array{0:int,1:int,2:int} $dark Groove colour.
 	 */
 	private function add_jigging( $texture, array $dark ): void {

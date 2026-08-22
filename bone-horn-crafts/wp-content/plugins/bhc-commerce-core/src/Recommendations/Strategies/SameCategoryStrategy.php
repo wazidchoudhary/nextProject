@@ -42,11 +42,11 @@ final class SameCategoryStrategy extends AbstractQueryStrategy {
 
 		$ids = $this->products->query(
 			[
-				'limit'      => $context->candidate_limit(),
-				'exclude'    => $context->excluded_ids(),
-				'orderby'    => 'popularity',
-				'order'      => 'DESC',
-				'tax_query'  => [
+				'limit'     => $context->candidate_limit(),
+				'exclude'   => $context->excluded_ids(),
+				'orderby'   => 'popularity',
+				'order'     => 'DESC',
+				'tax_query' => [
 					[
 						'taxonomy'         => 'product_cat',
 						'field'            => 'term_id',

@@ -26,6 +26,8 @@ final class CheckoutServiceProvider extends AbstractServiceProvider {
 
 	/**
 	 * Request context.
+	 *
+	 * @var Context|null
 	 */
 	private ?Context $context = null;
 

@@ -41,11 +41,11 @@ final class TieredPricingService implements HookableInterface {
 	/**
 	 * Constructor.
 	 *
-	 * @param DiscountCalculator          $calculator Discount maths.
-	 * @param PricingRuleInterface[]      $rules      Ordered pricing rules.
-	 * @param Template                    $template   Template renderer.
-	 * @param Options                     $options    Settings.
-	 * @param LoggerInterface             $logger     Logger.
+	 * @param DiscountCalculator     $calculator Discount maths.
+	 * @param PricingRuleInterface[] $rules      Ordered pricing rules.
+	 * @param Template               $template   Template renderer.
+	 * @param Options                $options    Settings.
+	 * @param LoggerInterface        $logger     Logger.
 	 */
 	public function __construct(
 		private DiscountCalculator $calculator,

@@ -30,47 +30,47 @@ final class ProductCatalog {
 	 */
 	public static function categories(): array {
 		return [
-			'knife-handle-scales'  => [
+			'knife-handle-scales' => [
 				'name'        => 'Knife Handle Scales',
 				'parent'      => '',
 				'description' => 'Matched handle scales cut, flattened and paired for full tang and hidden tang builds. Every pair is book-matched from one block so grain and colour run together across the handle.',
 			],
-			'bone-scales'          => [
+			'bone-scales'         => [
 				'name'        => 'Bone Scales',
 				'parent'      => 'knife-handle-scales',
 				'description' => 'Camel and cattle bone scales in smooth, jigged and dyed stabilized finishes. Dense, stable and easy to work with hand tools or a belt grinder.',
 			],
-			'horn-scales'          => [
+			'horn-scales'         => [
 				'name'        => 'Horn Scales',
 				'parent'      => 'knife-handle-scales',
 				'description' => 'Water buffalo and rams horn scales, from deep black polished slabs to bark-edge pieces that keep the natural outer surface of the horn.',
 			],
-			'wood-acrylic-scales'  => [
+			'wood-acrylic-scales' => [
 				'name'        => 'Wood &amp; Acrylic Scales',
 				'parent'      => 'knife-handle-scales',
 				'description' => 'Stabilized burls, tropical hardwoods and cast acrylics for makers who want colour and figure without the movement of untreated timber.',
 			],
-			'guitar-parts'         => [
+			'guitar-parts'        => [
 				'name'        => 'Guitar Parts',
 				'parent'      => '',
 				'description' => 'Nut and saddle blanks, bridge pin stock and pick blanks in bone and buffalo horn — oversized so you can cut, slot and sand to your own spec.',
 			],
-			'pen-blanks'           => [
+			'pen-blanks'          => [
 				'name'        => 'Pen Blanks',
 				'parent'      => '',
 				'description' => 'Turning blanks in bone, horn, stabilized burl and acrylic, squared and sized for standard pen kits.',
 			],
-			'drinking-horns-mugs'  => [
+			'drinking-horns-mugs' => [
 				'name'        => 'Drinking Horns &amp; Mugs',
 				'parent'      => '',
 				'description' => 'Food-safe finished drinking horns, tankards and shot sets for reenactment, gifting and display.',
 			],
-			'combs-beads-cutlery'  => [
+			'combs-beads-cutlery' => [
 				'name'        => 'Combs, Beads &amp; Cutlery',
 				'parent'      => '',
 				'description' => 'Finished pieces from the same material stock: hand-cut combs, bone folders, beads, shoe horns and horn cutlery.',
 			],
-			'workshop-essentials'  => [
+			'workshop-essentials' => [
 				'name'        => 'Workshop Essentials',
 				'parent'      => '',
 				'description' => 'Pin stock, spacer sheet, buttons and small stock that finish a build once the scales are shaped.',
@@ -85,16 +85,16 @@ final class ProductCatalog {
 	 */
 	public static function tags(): array {
 		return [
-			'matched-pair'        => 'Matched Pair',
-			'natural-edge'        => 'Natural Edge',
-			'viking-medieval'     => 'Viking &amp; Medieval',
-			'workshop-essential'  => 'Workshop Essential',
-			'bulk-buy'            => 'Bulk Buy',
-			'luthier'             => 'Luthier',
-			'edc-build'           => 'EDC Build',
-			'gift-ready'          => 'Gift Ready',
-			'beginner-friendly'   => 'Beginner Friendly',
-			'small-batch'         => 'Small Batch',
+			'matched-pair'       => 'Matched Pair',
+			'natural-edge'       => 'Natural Edge',
+			'viking-medieval'    => 'Viking &amp; Medieval',
+			'workshop-essential' => 'Workshop Essential',
+			'bulk-buy'           => 'Bulk Buy',
+			'luthier'            => 'Luthier',
+			'edc-build'          => 'EDC Build',
+			'gift-ready'         => 'Gift Ready',
+			'beginner-friendly'  => 'Beginner Friendly',
+			'small-batch'        => 'Small Batch',
 		];
 	}
 
@@ -420,9 +420,18 @@ final class ProductCatalog {
 				'lot'          => 'LOT-CT-0374',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 10, 'price' => 17.49 ],
-					[ 'min_qty' => 25, 'price' => 15.99 ],
-					[ 'min_qty' => 50, 'price' => 14.49 ],
+					[
+						'min_qty' => 10,
+						'price'   => 17.49,
+					],
+					[
+						'min_qty' => 25,
+						'price'   => 15.99,
+					],
+					[
+						'min_qty' => 50,
+						'price'   => 14.49,
+					],
 				],
 				'short'        => 'The workshop staple: plain bone, sanded to 400 grit, priced for classes and batch builds.',
 				'intro'        => 'This is the pair we cut most of. Nothing decorative — flat faces, square edges, consistent thickness — which is exactly what you want when you are teaching a class of twelve or running a batch of the same pattern. Quantity pricing applies automatically in the cart.',
@@ -458,8 +467,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-CT-SEC-11',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 5, 'price' => 11.49 ],
-					[ 'min_qty' => 12, 'price' => 9.99 ],
+					[
+						'min_qty' => 5,
+						'price'   => 11.49,
+					],
+					[
+						'min_qty' => 12,
+						'price'   => 9.99,
+					],
 				],
 				'short'        => 'Three pairs of honest seconds — small pits, off-colour patches or a short edge — at practice pricing.',
 				'intro'        => 'Every batch produces pieces that miss our first grade for cosmetic reasons: a pit near an edge, a grey streak, a pair that is 2mm short. They still cut, drill and polish the same, so they go out as a practice pack rather than into the bin. Expect visible flaws; that is the point.',
@@ -700,8 +715,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-WB-1233',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 10, 'price' => 12.99 ],
-					[ 'min_qty' => 25, 'price' => 11.49 ],
+					[
+						'min_qty' => 10,
+						'price'   => 12.99,
+					],
+					[
+						'min_qty' => 25,
+						'price'   => 11.49,
+					],
 				],
 				'short'        => 'Square-cut horn blocks for bolsters, butt caps and spacer stacks.',
 				'intro'        => 'Black horn against a light scale is the oldest contrast in cutlery, and this is the stock for it. Blocks are square on all faces so they sit flat in a stack, and they are sold in pairs so a front and rear bolster come from the same piece of horn.',
@@ -737,8 +758,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-WB-1241',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 3, 'price' => 74.99 ],
-					[ 'min_qty' => 6, 'price' => 69.99 ],
+					[
+						'min_qty' => 3,
+						'price'   => 74.99,
+					],
+					[
+						'min_qty' => 6,
+						'price'   => 69.99,
+					],
 				],
 				'short'        => 'Five matched pairs across black, marbled and honey tones — a season of builds in one box.',
 				'intro'        => 'Assembled for makers who work through material rather than buying a pair at a time. Each pack holds five matched pairs chosen across the tonal range we cut that month, so you get black, grey-marbled and honey-translucent scales without ordering three times.',
@@ -1010,8 +1037,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-AC-0783',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 10, 'price' => 14.99 ],
-					[ 'min_qty' => 25, 'price' => 13.49 ],
+					[
+						'min_qty' => 10,
+						'price'   => 14.99,
+					],
+					[
+						'min_qty' => 25,
+						'price'   => 13.49,
+					],
 				],
 				'short'        => 'Cream cast acrylic with fine grain lines — the modern stand-in for antique ivory, with none of the legal problems.',
 				'intro'        => 'Cast with faint parallel grain lines so it reads as aged material rather than plastic at arm\'s length. We stock it because restorers keep asking for a legal, consistent substitute when they replace a damaged handle on an old knife.',
@@ -1122,9 +1155,18 @@ final class ProductCatalog {
 				'lot'          => 'LOT-GN-0611',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 10, 'price' => 11.49 ],
-					[ 'min_qty' => 25, 'price' => 9.99 ],
-					[ 'min_qty' => 50, 'price' => 8.99 ],
+					[
+						'min_qty' => 10,
+						'price'   => 11.49,
+					],
+					[
+						'min_qty' => 25,
+						'price'   => 9.99,
+					],
+					[
+						'min_qty' => 50,
+						'price'   => 8.99,
+					],
 				],
 				'short'        => 'Unbleached bone nut and saddle blanks, cut oversize so you can fit them to your own slot.',
 				'intro'        => 'Unbleached bone outperforms bleached: bleaching leaves the material lighter but more porous, and porous bone soaks up string energy. These blanks are degreased rather than bleached, cut oversize on every dimension, and left at 400 grit so glue and slotting compounds still key to the surface.',
@@ -1160,8 +1202,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-BP-0455',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 6, 'price' => 13.49 ],
-					[ 'min_qty' => 20, 'price' => 11.99 ],
+					[
+						'min_qty' => 6,
+						'price'   => 13.49,
+					],
+					[
+						'min_qty' => 20,
+						'price'   => 11.99,
+					],
 				],
 				'short'        => 'Square horn blanks for turning your own bridge pins, six to a set with material to spare.',
 				'intro'        => 'Turning your own pins means you can match the taper to your bridge instead of shimming a shop-bought set. Blanks are cut square and slightly long so they can be held in a collet and parted off after shaping.',
@@ -1261,8 +1309,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-GN-0623',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 4, 'price' => 17.99 ],
-					[ 'min_qty' => 10, 'price' => 15.99 ],
+					[
+						'min_qty' => 4,
+						'price'   => 17.99,
+					],
+					[
+						'min_qty' => 10,
+						'price'   => 15.99,
+					],
 				],
 				'short'        => 'Black horn nut blanks in a five pack, for repair benches that fit several a week.',
 				'intro'        => 'Horn slots more smoothly than bone under a nut file and is kinder to a fretless or a slotted headstock where you are working close to finish. Five to a pack because a working bench never fits just one.',
@@ -1534,8 +1588,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-PB-0537',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 4, 'price' => 22.49 ],
-					[ 'min_qty' => 10, 'price' => 19.99 ],
+					[
+						'min_qty' => 4,
+						'price'   => 22.49,
+					],
+					[
+						'min_qty' => 10,
+						'price'   => 19.99,
+					],
 				],
 				'short'        => 'Five cast acrylic blanks in mixed colours — the practice set for learning speed and finish.',
 				'intro'        => 'Cheap enough to make mistakes on, which is exactly what you need when you are learning where the heat builds. Colours are mixed from the current casting run, so the set that arrives will not be identical to the photograph.',
@@ -1571,8 +1631,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-PB-0544',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 3, 'price' => 54.99 ],
-					[ 'min_qty' => 6, 'price' => 49.99 ],
+					[
+						'min_qty' => 3,
+						'price'   => 54.99,
+					],
+					[
+						'min_qty' => 6,
+						'price'   => 49.99,
+					],
 				],
 				'short'        => 'Ten bone blanks at trade pricing, for turners selling at markets and shows.',
 				'intro'        => 'Bought by turners who run a table at weekend shows and get through a box a month. Blanks are cut to the same nominal size, but colour varies across the pack the way natural material does — nobody wants ten identical pens on one table anyway.',
@@ -1822,8 +1888,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-CM-0740',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 12, 'price' => 14.49 ],
-					[ 'min_qty' => 36, 'price' => 12.49 ],
+					[
+						'min_qty' => 12,
+						'price'   => 14.49,
+					],
+					[
+						'min_qty' => 36,
+						'price'   => 12.49,
+					],
 				],
 				'short'        => 'Saw-cut horn teeth, rounded and polished by hand so nothing snags — the difference from a moulded comb.',
 				'intro'        => 'Every tooth is cut on a saw, then the tip and both edges are rounded on a wheel and polished. That hand work is the whole product: a moulded plastic comb has a seam down each tooth, and horn cut without rounding will pull. Horn also carries less static than plastic, which is why barbers still ask for it.',
@@ -1891,8 +1963,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-CM-0752',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 12, 'price' => 10.99 ],
-					[ 'min_qty' => 48, 'price' => 8.99 ],
+					[
+						'min_qty' => 12,
+						'price'   => 10.99,
+					],
+					[
+						'min_qty' => 48,
+						'price'   => 8.99,
+					],
 				],
 				'short'        => 'Wide-tooth neem comb, sanded smooth and left unfinished so the wood keeps its own smell.',
 				'intro'        => 'Neem is the traditional comb wood here and it stays the best value piece we sell. Nothing is applied to it — no lacquer, no oil — because the point of a neem comb is the untreated wood against the scalp.',
@@ -1928,8 +2006,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-BD-0193',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 5, 'price' => 20.49 ],
-					[ 'min_qty' => 15, 'price' => 17.99 ],
+					[
+						'min_qty' => 5,
+						'price'   => 20.49,
+					],
+					[
+						'min_qty' => 15,
+						'price'   => 17.99,
+					],
 				],
 				'short'        => 'Fifty drilled horn beads in mixed shapes and tones, 8-12mm, for beard rings, cord work and jewellery.',
 				'intro'        => 'Turned, drilled and tumbled in batches, then mixed so a bag carries the full tonal range from black through grey to honey. Hole size is consistent at 3mm even where the bead diameters vary, so they thread onto the same cord.',
@@ -1965,8 +2049,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-BF-0421',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 6, 'price' => 16.99 ],
-					[ 'min_qty' => 20, 'price' => 14.99 ],
+					[
+						'min_qty' => 6,
+						'price'   => 16.99,
+					],
+					[
+						'min_qty' => 20,
+						'price'   => 14.99,
+					],
 				],
 				'short'        => 'A real bone folder — one pointed end, one rounded — polished so it burnishes leather and creases paper without marking.',
 				'intro'        => 'Plastic folders drag and leave a shine; bone slides and burnishes. This one is shaped from solid bone with a fine point for corners and a broad rounded end for creasing spines and setting edges. It gets better as it wears in.',
@@ -2076,8 +2166,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-BR-0918',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 10, 'price' => 7.99 ],
-					[ 'min_qty' => 30, 'price' => 6.99 ],
+					[
+						'min_qty' => 10,
+						'price'   => 7.99,
+					],
+					[
+						'min_qty' => 30,
+						'price'   => 6.99,
+					],
 				],
 				'short'        => 'Five 150mm brass rods at 3mm — the standard pin for scales up to 10mm thick.',
 				'intro'        => 'Sold long so one rod does a whole knife with offcuts left for a lanyard tube. Diameter is held to 3mm within a hundredth, which matters when you have already drilled the tang.',
@@ -2177,8 +2273,14 @@ final class ProductCatalog {
 				'lot'          => 'LOT-BT-0244',
 				'wholesale'    => true,
 				'tiers'        => [
-					[ 'min_qty' => 6, 'price' => 14.49 ],
-					[ 'min_qty' => 20, 'price' => 12.99 ],
+					[
+						'min_qty' => 6,
+						'price'   => 14.49,
+					],
+					[
+						'min_qty' => 20,
+						'price'   => 12.99,
+					],
 				],
 				'short'        => 'Twelve four-hole horn buttons at 23mm, for coats, leather work and repairs.',
 				'intro'        => 'Turned from horn offcuts, drilled four-hole and polished. Tailors buy these because plastic buttons on a wool coat look exactly like plastic buttons on a wool coat; leather workers buy them because horn survives being sewn through heavy thread.',

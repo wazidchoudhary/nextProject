@@ -23,6 +23,8 @@ abstract class AbstractRepository {
 
 	/**
 	 * Database handle.
+	 *
+	 * @var wpdb
 	 */
 	protected wpdb $db;
 

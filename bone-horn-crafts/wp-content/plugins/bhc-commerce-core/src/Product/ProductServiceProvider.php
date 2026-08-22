@@ -34,6 +34,8 @@ final class ProductServiceProvider extends AbstractServiceProvider {
 
 	/**
 	 * Request context, captured during `should_load()`.
+	 *
+	 * @var Context|null
 	 */
 	private ?Context $context = null;
 

@@ -29,8 +29,8 @@ if ( post_password_required() ) {
 			<?php
 			wp_list_comments(
 				[
-					'style'      => 'ol',
-					'short_ping' => true,
+					'style'       => 'ol',
+					'short_ping'  => true,
 					'avatar_size' => 48,
 				]
 			);
@@ -43,9 +43,9 @@ if ( post_password_required() ) {
 	<?php
 	comment_form(
 		[
-			'title_reply'        => __( 'Leave a note', 'bhc-theme' ),
-			'label_submit'       => __( 'Post comment', 'bhc-theme' ),
-			'class_submit'       => 'bhc-button',
+			'title_reply'          => __( 'Leave a note', 'bhc-theme' ),
+			'label_submit'         => __( 'Post comment', 'bhc-theme' ),
+			'class_submit'         => 'bhc-button',
 			'comment_notes_before' => '<p class="bhc-field__hint">' . esc_html__( 'Your email address is not published.', 'bhc-theme' ) . '</p>',
 		]
 	);

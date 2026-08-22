@@ -27,6 +27,8 @@ final class FacetRepository extends AbstractRepository {
 
 	/**
 	 * Cache manager scoped to the facets group.
+	 *
+	 * @var CacheManager
 	 */
 	private CacheManager $cache;
 

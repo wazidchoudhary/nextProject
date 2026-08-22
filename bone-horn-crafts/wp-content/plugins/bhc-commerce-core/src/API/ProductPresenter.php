@@ -59,9 +59,9 @@ final class ProductPresenter {
 			'review_count' => (int) $product->get_review_count(),
 			'is_variable'  => $product->is_type( 'variable' ),
 			'add_to_cart'  => [
-				'url'       => (string) $product->add_to_cart_url(),
-				'label'     => wp_strip_all_tags( (string) $product->add_to_cart_text() ),
-				'ajax'      => $product->supports( 'ajax_add_to_cart' ) && $product->is_purchasable() && $product->is_in_stock(),
+				'url'   => (string) $product->add_to_cart_url(),
+				'label' => wp_strip_all_tags( (string) $product->add_to_cart_text() ),
+				'ajax'  => $product->supports( 'ajax_add_to_cart' ) && $product->is_purchasable() && $product->is_in_stock(),
 			],
 			'badges'       => array_map(
 				static fn ( $badge ): array => $badge->to_array(),

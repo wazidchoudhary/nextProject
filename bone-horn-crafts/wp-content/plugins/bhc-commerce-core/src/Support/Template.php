@@ -66,7 +66,9 @@ final class Template {
 		 */
 		$path = (string) apply_filters( 'bhc_locate_template', $path, $template );
 
-		return $this->resolved[ $template ] = $path;
+		$this->resolved[ $template ] = $path;
+
+		return $this->resolved[ $template ];
 	}
 
 	/**

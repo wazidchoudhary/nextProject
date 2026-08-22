@@ -37,7 +37,7 @@ final class Str {
 			$cut = mb_substr( $cut, 0, $last );
 		}
 
-		return rtrim( $cut, " ,.;:-" ) . $append;
+		return rtrim( $cut, ' ,.;:-' ) . $append;
 	}
 
 	/**

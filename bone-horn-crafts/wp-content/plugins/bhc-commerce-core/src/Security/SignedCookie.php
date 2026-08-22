@@ -59,6 +59,7 @@ final class SignedCookie {
 			return [];
 		}
 
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_decode -- Transport encoding for the signed cookie payload, not obfuscation; the HMAC below is what establishes trust.
 		$decoded = json_decode( (string) base64_decode( strtr( $payload, '-_', '+/' ), true ), true );
 
 		return is_array( $decoded ) ? $decoded : [];
@@ -78,6 +79,7 @@ final class SignedCookie {
 			return false;
 		}
 
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- URL-safe transport encoding so the JSON payload survives a cookie value.
 		$encoded = rtrim( strtr( base64_encode( $json ), '+/', '-_' ), '=' );
 		$value   = $encoded . '.' . $this->sign( $encoded );
 

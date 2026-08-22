@@ -22,7 +22,8 @@ if ( empty( $available ) ) : ?>
 	return;
 endif;
 
-if ( empty( $products ) ) : ?>
+if ( empty( $products ) ) :
+	?>
 	<div class="bhc-empty">
 		<h2 class="bhc-empty__title"><?php esc_html_e( 'Nothing saved yet', 'bhc-commerce-core' ); ?></h2>
 		<p class="bhc-empty__body"><?php esc_html_e( 'Save material while you plan a build and it will wait for you here. One-off pairs move quickly, so a saved list is the fastest way back to them.', 'bhc-commerce-core' ); ?></p>

@@ -261,6 +261,8 @@ final class Logger implements LoggerInterface {
 			return null;
 		}
 
-		return $this->wc_logger = wc_get_logger();
+		$this->wc_logger = wc_get_logger();
+
+		return $this->wc_logger;
 	}
 }

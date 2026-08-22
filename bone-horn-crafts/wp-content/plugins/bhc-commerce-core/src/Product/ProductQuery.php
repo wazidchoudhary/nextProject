@@ -42,11 +42,15 @@ final class ProductQuery {
 
 	/**
 	 * Column used for lookup-table ordering, empty when unused.
+	 *
+	 * @var string
 	 */
 	private string $lookup_column = '';
 
 	/**
 	 * Direction used for lookup-table ordering.
+	 *
+	 * @var string
 	 */
 	private string $lookup_order = 'DESC';
 
@@ -59,6 +63,8 @@ final class ProductQuery {
 
 	/**
 	 * Rows found by the most recent query that requested a total.
+	 *
+	 * @var int
 	 */
 	private int $last_total = 0;
 

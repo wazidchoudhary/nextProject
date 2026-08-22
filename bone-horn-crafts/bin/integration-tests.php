@@ -295,9 +295,9 @@ if ( null !== $seed ) {
 // ---------------------------------------------------------------------------
 $t->group( 'Search and filters' );
 
-/** @var SearchService $search */
-$search  = $container->get( SearchService::class );
-$request = FilterRequest::from_array(
+/** @var SearchService $search_service */
+$search_service = $container->get( SearchService::class );
+$request        = FilterRequest::from_array(
 	[
 		'material' => 'water-buffalo-horn',
 		'in_stock' => '1',
@@ -305,7 +305,7 @@ $request = FilterRequest::from_array(
 	]
 );
 
-$results = $search->results( $request );
+$results = $search_service->results( $request );
 
 $t->assert( 'filtered search returns results', $results['total'] > 0, $results['total'] . ' matches' );
 $t->assert( 'filtered search respects per_page', count( $results['ids'] ) <= 6, count( $results['ids'] ) . ' ids' );
@@ -319,13 +319,18 @@ foreach ( $products->hydrate( $results['ids'] ) as $filtered ) {
 }
 
 $t->assert( 'every filtered result carries the selected attribute', $all_horn );
-$t->assert( 'facets expose counts', count( $search->facets() ) >= 4, count( $search->facets() ) . ' facets' );
+$t->assert( 'facets expose counts', count( $search_service->facets() ) >= 4, count( $search_service->facets() ) . ' facets' );
 
-$range = $search->price_range();
+$range = $search_service->price_range();
 
 $t->assert( 'price range is derived from the catalogue', $range['max'] > $range['min'] && $range['min'] >= 0 );
 
-$rejected = FilterRequest::from_array( [ 'material' => 'unobtainium', 'orderby' => 'drop-table' ] );
+$rejected = FilterRequest::from_array(
+	[
+		'material' => 'unobtainium',
+		'orderby'  => 'drop-table',
+	]
+);
 
 $t->equals( 'unknown attribute terms are dropped', [], $rejected->attributes );
 $t->equals( 'unknown ordering falls back to a safe default', 'date', $rejected->orderby );
@@ -334,8 +339,8 @@ $t->equals( 'unknown ordering falls back to a safe default', 'date', $rejected->
 $t->group( 'Wishlist storage' );
 
 /** @var WishlistRepository $wishlist */
-$wishlist = $container->get( WishlistRepository::class );
-$user_id  = 999001;
+$wishlist   = $container->get( WishlistRepository::class );
+$user_id    = 999001;
 $product_id = $new_arrivals[0];
 
 $wishlist->clear( $user_id );
@@ -403,26 +408,26 @@ $response = rest_get_server()->dispatch( $request );
 
 $t->assert( 'health endpoint rejects anonymous callers', in_array( $response->get_status(), [ 401, 403 ], true ), 'status ' . $response->get_status() );
 
-$request  = new WP_REST_Request( 'POST', '/bhc/v1/wishlist/toggle' );
+$request = new WP_REST_Request( 'POST', '/bhc/v1/wishlist/toggle' );
 $request->set_param( 'product_id', $product_id );
 $response = rest_get_server()->dispatch( $request );
 
 $t->assert( 'wishlist writes reject a missing nonce', 403 === $response->get_status(), 'status ' . $response->get_status() );
 
-$request  = new WP_REST_Request( 'GET', '/bhc/v1/delivery-estimate' );
+$request = new WP_REST_Request( 'GET', '/bhc/v1/delivery-estimate' );
 $request->set_param( 'country', 'DE' );
 $response = rest_get_server()->dispatch( $request );
 $data     = $response->get_data();
 
 $t->assert( 'delivery estimate is public and returns a window', 200 === $response->get_status() && ! empty( $data['estimate']['label'] ) );
 
-$request  = new WP_REST_Request( 'GET', '/bhc/v1/delivery-estimate' );
+$request = new WP_REST_Request( 'GET', '/bhc/v1/delivery-estimate' );
 $request->set_param( 'country', 'not-a-country' );
 $response = rest_get_server()->dispatch( $request );
 
 $t->assert( 'delivery estimate validates its input', 400 === $response->get_status(), 'status ' . $response->get_status() );
 
-$request  = new WP_REST_Request( 'GET', '/bhc/v1/catalog' );
+$request = new WP_REST_Request( 'GET', '/bhc/v1/catalog' );
 $request->set_param( 'material', 'water-buffalo-horn' );
 $request->set_param( 'per_page', 4 );
 $response = rest_get_server()->dispatch( $request );

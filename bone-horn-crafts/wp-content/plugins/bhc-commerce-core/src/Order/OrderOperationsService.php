@@ -166,8 +166,8 @@ final class OrderOperationsService implements HookableInterface {
 				];
 			}
 
-			$summary[ $hsn ]['qty']   += $quantity;
-			$summary[ $hsn ]['value']  = round( $summary[ $hsn ]['value'] + $total, 2 );
+			$summary[ $hsn ]['qty']  += $quantity;
+			$summary[ $hsn ]['value'] = round( $summary[ $hsn ]['value'] + $total, 2 );
 		}
 
 		$order->update_meta_data( OrderMeta::HSN_SUMMARY, $summary );

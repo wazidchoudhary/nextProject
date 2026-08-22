@@ -114,8 +114,8 @@ final class DemoSeeder {
 		$this->configure_store();
 
 		$this->report( 'Installing craft attributes' );
-		$attribute_result       = $this->attributes->install();
-		$counts['attributes']   = (int) $attribute_result['created_attributes'];
+		$attribute_result          = $this->attributes->install();
+		$counts['attributes']      = (int) $attribute_result['created_attributes'];
 		$counts['attribute_terms'] = (int) $attribute_result['created_terms'];
 
 		$this->report( 'Creating categories and tags' );
@@ -619,7 +619,7 @@ final class DemoSeeder {
 			return;
 		}
 
-		$name  = wp_specialchars_decode( (string) $definition['name'] );
+		$name    = wp_specialchars_decode( (string) $definition['name'] );
 		$gallery = [];
 
 		for ( $view = 0; $view < 3; $view++ ) {
@@ -693,11 +693,11 @@ final class DemoSeeder {
 		);
 
 		$specs = [
-			'Material'    => AttributeCatalog::all()[ AttributeCatalog::MATERIAL ]['terms'][ $definition['material'] ] ?? $definition['material'],
-			'Finish'      => AttributeCatalog::all()[ AttributeCatalog::FINISH ]['terms'][ $definition['finish'] ] ?? $definition['finish'],
+			'Material'     => AttributeCatalog::all()[ AttributeCatalog::MATERIAL ]['terms'][ $definition['material'] ] ?? $definition['material'],
+			'Finish'       => AttributeCatalog::all()[ AttributeCatalog::FINISH ]['terms'][ $definition['finish'] ] ?? $definition['finish'],
 			'Nominal size' => $dimensions,
-			'Sold as'     => (string) $definition['unit'],
-			'Lot'         => (string) $definition['lot'],
+			'Sold as'      => (string) $definition['unit'],
+			'Lot'          => (string) $definition['lot'],
 		];
 
 		$spec_rows = '';
@@ -783,22 +783,22 @@ final class DemoSeeder {
 		}
 
 		$definitions = [
-			'India (domestic)'         => [
+			'India (domestic)'        => [
 				'countries' => [ 'IN' ],
 				'rate'      => '6.00',
 				'label'     => 'Courier, 2-5 working days',
 			],
-			'United States & Canada'   => [
+			'United States & Canada'  => [
 				'countries' => [ 'US', 'CA' ],
 				'rate'      => '14.00',
 				'label'     => 'Tracked international parcel',
 			],
-			'United Kingdom & Europe'  => [
+			'United Kingdom & Europe' => [
 				'countries' => [ 'GB', 'IE', 'DE', 'FR', 'IT', 'ES', 'NL', 'BE', 'SE', 'NO', 'DK', 'FI', 'PL', 'AT', 'CH' ],
 				'rate'      => '16.00',
 				'label'     => 'Tracked international parcel',
 			],
-			'Australia & New Zealand'  => [
+			'Australia & New Zealand' => [
 				'countries' => [ 'AU', 'NZ' ],
 				'rate'      => '19.00',
 				'label'     => 'Tracked international parcel',
@@ -853,7 +853,7 @@ final class DemoSeeder {
 			$this->add_free_shipping( $rest );
 		} else {
 			foreach ( $rest->get_shipping_methods() as $method ) {
-				if ( 'flat_rate' === $method->id && '' === (string) $method->get_option( 'cost' ) || '0' === (string) $method->get_option( 'cost' ) ) {
+				if ( 'flat_rate' === $method->id && ( '' === (string) $method->get_option( 'cost' ) || '0' === (string) $method->get_option( 'cost' ) ) ) {
 					$this->write_method_settings(
 						$method->id,
 						(int) $method->instance_id,
@@ -971,22 +971,22 @@ final class DemoSeeder {
 			}
 
 			$fields = [
-				'billing_first_name' => (string) $customer['first'],
-				'billing_last_name'  => (string) $customer['last'],
-				'billing_email'      => $email,
-				'billing_phone'      => (string) $customer['phone'],
-				'billing_address_1'  => (string) $customer['address'],
-				'billing_city'       => (string) $customer['city'],
-				'billing_state'      => (string) $customer['state'],
-				'billing_postcode'   => (string) $customer['postcode'],
-				'billing_country'    => (string) $customer['country'],
+				'billing_first_name'  => (string) $customer['first'],
+				'billing_last_name'   => (string) $customer['last'],
+				'billing_email'       => $email,
+				'billing_phone'       => (string) $customer['phone'],
+				'billing_address_1'   => (string) $customer['address'],
+				'billing_city'        => (string) $customer['city'],
+				'billing_state'       => (string) $customer['state'],
+				'billing_postcode'    => (string) $customer['postcode'],
+				'billing_country'     => (string) $customer['country'],
 				'shipping_first_name' => (string) $customer['first'],
-				'shipping_last_name' => (string) $customer['last'],
-				'shipping_address_1' => (string) $customer['address'],
-				'shipping_city'      => (string) $customer['city'],
-				'shipping_state'     => (string) $customer['state'],
-				'shipping_postcode'  => (string) $customer['postcode'],
-				'shipping_country'   => (string) $customer['country'],
+				'shipping_last_name'  => (string) $customer['last'],
+				'shipping_address_1'  => (string) $customer['address'],
+				'shipping_city'       => (string) $customer['city'],
+				'shipping_state'      => (string) $customer['state'],
+				'shipping_postcode'   => (string) $customer['postcode'],
+				'shipping_country'    => (string) $customer['country'],
 			];
 
 			foreach ( $fields as $key => $value ) {
@@ -1474,12 +1474,12 @@ final class DemoSeeder {
 
 		if ( $shop_page_id > 0 ) {
 			$primary[] = [
-				'key'      => 'shop',
-				'type'     => 'post_type',
-				'object'   => 'page',
-				'id'       => $shop_page_id,
-				'title'    => __( 'Shop', 'bhc-commerce-core' ),
-				'parent'   => '',
+				'key'    => 'shop',
+				'type'   => 'post_type',
+				'object' => 'page',
+				'id'     => $shop_page_id,
+				'title'  => __( 'Shop', 'bhc-commerce-core' ),
+				'parent' => '',
 			];
 		}
 
@@ -1765,7 +1765,12 @@ final class DemoSeeder {
 			}
 		}
 
-		foreach ( wc_get_orders( [ 'limit' => 200, 'return' => 'objects' ] ) as $order ) {
+		foreach ( wc_get_orders(
+			[
+				'limit'  => 200,
+				'return' => 'objects',
+			]
+		) as $order ) {
 			if ( $order instanceof \WC_Order && 'yes' === $order->get_meta( '_bhc_demo', true ) ) {
 				$order->delete( true );
 

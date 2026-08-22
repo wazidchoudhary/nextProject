@@ -63,7 +63,9 @@ final class BreadcrumbService {
 			];
 
 			/** This filter is documented later in this method. */
-			return $this->trail = (array) apply_filters( 'bhc_breadcrumb_trail', $trail );
+			$this->trail = (array) apply_filters( 'bhc_breadcrumb_trail', $trail );
+
+			return $this->trail;
 		}
 
 		if ( function_exists( 'is_product' ) && ( is_product_category() || is_product_tag() || is_product() ) ) {
@@ -161,7 +163,9 @@ final class BreadcrumbService {
 		 *
 		 * @param array<int, array{label:string, url:string}> $trail Trail items.
 		 */
-		return $this->trail = (array) apply_filters( 'bhc_breadcrumb_trail', $trail );
+		$this->trail = (array) apply_filters( 'bhc_breadcrumb_trail', $trail );
+
+		return $this->trail;
 	}
 
 	/**

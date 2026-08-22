@@ -61,8 +61,8 @@ final class Container implements ContainerInterface {
 	/**
 	 * Registers a factory that produces a new instance on every resolve.
 	 *
-	 * @param string                 $id      Service id.
-	 * @param callable(self):mixed   $factory Factory closure.
+	 * @param string               $id      Service id.
+	 * @param callable(self):mixed $factory Factory closure.
 	 */
 	public function bind( string $id, callable $factory ): void {
 		unset( $this->instances[ $id ], $this->shared[ $id ] );

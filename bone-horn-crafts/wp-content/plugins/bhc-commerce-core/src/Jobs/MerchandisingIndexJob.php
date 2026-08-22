@@ -73,8 +73,8 @@ final class MerchandisingIndexJob extends AbstractBatchJob {
 	 * @return array{processed:int, next:?array<string, mixed>}
 	 */
 	protected function handle_batch( array $args ): array {
-		$page  = max( 1, absint( $args['page'] ?? 1 ) );
-		$size  = $this->batch_size();
+		$page = max( 1, absint( $args['page'] ?? 1 ) );
+		$size = $this->batch_size();
 
 		$product_ids = $this->products->query(
 			[

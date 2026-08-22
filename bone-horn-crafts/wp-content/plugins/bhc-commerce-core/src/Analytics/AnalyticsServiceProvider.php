@@ -26,6 +26,8 @@ final class AnalyticsServiceProvider extends AbstractServiceProvider {
 
 	/**
 	 * Request context.
+	 *
+	 * @var Context|null
 	 */
 	private ?Context $context = null;
 

@@ -29,18 +29,66 @@ final class ReviewLibrary {
 	 */
 	public static function reviewers(): array {
 		return [
-			[ 'name' => 'Marcus Hillard', 'email' => 'marcus.hillard@example.com', 'country' => 'US' ],
-			[ 'name' => 'Priya Raghavan', 'email' => 'priya.raghavan@example.com', 'country' => 'IN' ],
-			[ 'name' => 'Tomas Lindqvist', 'email' => 'tomas.lindqvist@example.com', 'country' => 'SE' ],
-			[ 'name' => 'Ellen Roache', 'email' => 'ellen.roache@example.com', 'country' => 'GB' ],
-			[ 'name' => 'Daniel Okafor', 'email' => 'daniel.okafor@example.com', 'country' => 'US' ],
-			[ 'name' => 'Sophie Bertrand', 'email' => 'sophie.bertrand@example.com', 'country' => 'FR' ],
-			[ 'name' => 'Callum Reid', 'email' => 'callum.reid@example.com', 'country' => 'AU' ],
-			[ 'name' => 'Ana Molnar', 'email' => 'ana.molnar@example.com', 'country' => 'DE' ],
-			[ 'name' => 'Jesse Vandermeer', 'email' => 'jesse.vandermeer@example.com', 'country' => 'CA' ],
-			[ 'name' => 'Rina Takahashi', 'email' => 'rina.takahashi@example.com', 'country' => 'JP' ],
-			[ 'name' => 'Owen Pritchard', 'email' => 'owen.pritchard@example.com', 'country' => 'GB' ],
-			[ 'name' => 'Isabel Duarte', 'email' => 'isabel.duarte@example.com', 'country' => 'ES' ],
+			[
+				'name'    => 'Marcus Hillard',
+				'email'   => 'marcus.hillard@example.com',
+				'country' => 'US',
+			],
+			[
+				'name'    => 'Priya Raghavan',
+				'email'   => 'priya.raghavan@example.com',
+				'country' => 'IN',
+			],
+			[
+				'name'    => 'Tomas Lindqvist',
+				'email'   => 'tomas.lindqvist@example.com',
+				'country' => 'SE',
+			],
+			[
+				'name'    => 'Ellen Roache',
+				'email'   => 'ellen.roache@example.com',
+				'country' => 'GB',
+			],
+			[
+				'name'    => 'Daniel Okafor',
+				'email'   => 'daniel.okafor@example.com',
+				'country' => 'US',
+			],
+			[
+				'name'    => 'Sophie Bertrand',
+				'email'   => 'sophie.bertrand@example.com',
+				'country' => 'FR',
+			],
+			[
+				'name'    => 'Callum Reid',
+				'email'   => 'callum.reid@example.com',
+				'country' => 'AU',
+			],
+			[
+				'name'    => 'Ana Molnar',
+				'email'   => 'ana.molnar@example.com',
+				'country' => 'DE',
+			],
+			[
+				'name'    => 'Jesse Vandermeer',
+				'email'   => 'jesse.vandermeer@example.com',
+				'country' => 'CA',
+			],
+			[
+				'name'    => 'Rina Takahashi',
+				'email'   => 'rina.takahashi@example.com',
+				'country' => 'JP',
+			],
+			[
+				'name'    => 'Owen Pritchard',
+				'email'   => 'owen.pritchard@example.com',
+				'country' => 'GB',
+			],
+			[
+				'name'    => 'Isabel Duarte',
+				'email'   => 'isabel.duarte@example.com',
+				'country' => 'ES',
+			],
 		];
 	}
 
@@ -52,35 +100,98 @@ final class ReviewLibrary {
 	public static function bodies(): array {
 		return [
 			'bone'    => [
-				[ 'rating' => 5, 'body' => 'Flat out of the packet — I checked both faces on a granite plate and neither pair needed truing before glue-up. That saves me twenty minutes a handle.' ],
-				[ 'rating' => 5, 'body' => 'Third order. The colour is consistent enough that I can quote a customer from a photograph of the last build, which was not true of my previous supplier.' ],
-				[ 'rating' => 4, 'body' => 'Good dense material and no smell when sanding. One scale had a small pit near the edge, but it fell inside the handle outline so it made no difference.' ],
-				[ 'rating' => 5, 'body' => 'Drilled clean with a brad point at 3mm, no chipping on the exit side. That is the test I care about with bone.' ],
-				[ 'rating' => 4, 'body' => 'Took the amber dye job well. Slightly thicker than the listed 0.375 which was fine for me, but worth knowing if you are working to a tight stack.' ],
-				[ 'rating' => 5, 'body' => 'Bought the seconds pack to practise jigging. Honestly graded — the flaws are exactly where the listing says they will be, and it still cuts like first-grade material.' ],
+				[
+					'rating' => 5,
+					'body'   => 'Flat out of the packet — I checked both faces on a granite plate and neither pair needed truing before glue-up. That saves me twenty minutes a handle.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Third order. The colour is consistent enough that I can quote a customer from a photograph of the last build, which was not true of my previous supplier.',
+				],
+				[
+					'rating' => 4,
+					'body'   => 'Good dense material and no smell when sanding. One scale had a small pit near the edge, but it fell inside the handle outline so it made no difference.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Drilled clean with a brad point at 3mm, no chipping on the exit side. That is the test I care about with bone.',
+				],
+				[
+					'rating' => 4,
+					'body'   => 'Took the amber dye job well. Slightly thicker than the listed 0.375 which was fine for me, but worth knowing if you are working to a tight stack.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Bought the seconds pack to practise jigging. Honestly graded — the flaws are exactly where the listing says they will be, and it still cuts like first-grade material.',
+				],
 			],
 			'horn'    => [
-				[ 'rating' => 5, 'body' => 'Deep black right through, no grey streak when I ground it down to final thickness. Polished to a mirror with nothing but micromesh and a cotton wheel.' ],
-				[ 'rating' => 5, 'body' => 'The bark scales are the real thing. Ridges are irregular in a way you cannot fake, and the inside face was flat enough to glue straight down.' ],
-				[ 'rating' => 4, 'body' => 'Beautiful marbling. Horn is horn, so it moved a fraction after shaping and I had to re-flatten before pinning — expected, not a complaint.' ],
-				[ 'rating' => 5, 'body' => 'Rams horn arrived with the ripple running the full length of both scales. I have paid more elsewhere for less figure.' ],
-				[ 'rating' => 5, 'body' => 'Ordered the mixed pack for a run of five knives and every pair was usable. No filler, no voids opening up mid-grind.' ],
-				[ 'rating' => 4, 'body' => 'Nut blanks slot smoothly and hold their edges. Slightly softer than bone under the file, which I actually prefer for a fretless setup.' ],
+				[
+					'rating' => 5,
+					'body'   => 'Deep black right through, no grey streak when I ground it down to final thickness. Polished to a mirror with nothing but micromesh and a cotton wheel.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'The bark scales are the real thing. Ridges are irregular in a way you cannot fake, and the inside face was flat enough to glue straight down.',
+				],
+				[
+					'rating' => 4,
+					'body'   => 'Beautiful marbling. Horn is horn, so it moved a fraction after shaping and I had to re-flatten before pinning — expected, not a complaint.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Rams horn arrived with the ripple running the full length of both scales. I have paid more elsewhere for less figure.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Ordered the mixed pack for a run of five knives and every pair was usable. No filler, no voids opening up mid-grind.',
+				],
+				[
+					'rating' => 4,
+					'body'   => 'Nut blanks slot smoothly and hold their edges. Slightly softer than bone under the file, which I actually prefer for a fretless setup.',
+				],
 			],
 			'wood'    => [
-				[ 'rating' => 5, 'body' => 'Stabilizing is properly done — I cut an offcut in half to check and the resin goes right through the section, not just the surface.' ],
-				[ 'rating' => 5, 'body' => 'Buckeye took the shaping without a single tear-out in the soft eyes. Finished at 800 grit and buffed, no sealer needed.' ],
-				[ 'rating' => 4, 'body' => 'Rosewood was straight-grained and well seasoned. A little dustier than I expected, so run extraction.' ],
-				[ 'rating' => 5, 'body' => 'Sampler pack was the right call. I now know I get on with walnut and not with ebony, which was worth the price on its own.' ],
+				[
+					'rating' => 5,
+					'body'   => 'Stabilizing is properly done — I cut an offcut in half to check and the resin goes right through the section, not just the surface.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Buckeye took the shaping without a single tear-out in the soft eyes. Finished at 800 grit and buffed, no sealer needed.',
+				],
+				[
+					'rating' => 4,
+					'body'   => 'Rosewood was straight-grained and well seasoned. A little dustier than I expected, so run extraction.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Sampler pack was the right call. I now know I get on with walnut and not with ebony, which was worth the price on its own.',
+				],
 			],
 			'acrylic' => [
-				[ 'rating' => 4, 'body' => 'Polishes to a proper gloss with plastic compound. Needs slow passes — I smeared the first one going too fast, which is on me.' ],
-				[ 'rating' => 5, 'body' => 'Used the ivory alternative on a restoration where the original handle was cracked. Under a lamp it reads as aged material, not plastic.' ],
-				[ 'rating' => 5, 'body' => 'Waterproof and stable, which is all I want on a fishing knife. Six months of salt water and it still looks new.' ],
+				[
+					'rating' => 4,
+					'body'   => 'Polishes to a proper gloss with plastic compound. Needs slow passes — I smeared the first one going too fast, which is on me.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Used the ivory alternative on a restoration where the original handle was cracked. Under a lamp it reads as aged material, not plastic.',
+				],
+				[
+					'rating' => 5,
+					'body'   => 'Waterproof and stable, which is all I want on a fishing knife. Six months of salt water and it still looks new.',
+				],
 			],
 			'brass'   => [
-				[ 'rating' => 5, 'body' => 'Diameter is consistent — went straight into a 3mm hole with no slop and peened without splitting.' ],
-				[ 'rating' => 4, 'body' => 'Long rods mean one order covers a lot of knives. Deburr the cut ends and they are perfect.' ],
+				[
+					'rating' => 5,
+					'body'   => 'Diameter is consistent — went straight into a 3mm hole with no slop and peened without splitting.',
+				],
+				[
+					'rating' => 4,
+					'body'   => 'Long rods mean one order covers a lot of knives. Deburr the cut ends and they are perfect.',
+				],
 			],
 		];
 	}

@@ -30,6 +30,8 @@ final class WishlistService implements HookableInterface {
 
 	/**
 	 * Resolved storage for the current request.
+	 *
+	 * @var WishlistStorageInterface|null
 	 */
 	private ?WishlistStorageInterface $storage = null;
 
@@ -68,10 +70,14 @@ final class WishlistService implements HookableInterface {
 		$max = max( 1, $this->options->int( 'wishlist_max_items' ) );
 
 		if ( is_user_logged_in() ) {
-			return $this->storage = new UserWishlistStorage( $this->repository, get_current_user_id(), $max );
+			$this->storage = new UserWishlistStorage( $this->repository, get_current_user_id(), $max );
+
+			return $this->storage;
 		}
 
-		return $this->storage = new GuestWishlistStorage( $this->cookies, min( 40, $max ) );
+		$this->storage = new GuestWishlistStorage( $this->cookies, min( 40, $max ) );
+
+		return $this->storage;
 	}
 
 	/**

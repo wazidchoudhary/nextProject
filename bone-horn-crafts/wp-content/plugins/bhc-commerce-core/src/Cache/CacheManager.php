@@ -101,7 +101,9 @@ final class CacheManager implements CacheInterface {
 			$value = false;
 		}
 
-		return $this->memo[ $full ] = $value;
+		$this->memo[ $full ] = $value;
+
+		return $this->memo[ $full ];
 	}
 
 	/**
@@ -155,7 +157,9 @@ final class CacheManager implements CacheInterface {
 				$value = false;
 			}
 
-			return $this->memo[ $full ] = $value;
+			$this->memo[ $full ] = $value;
+
+			return $this->memo[ $full ];
 		}
 
 		$value = $callback();
@@ -243,7 +247,9 @@ final class CacheManager implements CacheInterface {
 			$this->store->write( $this->version_key( $group ), $stored, 0 );
 		}
 
-		return $this->versions[ $group ] = (int) $stored;
+		$this->versions[ $group ] = (int) $stored;
+
+		return $this->versions[ $group ];
 	}
 
 	/**

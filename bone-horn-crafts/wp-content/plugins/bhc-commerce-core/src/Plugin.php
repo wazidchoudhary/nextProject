@@ -26,11 +26,15 @@ final class Plugin {
 	 * Singleton instance. WordPress gives us no bootstrap of its own, so the
 	 * plugin file needs one well-known entry point; everything downstream is
 	 * constructor injected.
+	 *
+	 * @var self|null
 	 */
 	private static ?self $instance = null;
 
 	/**
 	 * Service container.
+	 *
+	 * @var Container
 	 */
 	private Container $container;
 
@@ -43,6 +47,8 @@ final class Plugin {
 
 	/**
 	 * Guard against double booting.
+	 *
+	 * @var bool
 	 */
 	private bool $booted = false;
 

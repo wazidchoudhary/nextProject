@@ -109,7 +109,7 @@ final class RecommendationService {
 	 * @return int[]
 	 */
 	private function blend( RecommendationContext $context ): array {
-		$scores    = [];
+		$scores     = [];
 		$diagnostic = [];
 
 		foreach ( $this->strategies as $strategy ) {

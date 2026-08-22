@@ -68,13 +68,17 @@ final class WholesaleService implements HookableInterface {
 		$user = get_userdata( $user_id );
 
 		if ( false === $user ) {
-			return $this->memo[ $user_id ] = false;
+			$this->memo[ $user_id ] = false;
+
+			return $this->memo[ $user_id ];
 		}
 
 		$approved = 'yes' === get_user_meta( $user_id, self::APPROVED_META, true );
 		$has_role = in_array( Roles::WHOLESALE_ROLE, (array) $user->roles, true );
 
-		return $this->memo[ $user_id ] = ( $approved || $has_role || user_can( $user, Roles::WHOLESALE_CAP ) );
+		$this->memo[ $user_id ] = ( $approved || $has_role || user_can( $user, Roles::WHOLESALE_CAP ) );
+
+		return $this->memo[ $user_id ];
 	}
 
 	/**

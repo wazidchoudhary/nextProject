@@ -65,8 +65,8 @@ final class RobotsPolicy implements HookableInterface {
 	 */
 	public function filter_robots( array $robots ): array {
 		if ( $this->is_transactional_page() || is_search() || is_404() ) {
-			$robots['noindex']  = true;
-			$robots['follow']   = true;
+			$robots['noindex']   = true;
+			$robots['follow']    = true;
 			$robots['noarchive'] = true;
 
 			unset( $robots['index'] );

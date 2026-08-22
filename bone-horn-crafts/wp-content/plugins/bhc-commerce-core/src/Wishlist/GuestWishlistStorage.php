@@ -54,11 +54,13 @@ final class GuestWishlistStorage implements WishlistStorageInterface {
 		$payload = $this->cookies->read( self::COOKIE );
 		$ids     = isset( $payload['ids'] ) && is_array( $payload['ids'] ) ? $payload['ids'] : [];
 
-		return $this->ids = array_slice(
+		$this->ids = array_slice(
 			array_values( array_unique( array_filter( array_map( 'absint', $ids ) ) ) ),
 			0,
 			$this->max_items
 		);
+
+		return $this->ids;
 	}
 
 	/**

@@ -53,9 +53,9 @@ final class OrderRepository {
 	/**
 	 * Order ids in a date window, paged for batch jobs.
 	 *
-	 * @param int    $days   Look-back window in days.
-	 * @param int    $limit  Page size.
-	 * @param int    $page   Page number (1 based).
+	 * @param int      $days   Look-back window in days.
+	 * @param int      $limit  Page size.
+	 * @param int      $page   Page number (1 based).
 	 * @param string[] $statuses Order statuses.
 	 *
 	 * @return int[]

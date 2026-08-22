@@ -42,8 +42,8 @@ final class AdminAssets implements HookableInterface {
 	 * @param string $hook_suffix Current admin page.
 	 */
 	public function enqueue( string $hook_suffix ): void {
-		$screen    = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-		$is_plugin = str_contains( $hook_suffix, AdminMenu::SLUG );
+		$screen     = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+		$is_plugin  = str_contains( $hook_suffix, AdminMenu::SLUG );
 		$is_product = null !== $screen && 'product' === $screen->id;
 
 		if ( ! $is_plugin && ! $is_product ) {

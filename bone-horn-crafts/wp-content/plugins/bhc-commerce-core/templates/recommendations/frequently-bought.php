@@ -29,7 +29,16 @@ foreach ( $products as $suggested ) {
 		<?php foreach ( $products as $suggested ) : ?>
 			<li class="bhc-fbt__item">
 				<a class="bhc-fbt__link" href="<?php echo esc_url( (string) $suggested->get_permalink() ); ?>">
-					<?php echo wp_kses_post( $suggested->get_image( 'woocommerce_gallery_thumbnail', [ 'loading' => 'lazy', 'decoding' => 'async' ] ) ); ?>
+					<?php echo wp_kses_post(
+						$suggested->get_image(
+							'woocommerce_gallery_thumbnail',
+							[
+								'loading'  => 'lazy',
+								'decoding' => 'async',
+							]
+						)
+					);
+					?>
 					<span class="bhc-fbt__name"><?php echo esc_html( $suggested->get_name() ); ?></span>
 					<span class="bhc-fbt__price"><?php echo wp_kses_post( (string) $suggested->get_price_html() ); ?></span>
 				</a>

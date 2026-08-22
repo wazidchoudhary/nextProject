@@ -40,7 +40,7 @@ final class BreadcrumbListSchema implements SchemaPieceInterface {
 	 * @return array<int, array<string, mixed>>
 	 */
 	public function build(): array {
-		$items = [];
+		$items    = [];
 		$position = 0;
 
 		foreach ( $this->breadcrumbs->trail() as $crumb ) {

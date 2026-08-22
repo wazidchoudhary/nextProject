@@ -139,7 +139,7 @@ final class OrderOperationsMetaBox implements HookableInterface {
 	public function save( $order_id, $order = null ): void {
 		$order_id = absint( $order_id );
 
-		if ( $order_id <= 0 || ! current_user_can( 'edit_shop_order', $order_id ) && ! Capabilities::can_manage() ) {
+		if ( $order_id <= 0 || ( ! current_user_can( 'edit_shop_order', $order_id ) && ! Capabilities::can_manage() ) ) {
 			return;
 		}
 
@@ -157,6 +157,7 @@ final class OrderOperationsMetaBox implements HookableInterface {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 		$export_type = Sanitizer::key( wp_unslash( $_POST['bhc_export_type'] ?? '' ) );
 
 		if ( in_array( $export_type, [ OrderMeta::EXPORT_ZERO_RATED, OrderMeta::DOMESTIC_GST ], true ) ) {
@@ -166,6 +167,7 @@ final class OrderOperationsMetaBox implements HookableInterface {
 		$order->update_meta_data( OrderMeta::IS_WHOLESALE, isset( $_POST['bhc_is_wholesale'] ) ? 'yes' : 'no' );
 		$order->update_meta_data(
 			OrderMeta::PACKING_NOTES,
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitised by Security\Sanitizer on this line; WPCS cannot follow a static call.
 			Sanitizer::rich_text( wp_unslash( $_POST['bhc_packing_notes'] ?? '' ) )
 		);
 
@@ -200,8 +202,8 @@ final class OrderOperationsMetaBox implements HookableInterface {
 	/**
 	 * Renders the export column.
 	 *
-	 * @param string          $column        Column key.
-	 * @param int|WC_Order    $post_or_order Post id or order object.
+	 * @param string       $column        Column key.
+	 * @param int|WC_Order $post_or_order Post id or order object.
 	 */
 	public function render_list_column( $column, $post_or_order = null ): void {
 		if ( 'bhc_export' !== $column ) {

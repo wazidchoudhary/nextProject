@@ -20,14 +20,14 @@ get_header( 'shop' );
 do_action( 'woocommerce_before_main_content' );
 
 $filter_panel = bhc_service( \BoneHornCrafts\Core\Search\FilterPanelRenderer::class );
-$term         = is_tax() ? get_queried_object() : null;
+$queried_term = is_tax() ? get_queried_object() : null;
 ?>
 
 <header class="page-header">
 	<h1 class="page-header__title">
 		<?php
-		if ( $term instanceof WP_Term ) {
-			echo esc_html( $term->name );
+		if ( $queried_term instanceof WP_Term ) {
+			echo esc_html( $queried_term->name );
 		} elseif ( is_search() ) {
 			printf(
 				/* translators: %s: search term. */
@@ -45,8 +45,8 @@ $term         = is_tax() ? get_queried_object() : null;
 	// excerpt on the shop. `get_the_archive_description()` falls back to the
 	// product post type's registered description, which is WooCommerce's stock
 	// "This is where you can browse products in this store" placeholder.
-	if ( $term instanceof WP_Term ) {
-		$description = $term->description;
+	if ( $queried_term instanceof WP_Term ) {
+		$description = $queried_term->description;
 	} elseif ( function_exists( 'is_shop' ) && is_shop() ) {
 		$description = (string) get_post_field( 'post_excerpt', (int) wc_get_page_id( 'shop' ) );
 	} else {

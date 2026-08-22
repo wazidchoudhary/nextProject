@@ -22,6 +22,8 @@ final class Context {
 
 	/**
 	 * Memoised REST detection.
+	 *
+	 * @var bool|null
 	 */
 	private ?bool $is_rest = null;
 
@@ -51,18 +53,24 @@ final class Context {
 		}
 
 		if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-			return $this->is_rest = true;
+			$this->is_rest = true;
+
+			return $this->is_rest;
 		}
 
 		$uri = isset( $_SERVER['REQUEST_URI'] ) ? esc_url_raw( wp_unslash( (string) $_SERVER['REQUEST_URI'] ) ) : '';
 
 		if ( '' === $uri ) {
-			return $this->is_rest = false;
+			$this->is_rest = false;
+
+			return $this->is_rest;
 		}
 
 		$prefix = function_exists( 'rest_get_url_prefix' ) ? rest_get_url_prefix() : 'wp-json';
 
-		return $this->is_rest = str_contains( $uri, '/' . $prefix . '/' );
+		$this->is_rest = str_contains( $uri, '/' . $prefix . '/' );
+
+		return $this->is_rest;
 	}
 
 	/**

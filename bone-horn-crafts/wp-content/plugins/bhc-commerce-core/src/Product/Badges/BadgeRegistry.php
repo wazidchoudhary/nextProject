@@ -114,7 +114,9 @@ final class BadgeRegistry {
 		 */
 		$badges = (array) apply_filters( 'bhc_registered_badges', $badges );
 
-		return $this->badges = array_filter( $badges, static fn ( $badge ): bool => $badge instanceof Badge );
+		$this->badges = array_filter( $badges, static fn ( $badge ): bool => $badge instanceof Badge );
+
+		return $this->badges;
 	}
 
 	/**

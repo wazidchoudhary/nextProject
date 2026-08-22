@@ -77,11 +77,11 @@ final class RedisStatus {
 		global $wp_object_cache;
 
 		return [
-			'persistent'        => $this->has_persistent_object_cache(),
-			'redis'             => $this->is_redis(),
-			'redis_extension'   => $this->extension_loaded(),
-			'implementation'    => is_object( $wp_object_cache ) ? get_class( $wp_object_cache ) : 'none',
-			'dropin_installed'  => file_exists( WP_CONTENT_DIR . '/object-cache.php' ),
+			'persistent'       => $this->has_persistent_object_cache(),
+			'redis'            => $this->is_redis(),
+			'redis_extension'  => $this->extension_loaded(),
+			'implementation'   => is_object( $wp_object_cache ) ? get_class( $wp_object_cache ) : 'none',
+			'dropin_installed' => file_exists( WP_CONTENT_DIR . '/object-cache.php' ),
 		];
 	}
 }

@@ -52,7 +52,9 @@ function bhc_critical_css(): string {
 
 	$path = BHC_THEME_DIR . '/assets/css/critical.css';
 
-	return $css = is_readable( $path ) ? (string) file_get_contents( $path ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local theme asset.
+	$css = is_readable( $path ) ? (string) file_get_contents( $path ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local theme asset.
+
+	return $css;
 }
 
 /**
@@ -100,6 +102,7 @@ function bhc_enqueue_assets(): void {
 			'strings' => [
 				'menuOpen'   => __( 'Open menu', 'bhc-theme' ),
 				'menuClose'  => __( 'Close menu', 'bhc-theme' ),
+				/* translators: %d: position of the image within the product gallery. */
 				'galleryAlt' => __( 'Product image %d', 'bhc-theme' ),
 			],
 		]

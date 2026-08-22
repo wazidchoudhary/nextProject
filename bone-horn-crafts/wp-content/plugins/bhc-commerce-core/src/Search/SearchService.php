@@ -144,6 +144,7 @@ final class SearchService implements HookableInterface {
 		$like   = '%' . $wpdb->esc_like( $term ) . '%';
 
 		$sku_clause = $wpdb->prepare(
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table identifiers cannot be bound; both come from $wpdb, and the search term is the %s placeholder.
 			"OR ({$wpdb->posts}.ID IN (SELECT product_id FROM {$lookup} WHERE sku LIKE %s LIMIT 50))",
 			$like
 		);

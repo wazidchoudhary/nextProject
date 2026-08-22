@@ -56,7 +56,7 @@ final class ArrayStore implements StoreInterface {
 	 */
 	public function write( string $key, mixed $value, int $ttl ): bool {
 		$this->items[ $key ] = [
-			'value' => $value,
+			'value'   => $value,
 			// 0 means "no expiry" (the interface's "cache lifetime"); any other
 			// value is an absolute expiry, so a negative TTL is already stale.
 			'expires' => 0 === $ttl ? 0 : time() + $ttl,

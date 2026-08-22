@@ -54,17 +54,17 @@ final class CheckoutFieldCustomizer implements HookableInterface {
 		$country = $this->current_country();
 
 		if ( isset( $fields['billing']['billing_phone'] ) ) {
-			$fields['billing']['billing_phone']['required']    = true;
-			$fields['billing']['billing_phone']['type']        = 'tel';
-			$fields['billing']['billing_phone']['placeholder'] = $this->phones->placeholder( $country );
-			$fields['billing']['billing_phone']['label']       = __( 'Phone (with country code)', 'bhc-commerce-core' );
-			$fields['billing']['billing_phone']['autocomplete'] = 'tel';
-			$fields['billing']['billing_phone']['custom_attributes']['inputmode'] = 'tel';
+			$fields['billing']['billing_phone']['required']                            = true;
+			$fields['billing']['billing_phone']['type']                                = 'tel';
+			$fields['billing']['billing_phone']['placeholder']                         = $this->phones->placeholder( $country );
+			$fields['billing']['billing_phone']['label']                               = __( 'Phone (with country code)', 'bhc-commerce-core' );
+			$fields['billing']['billing_phone']['autocomplete']                        = 'tel';
+			$fields['billing']['billing_phone']['custom_attributes']['inputmode']      = 'tel';
 			$fields['billing']['billing_phone']['custom_attributes']['data-bhc-phone'] = '1';
 		}
 
 		if ( isset( $fields['billing']['billing_email'] ) ) {
-			$fields['billing']['billing_email']['priority'] = 25;
+			$fields['billing']['billing_email']['priority']    = 25;
 			$fields['billing']['billing_email']['description'] = __( 'Order updates and the tracking number are sent here.', 'bhc-commerce-core' );
 		}
 
@@ -77,17 +77,17 @@ final class CheckoutFieldCustomizer implements HookableInterface {
 			$postcode_key = $group . '_postcode';
 
 			if ( isset( $fields[ $group ][ $postcode_key ] ) ) {
-				$fields[ $group ][ $postcode_key ]['label']       = $this->postcodes->label( $country );
-				$fields[ $group ][ $postcode_key ]['placeholder'] = $this->postcodes->example( $country );
+				$fields[ $group ][ $postcode_key ]['label']                                  = $this->postcodes->label( $country );
+				$fields[ $group ][ $postcode_key ]['placeholder']                            = $this->postcodes->example( $country );
 				$fields[ $group ][ $postcode_key ]['custom_attributes']['data-bhc-postcode'] = '1';
 			}
 
 			$address_2 = $group . '_address_2';
 
 			if ( isset( $fields[ $group ][ $address_2 ] ) ) {
-				$fields[ $group ][ $address_2 ]['label']         = __( 'Apartment, unit, workshop (optional)', 'bhc-commerce-core' );
-				$fields[ $group ][ $address_2 ]['label_class']   = [];
-				$fields[ $group ][ $address_2 ]['placeholder']   = __( 'Unit 4, Makers Yard', 'bhc-commerce-core' );
+				$fields[ $group ][ $address_2 ]['label']       = __( 'Apartment, unit, workshop (optional)', 'bhc-commerce-core' );
+				$fields[ $group ][ $address_2 ]['label_class'] = [];
+				$fields[ $group ][ $address_2 ]['placeholder'] = __( 'Unit 4, Makers Yard', 'bhc-commerce-core' );
 			}
 		}
 

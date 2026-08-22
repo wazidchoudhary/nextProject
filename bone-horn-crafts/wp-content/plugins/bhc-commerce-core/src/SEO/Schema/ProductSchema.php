@@ -181,13 +181,13 @@ final class ProductSchema implements SchemaPieceInterface {
 		}
 
 		$offer = [
-			'@type'           => 'Offer',
-			'url'             => $permalink,
-			'priceCurrency'   => $currency,
-			'price'           => $this->format_price( (float) wc_get_price_to_display( $product ) ),
-			'availability'    => $availability,
-			'itemCondition'   => 'https://schema.org/NewCondition',
-			'seller'          => [ '@id' => $this->organization->id() ],
+			'@type'         => 'Offer',
+			'url'           => $permalink,
+			'priceCurrency' => $currency,
+			'price'         => $this->format_price( (float) wc_get_price_to_display( $product ) ),
+			'availability'  => $availability,
+			'itemCondition' => 'https://schema.org/NewCondition',
+			'seller'        => [ '@id' => $this->organization->id() ],
 		];
 
 		$sale_end = $product->get_date_on_sale_to();

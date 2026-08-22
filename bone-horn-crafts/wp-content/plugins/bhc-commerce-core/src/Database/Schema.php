@@ -39,9 +39,9 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Schema {
 
-	public const TABLE_WISHLIST  = 'bhc_wishlist';
-	public const TABLE_AFFINITY  = 'bhc_product_affinity';
-	public const TABLE_STATS     = 'bhc_product_stats';
+	public const TABLE_WISHLIST = 'bhc_wishlist';
+	public const TABLE_AFFINITY = 'bhc_product_affinity';
+	public const TABLE_STATS    = 'bhc_product_stats';
 
 	/**
 	 * Returns the prefixed table name.
@@ -94,7 +94,7 @@ final class Schema {
 	KEY updated_at (updated_at)
 ) {$collate};",
 
-			$stats => "CREATE TABLE {$stats} (
+			$stats    => "CREATE TABLE {$stats} (
 	product_id bigint(20) unsigned NOT NULL,
 	views_30d int(10) unsigned NOT NULL default 0,
 	units_30d int(10) unsigned NOT NULL default 0,
@@ -152,7 +152,7 @@ final class Schema {
 		global $wpdb;
 
 		foreach ( array_keys( self::definitions() ) as $table ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared -- Table names come from Schema, never user input.
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table identifiers cannot be bound as placeholders; these come from Schema::definitions(), never from user input.
 			$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
 		}
 	}

@@ -56,7 +56,9 @@ final class DemoState {
 			$state[ $bucket ] = array_values( array_unique( array_filter( array_map( 'absint', $ids ) ) ) );
 		}
 
-		return $this->state = $state;
+		$this->state = $state;
+
+		return $this->state;
 	}
 
 	/**
