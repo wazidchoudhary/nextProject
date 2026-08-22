@@ -202,6 +202,65 @@ final class DemoSeeder {
 
 			flush_rewrite_rules( false );
 		}
+
+		$this->purge_default_content();
+	}
+
+	/**
+	 * Removes the placeholder content WordPress and WooCommerce ship with.
+	 *
+	 * A fresh install leaves behind "Hello world!", "Sample Page", the
+	 * "A WordPress Commenter" comment and WooCommerce's draft refund policy.
+	 * They are the clearest tell that a site is an untouched install, so a
+	 * store that is meant to read as a real business has to clear them.
+	 *
+	 * Each is matched on its default slug *and* left alone once edited, so an
+	 * operator who repurposed one of these pages does not lose the work.
+	 */
+	private function purge_default_content(): void {
+		$defaults = [
+			'post' => [ 'hello-world' ],
+			'page' => [ 'sample-page', 'refund_returns', 'privacy-policy-2' ],
+		];
+
+		foreach ( $defaults as $post_type => $slugs ) {
+			foreach ( $slugs as $slug ) {
+				$posts = get_posts(
+					[
+						'name'             => $slug,
+						'post_type'        => $post_type,
+						'post_status'      => [ 'publish', 'draft', 'auto-draft', 'pending' ],
+						'numberposts'      => 1,
+						'suppress_filters' => false,
+					]
+				);
+
+				if ( [] === $posts ) {
+					continue;
+				}
+
+				$post = $posts[0];
+
+				// An edited placeholder is somebody's content now: the modified
+				// timestamp only stays equal to the created one while untouched.
+				if ( $post->post_modified_gmt !== $post->post_date_gmt ) {
+					continue;
+				}
+
+				wp_delete_post( $post->ID, true );
+			}
+		}
+
+		$default_comments = get_comments(
+			[
+				'author_email' => 'wapuu@wordpress.example',
+				'number'       => 5,
+			]
+		);
+
+		foreach ( $default_comments as $comment ) {
+			wp_delete_comment( (int) $comment->comment_ID, true );
+		}
 	}
 
 	/**
@@ -472,12 +531,17 @@ final class DemoSeeder {
 	/**
 	 * Size variations offered for a variable product.
 	 *
+	 * The middle entry is the catalogue row's own size, so a row whose size
+	 * already matches one of the two offsets is offered in two sizes rather
+	 * than three. Slugs are deduplicated here so callers never see the same
+	 * size twice.
+	 *
 	 * @param array<string, mixed> $definition Catalogue row.
 	 *
 	 * @return array<int, array{slug:string, modifier:float, stock:int}>
 	 */
 	private function variation_sizes( array $definition ): array {
-		return [
+		$sizes = [
 			[
 				'slug'     => '4-5x1-25x0-25',
 				'modifier' => -0.2,
@@ -494,6 +558,29 @@ final class DemoSeeder {
 				'stock'    => max( 3, (int) round( (int) $definition['stock'] * 0.3 ) ),
 			],
 		];
+
+		// The row's own size wins a collision: it carries the catalogue price,
+		// where the other two only exist as offsets from it. Seed the map with
+		// the base entry so neither offset can overwrite it, then re-order so
+		// the sizes still read small to large on the product page.
+		$base   = (string) $definition['size'];
+		$unique = [ $base => $sizes[1] ];
+
+		foreach ( [ $sizes[0], $sizes[2] ] as $size ) {
+			$slug = (string) $size['slug'];
+
+			if ( isset( $unique[ $slug ] ) ) {
+				continue;
+			}
+
+			$unique[ $slug ] = $size;
+		}
+
+		$unique = array_values( $unique );
+
+		usort( $unique, static fn ( array $a, array $b ): int => $a['modifier'] <=> $b['modifier'] );
+
+		return $unique;
 	}
 
 	/**
@@ -510,14 +597,36 @@ final class DemoSeeder {
 		}
 
 		$taxonomy = AttributeCatalog::taxonomy( AttributeCatalog::SIZE );
+		$wanted   = array_column( $this->variation_sizes( $definition ), 'slug' );
 		$existing = [];
+		$stale    = [];
 
 		foreach ( $parent->get_children() as $child_id ) {
 			$variation = wc_get_product( (int) $child_id );
 
-			if ( $variation instanceof WC_Product_Variation ) {
-				$existing[ (string) $variation->get_attribute( $taxonomy ) ] = $variation;
+			if ( ! $variation instanceof WC_Product_Variation ) {
+				continue;
 			}
+
+			// `get_attributes()` returns the stored term slug. `get_attribute()`
+			// resolves it to the display name, which never matches the slugs in
+			// variation_sizes() — keying on it made every reseed build a fresh
+			// set of variations instead of updating the existing ones.
+			$slug = (string) ( $variation->get_attributes()[ $taxonomy ] ?? '' );
+
+			if ( '' === $slug || ! in_array( $slug, $wanted, true ) || isset( $existing[ $slug ] ) ) {
+				$stale[] = $variation;
+
+				continue;
+			}
+
+			$existing[ $slug ] = $variation;
+		}
+
+		// Sizes that were dropped from the catalogue, and any duplicates left by
+		// an earlier run, go now: a variable product must offer each size once.
+		foreach ( $stale as $variation ) {
+			$variation->delete( true );
 		}
 
 		foreach ( $this->variation_sizes( $definition ) as $size ) {
