@@ -115,8 +115,12 @@ jobs:
           SITE_URL: http://localhost:8088
         run: bin/setup-demo.sh "${HOME}/wp-demo"
 
+      # Without --strict this fails on a failing check and passes on a warning,
+      # which is what CI wants: the runner has no persistent object cache, and
+      # "no Redis here" is not a broken build. --strict is the production
+      # deploy gate — see docs/deployment.md.
       - name: Health check
-        run: wp --path="${HOME}/wp-demo" --allow-root bhc health-check --strict
+        run: wp --path="${HOME}/wp-demo" --allow-root bhc health-check
 
       - name: Integration assertions
         run: wp --path="${HOME}/wp-demo" --allow-root eval-file bin/integration-tests.php
