@@ -31,8 +31,8 @@
 		}
 	},
 	"scripts": {
-		"test": "phpunit --testsuite unit",
-		"lint": "phpcs",
-		"lint:fix": "phpcbf"
+		"test": "phpunit",
+		"lint": "phpcs --standard=../../../phpcs.xml.dist",
+		"lint:fix": "phpcbf --standard=../../../phpcs.xml.dist"
 	}
 }

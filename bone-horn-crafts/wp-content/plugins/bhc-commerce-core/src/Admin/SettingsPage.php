@@ -131,6 +131,7 @@ final class SettingsPage {
 		$this->text_row( 'organization_phone', __( 'Public contact phone', 'bhc-commerce-core' ), (string) $settings['organization_phone'], '' );
 		$this->text_row( 'legal_entity', __( 'Manufacturing entity', 'bhc-commerce-core' ), (string) $settings['legal_entity'], __( 'Shown in the footer credit and as the manufacturer in structured data.', 'bhc-commerce-core' ) );
 		$this->number_row( 'index_batch_size', __( 'Index batch size', 'bhc-commerce-core' ), (int) $settings['index_batch_size'], 10, 200 );
+		$this->checkbox_row( 'delete_data_on_uninstall', __( 'Delete data on uninstall', 'bhc-commerce-core' ), __( 'Drop the wishlist, affinity and stats tables when the plugin is deleted. Deactivating never deletes anything.', 'bhc-commerce-core' ), (bool) $settings['delete_data_on_uninstall'] );
 
 		echo '</tbody></table>';
 

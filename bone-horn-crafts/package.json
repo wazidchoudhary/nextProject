@@ -13,7 +13,12 @@
 		"lint:js": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js",
 		"test:e2e": "node tests/e2e/purchase-flow.mjs",
 		"test:admin": "node tests/e2e/admin-screens.mjs",
-		"screenshots": "node tools/screenshots.mjs"
+		"screenshots": "node tools/screenshots.mjs",
+		"lint:php": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpcs --standard=phpcs.xml.dist",
+		"lint:php:fix": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpcbf --standard=phpcs.xml.dist",
+		"test:unit": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpunit --configuration wp-content/plugins/bhc-commerce-core/phpunit.xml.dist",
+		"lint": "npm run lint:css && npm run lint:js && npm run lint:php",
+		"test:vitals": "node tests/e2e/web-vitals.mjs"
 	},
 	"devDependencies": {
 		"sass": "^1.77.0",

@@ -65,14 +65,16 @@
 
 	<rule ref="WordPress.WP.Capabilities">
 		<properties>
-			<!-- WooCommerce capabilities plus the two this plugin registers in
-			     Security\Capabilities. -->
+			<!-- The WooCommerce capabilities the plugin checks, plus the two it
+			     registers itself (see Security\Capabilities and Customer\Roles). -->
 			<property name="custom_capabilities" type="array">
-				<element value="edit_shop_order"/>
 				<element value="edit_products"/>
+				<element value="edit_shop_order"/>
+				<element value="edit_shop_orders"/>
 				<element value="manage_woocommerce"/>
-				<element value="bhc_manage_store"/>
-				<element value="bhc_wholesale"/>
+				<element value="view_woocommerce_reports"/>
+				<element value="manage_bhc_commerce"/>
+				<element value="bhc_view_wholesale_pricing"/>
 			</property>
 		</properties>
 	</rule>

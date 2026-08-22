@@ -56,6 +56,9 @@ final class Options {
 			'canonical_host'             => 'https://www.bonehorncrafts.com',
 			'index_batch_size'           => 40,
 			'log_level'                  => 'info',
+			// Off by default: uninstalling a plugin should not be able to destroy
+			// wishlists and merchandising history by accident. See uninstall.php.
+			'delete_data_on_uninstall'   => false,
 		];
 	}
 
