@@ -320,6 +320,29 @@ function bhc_reading_time( int $post_id = 0 ): string {
  * @param string $part street, locality, region, postcode, phone, phone_href, email or country.
  */
 function bhc_contact( string $part ): string {
+	// The plugin owns the address, because the same details also have to appear
+	// in the Organization JSON-LD and in the policy pages, and three copies of
+	// a postal address drift. The theme keeps a fallback so it still renders a
+	// sensible footer if the plugin is deactivated.
+	$business = bhc_service( \BoneHornCrafts\Core\Store\BusinessDetails::class );
+
+	if ( null !== $business ) {
+		$value = match ( $part ) {
+			'street'     => $business->street(),
+			'locality'   => $business->locality(),
+			'region'     => trim( $business->region() . ' ' . $business->postcode() . ', ' . $business->country() ),
+			'postcode'   => $business->postcode(),
+			'country'    => $business->country_code(),
+			'phone'      => $business->phone(),
+			'phone_href' => $business->phone_href(),
+			'email'      => $business->email(),
+			default      => '',
+		};
+
+		/** This filter is documented in inc/template-tags.php. */
+		return (string) apply_filters( 'bhc_contact_detail', $value, $part );
+	}
+
 	static $defaults = [
 		'street'     => 'Khasra No. 535-536, Garima Garden',
 		'locality'   => 'Sahibabad, Ghaziabad',
@@ -332,27 +355,6 @@ function bhc_contact( string $part ): string {
 	];
 
 	$value = $defaults[ $part ] ?? '';
-
-	$options = bhc_service( \BoneHornCrafts\Core\Support\Options::class );
-
-	if ( null !== $options ) {
-		$configured = match ( $part ) {
-			'email' => $options->string( 'organization_email' ),
-			'phone' => $options->string( 'organization_phone' ),
-			default => '',
-		};
-
-		if ( '' !== $configured ) {
-			$value = $configured;
-		}
-	}
-
-	// The tel: form must carry no spaces or punctuation, so it is derived from
-	// whatever the display number ends up being rather than stored twice.
-	if ( 'phone_href' === $part ) {
-		$display = bhc_contact( 'phone' );
-		$value   = (string) preg_replace( '/[^0-9+]/', '', $display );
-	}
 
 	/**
 	 * Filters a contact detail.
@@ -372,6 +374,7 @@ function bhc_contact( string $part ): string {
  */
 function bhc_legal_menu_fallback(): void {
 	$slugs = [
+		'contact'           => __( 'Contact Us', 'bhc-theme' ),
 		'privacy-policy'    => __( 'Privacy Policy', 'bhc-theme' ),
 		'terms-conditions'  => __( 'Terms & Conditions', 'bhc-theme' ),
 		'shipping-delivery' => __( 'Shipping & Delivery', 'bhc-theme' ),

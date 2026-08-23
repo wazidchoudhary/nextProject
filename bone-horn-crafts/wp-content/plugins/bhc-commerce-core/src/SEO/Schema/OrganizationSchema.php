@@ -12,6 +12,7 @@ namespace BoneHornCrafts\Core\SEO\Schema;
 defined( 'ABSPATH' ) || exit;
 
 use BoneHornCrafts\Core\SEO\BrandProfile;
+use BoneHornCrafts\Core\Store\BusinessDetails;
 
 /**
  * Describes the storefront brand.
@@ -25,9 +26,10 @@ final class OrganizationSchema implements SchemaPieceInterface {
 	/**
 	 * Constructor.
 	 *
-	 * @param BrandProfile $brand Brand profile.
+	 * @param BrandProfile    $brand    Brand profile.
+	 * @param BusinessDetails $business Registered business details.
 	 */
-	public function __construct( private BrandProfile $brand ) {}
+	public function __construct( private BrandProfile $brand, private BusinessDetails $business ) {}
 
 	/**
 	 * Stable node id used by other pieces.
@@ -92,6 +94,15 @@ final class OrganizationSchema implements SchemaPieceInterface {
 
 			$node['contactPoint'] = [ $contact ];
 		}
+
+		// A postal address is one of the stronger entity signals available to a
+		// business that trades internationally, and it was simply absent. It
+		// comes from BusinessDetails rather than being written out again here,
+		// so the schema and the footer can never disagree.
+		$node['address'] = $this->business->postal_address_schema();
+
+		$node['telephone'] = $this->business->phone();
+		$node['email']     = $this->business->email();
 
 		$manufacturer = $this->brand->legal_entity();
 

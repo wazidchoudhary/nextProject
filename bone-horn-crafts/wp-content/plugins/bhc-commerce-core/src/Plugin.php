@@ -122,6 +122,7 @@ final class Plugin {
 			Payments\PaymentsServiceProvider::class,
 			Order\OrderServiceProvider::class,
 			Customer\CustomerServiceProvider::class,
+			Content\ContentServiceProvider::class,
 			Analytics\AnalyticsServiceProvider::class,
 			Jobs\JobsServiceProvider::class,
 			SEO\SeoServiceProvider::class,

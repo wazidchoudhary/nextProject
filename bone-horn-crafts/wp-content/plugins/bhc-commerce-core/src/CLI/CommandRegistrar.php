@@ -51,10 +51,12 @@ final class CommandRegistrar {
 	}
 
 	/**
-	 * `wp bhc setup accounts`.
+	 * `wp bhc setup accounts` and `wp bhc setup pages`.
 	 */
 	private function register_setup_commands(): void {
 		$container = $this->container;
+
+		$this->register_pages_command();
 
 		WP_CLI::add_command(
 			'bhc setup accounts',
@@ -90,6 +92,62 @@ final class CommandRegistrar {
 			[
 				'shortdesc' => 'Turn on customer registration on My Account and at checkout.',
 				'longdesc'  => "Three independent switches control whether people can create an account: WordPress's own users_can_register, WooCommerce's My Account registration setting, and its checkout signup setting. Setting one and testing that page makes the other two look fine, which is why a store can appear to offer accounts and not actually do so.\n\nApplied automatically when the plugin's schema installs. Run this to apply it to a store that predates that, or after deliberately changing one of the settings back.\n\n## EXAMPLES\n\n    wp bhc setup accounts",
+			]
+		);
+	}
+
+	/**
+	 * `wp bhc setup pages`.
+	 */
+	private function register_pages_command(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc setup pages',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				unset( $args );
+
+				$installer = $container->get( \BoneHornCrafts\Core\Content\PolicyPageInstaller::class );
+				$refresh   = (bool) WP_CLI\Utils\get_flag_value( $assoc_args, 'refresh', false );
+
+				$created = $installer->install();
+
+				foreach ( $created as $slug ) {
+					WP_CLI::log( sprintf( '  created  %s', $slug ) );
+				}
+
+				if ( $refresh ) {
+					WP_CLI::warning( 'Rewriting the body of every policy page. Local edits to these pages are lost.' );
+
+					foreach ( $installer->refresh() as $slug ) {
+						WP_CLI::log( sprintf( '  rewrote  %s', $slug ) );
+					}
+				}
+
+				WP_CLI\Utils\format_items(
+					'table',
+					array_map(
+						static fn ( string $slug, int $id ): array => [
+							'page'    => $slug,
+							'id'      => $id,
+							'url'     => $id > 0 ? (string) get_permalink( $id ) : '',
+							'present' => $id > 0 ? 'yes' : 'no',
+						],
+						array_keys( $installer->status() ),
+						array_values( $installer->status() )
+					),
+					[ 'page', 'id', 'present', 'url' ]
+				);
+
+				WP_CLI::success(
+					[] === $created && ! $refresh
+						? 'All policy pages already exist. Nothing was changed.'
+						: sprintf( '%d page(s) created.', count( $created ) )
+				);
+			},
+			[
+				'shortdesc' => 'Publish the contact and legal pages, and point WooCommerce at them.',
+				'longdesc'  => "Creates the contact, privacy policy, terms, shipping and returns pages if they are missing, then sets WordPress's privacy page and WooCommerce's terms and refunds page options to match.\n\nThis runs automatically when the plugin's schema installs. Run it by hand on a store that predates that, or after a page was deleted.\n\nExisting pages are never modified: an owner who rewrote the returns policy keeps their copy. Pass --refresh to overwrite every page body with the shipped copy, which discards those edits.\n\n## OPTIONS\n\n[--refresh]\n: Overwrite the body of every page with the shipped copy. Destructive.\n\n## EXAMPLES\n\n    wp bhc setup pages\n    wp bhc setup pages --refresh",
 			]
 		);
 	}

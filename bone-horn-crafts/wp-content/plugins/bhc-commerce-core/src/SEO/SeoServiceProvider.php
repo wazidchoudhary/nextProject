@@ -22,6 +22,7 @@ use BoneHornCrafts\Core\SEO\Schema\ProductSchema;
 use BoneHornCrafts\Core\SEO\Schema\SchemaGraph;
 use BoneHornCrafts\Core\SEO\Schema\WebSiteSchema;
 use BoneHornCrafts\Core\Support\Context;
+use BoneHornCrafts\Core\Store\BusinessDetails;
 use BoneHornCrafts\Core\Support\Options;
 
 /**
@@ -76,7 +77,10 @@ final class SeoServiceProvider extends AbstractServiceProvider {
 
 		$container->singleton(
 			OrganizationSchema::class,
-			static fn ( Container $c ): OrganizationSchema => new OrganizationSchema( $c->get( BrandProfile::class ) )
+			static fn ( Container $c ): OrganizationSchema => new OrganizationSchema(
+				$c->get( BrandProfile::class ),
+				$c->get( BusinessDetails::class )
+			)
 		);
 
 		$container->singleton(

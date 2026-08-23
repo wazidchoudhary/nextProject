@@ -91,6 +91,55 @@ if ( ! function_exists( 'add_action' ) ) {
 	}
 }
 
+if ( ! function_exists( 'get_option' ) ) {
+	/**
+	 * Returns the default; the unit suite has no options table.
+	 *
+	 * @param string $name    Option name.
+	 * @param mixed  $default Default value.
+	 *
+	 * @return mixed
+	 */
+	function get_option( string $name, $default = false ) {
+		unset( $name );
+
+		return $default;
+	}
+}
+
+if ( ! function_exists( 'esc_html' ) ) {
+	/**
+	 * Escapes for HTML output.
+	 *
+	 * @param string $text Text.
+	 */
+	function esc_html( string $text ): string {
+		return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( 'esc_attr' ) ) {
+	/**
+	 * Escapes for an attribute value.
+	 *
+	 * @param string $text Text.
+	 */
+	function esc_attr( string $text ): string {
+		return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+	}
+}
+
+if ( ! function_exists( 'get_bloginfo' ) ) {
+	/**
+	 * Returns a fixed site name.
+	 *
+	 * @param string $show Which value.
+	 */
+	function get_bloginfo( string $show = 'name' ): string {
+		return 'name' === $show ? 'Bone Horn Crafts' : '';
+	}
+}
+
 if ( ! function_exists( '__' ) ) {
 	/**
 	 * Pass-through translation.
