@@ -167,6 +167,12 @@ final class HealthReport {
 		// usual cause is a window where the plugin's callbacks were absent
 		// (a mid-upload deploy, WooCommerce deactivated), which is worth knowing
 		// about even after it has healed.
+		//
+		// The remedy is `clean`, not `run`: `run` executes actions that are
+		// pending and does nothing to a failed row, and Action Scheduler's own
+		// cleaner only prunes complete and cancelled actions, so a failed row
+		// otherwise sits there forever. `--before=now` is required because
+		// `clean` defaults to deleting nothing newer than 31 days.
 		$failed = (int) ( $report['jobs']['failed'] ?? 0 );
 
 		$checks[] = [
@@ -177,8 +183,8 @@ final class HealthReport {
 				: sprintf(
 					/* translators: %d: number of failed actions. */
 					_n(
-						'%d failed action in the bhc-core group. The schedule repairs itself, so clear the row once the job has run again: wp action-scheduler run --group=bhc-core',
-						'%d failed actions in the bhc-core group. The schedule repairs itself, so clear the rows once the jobs have run again: wp action-scheduler run --group=bhc-core',
+						'%d failed action in the bhc-core group. The schedule repairs itself, so this is a record of a past failure rather than a job that is still broken. Delete the row with: wp action-scheduler clean --status=failed --before=now',
+						'%d failed actions in the bhc-core group. The schedule repairs itself, so these are records of past failures rather than jobs that are still broken. Delete the rows with: wp action-scheduler clean --status=failed --before=now',
 						$failed,
 						'bhc-commerce-core'
 					),
