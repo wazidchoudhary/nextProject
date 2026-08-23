@@ -92,6 +92,7 @@ final class HealthReport {
 				'action_scheduler' => function_exists( 'as_schedule_recurring_action' ),
 				'wp_cron_disabled' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON,
 				'schedule'         => $this->scheduler->status(),
+				'failed'           => $this->scheduler->failed(),
 			],
 			'catalogue'   => [
 				'published_products' => $this->products->published_count(),
@@ -158,6 +159,31 @@ final class HealthReport {
 			'detail' => $report['jobs']['action_scheduler']
 				? __( 'Available. Background indexing is scheduled.', 'bhc-commerce-core' )
 				: __( 'Unavailable — WooCommerce provides it, so check that WooCommerce is active.', 'bhc-commerce-core' ),
+		];
+
+		// A failed action is not fatal — `Scheduler::ensure_schedules()` recreates
+		// a missing recurring action on the next request, so the site recovers by
+		// itself. It is reported as a warning rather than a pass because the
+		// usual cause is a window where the plugin's callbacks were absent
+		// (a mid-upload deploy, WooCommerce deactivated), which is worth knowing
+		// about even after it has healed.
+		$failed = (int) ( $report['jobs']['failed'] ?? 0 );
+
+		$checks[] = [
+			'label'  => __( 'Failed background jobs', 'bhc-commerce-core' ),
+			'status' => 0 === $failed ? 'pass' : 'warn',
+			'detail' => 0 === $failed
+				? __( 'None recorded.', 'bhc-commerce-core' )
+				: sprintf(
+					/* translators: %d: number of failed actions. */
+					_n(
+						'%d failed action in the bhc-core group. The schedule repairs itself, so clear the row once the job has run again: wp action-scheduler run --group=bhc-core',
+						'%d failed actions in the bhc-core group. The schedule repairs itself, so clear the rows once the jobs have run again: wp action-scheduler run --group=bhc-core',
+						$failed,
+						'bhc-commerce-core'
+					),
+					$failed
+				),
 		];
 
 		$checks[] = [

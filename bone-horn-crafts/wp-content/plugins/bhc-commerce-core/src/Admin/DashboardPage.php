@@ -168,14 +168,17 @@ final class DashboardPage {
 		echo '</section>';
 
 		echo '<section class="bhc-admin__panel"><h2>' . esc_html__( 'Background jobs', 'bhc-commerce-core' ) . '</h2>';
-		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Job', 'bhc-commerce-core' ) . '</th><th>' . esc_html__( 'Next run', 'bhc-commerce-core' ) . '</th><th>' . esc_html__( 'Pending', 'bhc-commerce-core' ) . '</th><th>' . esc_html__( 'Last completed', 'bhc-commerce-core' ) . '</th></tr></thead><tbody>';
+		echo '<table class="widefat striped"><thead><tr><th>' . esc_html__( 'Job', 'bhc-commerce-core' ) . '</th><th>' . esc_html__( 'Next run', 'bhc-commerce-core' ) . '</th><th>' . esc_html__( 'Pending', 'bhc-commerce-core' ) . '</th><th>' . esc_html__( 'Failed', 'bhc-commerce-core' ) . '</th><th>' . esc_html__( 'Last completed', 'bhc-commerce-core' ) . '</th></tr></thead><tbody>';
 
 		foreach ( $this->scheduler->status() as $job ) {
 			printf(
-				'<tr><td><code>%1$s</code></td><td>%2$s</td><td>%3$d</td><td>%4$s</td></tr>',
+				'<tr><td><code>%1$s</code></td><td>%2$s</td><td>%3$d</td><td>%4$s</td><td>%5$s</td></tr>',
 				esc_html( (string) $job['hook'] ),
 				esc_html( (string) $job['next_run'] ),
 				(int) $job['pending'],
+				0 === (int) $job['failed']
+					? '0'
+					: '<strong>' . esc_html( (string) (int) $job['failed'] ) . '</strong>',
 				esc_html( (string) $job['last_completed'] )
 			);
 		}

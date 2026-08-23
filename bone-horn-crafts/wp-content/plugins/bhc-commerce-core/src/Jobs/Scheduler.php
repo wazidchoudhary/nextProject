@@ -116,9 +116,53 @@ final class Scheduler implements HookableInterface {
 	}
 
 	/**
+	 * Number of failed actions for a hook.
+	 *
+	 * A recurring action that fails is not rescheduled by Action Scheduler, so
+	 * `ensure_schedules()` recreates it on the next request and the site
+	 * recovers on its own. That self-healing is why a failure is easy to miss:
+	 * by the time anyone looks, the job is running again and only the failed
+	 * row is left behind. Surfacing the count means a deploy that briefly took
+	 * the callbacks away — the plugin folder mid-upload, WooCommerce
+	 * deactivated — leaves a visible trace instead of a silent one.
+	 *
+	 * @param string $hook Hook name.
+	 */
+	private function failed_count( string $hook ): int {
+		if ( ! function_exists( 'as_get_scheduled_actions' ) ) {
+			return 0;
+		}
+
+		return count(
+			(array) as_get_scheduled_actions(
+				[
+					'hook'     => $hook,
+					'status'   => 'failed',
+					'group'    => self::GROUP,
+					'per_page' => 100,
+				],
+				'ids'
+			)
+		);
+	}
+
+	/**
+	 * Total failed actions across every job in the group.
+	 */
+	public function failed(): int {
+		$total = 0;
+
+		foreach ( array_keys( $this->jobs ) as $hook ) {
+			$total += $this->failed_count( (string) $hook );
+		}
+
+		return $total;
+	}
+
+	/**
 	 * Status summary for the admin health screen.
 	 *
-	 * @return array<int, array{hook:string, next_run:string, pending:int, last_completed:string}>
+	 * @return array<int, array{hook:string, next_run:string, pending:int, failed:int, last_completed:string}>
 	 */
 	public function status(): array {
 		$status = [];
@@ -152,6 +196,7 @@ final class Scheduler implements HookableInterface {
 				'hook'           => $hook,
 				'next_run'       => $next > 0 ? wp_date( 'Y-m-d H:i', $next ) : __( 'not scheduled', 'bhc-commerce-core' ),
 				'pending'        => $pending,
+				'failed'         => $this->failed_count( (string) $hook ),
 				'last_completed' => $last > 0 ? wp_date( 'Y-m-d H:i', $last ) : __( 'never', 'bhc-commerce-core' ),
 			];
 		}
