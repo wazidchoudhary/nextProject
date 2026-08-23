@@ -178,15 +178,26 @@ if ( await placeOrder.count() ) {
 	const afterLayout = await measure();
 	const noticeCount = await page.locator( '.woocommerce-error, .woocommerce-NoticeGroup' ).count();
 
-	const shifted =
-		beforeLayout.orderTop !== afterLayout.orderTop ||
-		beforeLayout.orderLeft !== afterLayout.orderLeft;
+	// Two different things get called "the layout shifted", and only one is a
+	// bug. A notice inserted above the form legitimately pushes what follows
+	// down — that is what inserting content does. Columns changing places is
+	// the defect: it means the notice took a grid cell and displaced everything
+	// after it. Measure them separately so a fix for the second is not hidden
+	// by the first.
+	const movedColumn = beforeLayout.orderLeft !== afterLayout.orderLeft;
+	const pushedDown = afterLayout.orderTop - beforeLayout.orderTop;
 
 	finding(
-		'checkout: layout on error',
-		shifted ? 'CONFIRMED' : 'WORKS',
-		`notices=${ noticeCount } · order review top ${ beforeLayout.orderTop }→${ afterLayout.orderTop }, ` +
-		`left ${ beforeLayout.orderLeft }→${ afterLayout.orderLeft }, doc height ${ beforeLayout.docHeight }→${ afterLayout.docHeight }`,
+		'checkout: column stability on error',
+		movedColumn ? 'CONFIRMED' : 'WORKS',
+		`notices=${ noticeCount } · order review left ${ beforeLayout.orderLeft }→${ afterLayout.orderLeft }` +
+		`${ movedColumn ? ' — changed column' : ' — held its column' }`,
+	);
+
+	finding(
+		'checkout: vertical displacement',
+		pushedDown > 600 ? 'PARTIAL' : 'WORKS',
+		`pushed down ${ pushedDown }px by ${ noticeCount } notice block(s); expected when a message is inserted above`,
 	);
 } else {
 	finding( 'checkout: layout on error', 'PARTIAL', 'No place-order button — cart may be empty.' );
