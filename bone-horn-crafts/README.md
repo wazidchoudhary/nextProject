@@ -30,7 +30,7 @@ three levels.
 | **WP-CLI** | `wp bhc` with 8 subcommands |
 | **Background jobs** | 4 Action Scheduler jobs, idempotent, with retry and structured logging |
 | **Extension points** | 27 filters and 5 actions |
-| **Tests** | 73 PHPUnit tests / 136 assertions, 62 integration assertions, 4 Playwright suites |
+| **Tests** | 73 PHPUnit tests / 136 assertions, 73 integration assertions, 4 Playwright suites / 91 checks |
 | **Accessibility** | axe-core over 24 renders (12 pages × 2 viewports): zero violations at any impact level |
 | **Standards** | WPCS + PHPCompatibility, stylelint and eslint — `npm run lint` clean |
 | **Demo catalogue** | 60 products, 22 variations, 186 attachments, 20 terms, 24 orders, 8 customers, 18 pages, 6 journal articles, 2 menus, 148 reviews, 4 shipping zones |
@@ -64,7 +64,11 @@ calls in the body that then throw.
 ## Quick start
 
 One command builds the whole store — WordPress, WooCommerce, a database, the
-theme and plugin, the built assets and the demo catalogue:
+theme and plugin, the built assets and the demo catalogue.
+
+**Start MySQL and Redis first** (`sudo service mariadb start`,
+`sudo service redis-server start`); the script talks to both and the failure
+otherwise reads like bad credentials rather than a stopped server.
 
 ```bash
 DB_HOST=127.0.0.1 DB_NAME=bhc_demo DB_USER=root DB_PASSWORD=secret \
@@ -74,10 +78,14 @@ bin/setup-demo.sh ~/wp-demo
 PHP_CLI_SERVER_WORKERS=6 php -S localhost:8088 -t ~/wp-demo ~/wp-demo/router.php
 ```
 
-Then open <http://localhost:8088> (admin / admin at `/wp-admin`). The script
-prints a `wp bhc health-check` command at the end; run it to confirm the schema,
-object cache, Action Scheduler and merchandising index are all in the state it
-expects.
+Then open <http://localhost:8088> (admin / admin at `/wp-admin`). Budget **four
+to six minutes**; most of it is seeding 60 products with generated imagery, 8
+customers, 24 orders and 148 reviews. The script prints a `wp bhc health-check`
+command at the end; run it to confirm the schema, object cache, Action Scheduler
+and merchandising index are all in the state it expects.
+
+It creates the database for you if the DB user has `CREATE` rights, and prints
+the `CREATE DATABASE` and `GRANT` to run if not.
 
 The script is idempotent: re-running it skips whatever is already done. It also
 sets `WP_ENVIRONMENT_TYPE=development` in the install.
@@ -186,7 +194,7 @@ npm run test:e2e           # Playwright purchase flow, 13 checks
 npm run test:admin         # Playwright admin screens
 npm run test:vitals        # Playwright CLS/LCP budgets (fails above 0.1 CLS or 2.5s LCP)
 npm run test:a11y          # axe-core over 12 pages × 2 viewports
-wp eval-file bin/integration-tests.php   # 62 assertions against the live store
+wp eval-file bin/integration-tests.php   # 73 assertions against the live store
 
 # Standards
 npm run lint               # stylelint + eslint + phpcs

@@ -2,6 +2,21 @@
 
 ## Getting a store
 
+**Prerequisites:** PHP 8.2+ with `gd`, WP-CLI, Composer, Node 18+, `curl`,
+`unzip`, `git`. Add the PHP `redis` extension for the object cache — without it
+the script skips the Redis step with a message rather than failing.
+
+**Start the services first.** MySQL (or MariaDB) and Redis have to be running
+before the script does anything, and the error you get otherwise reads like bad
+credentials rather than a stopped server:
+
+```bash
+sudo service mariadb start     # or: mysql, mysqld
+sudo service redis-server start
+```
+
+Then, in one command:
+
 ```bash
 DB_HOST=127.0.0.1 DB_NAME=bhc_demo DB_USER=root DB_PASSWORD=secret \
 REDIS_HOST=127.0.0.1 \
@@ -11,6 +26,14 @@ PHP_CLI_SERVER_WORKERS=6 php -S localhost:8088 -t ~/wp-demo ~/wp-demo/router.php
 ```
 
 <http://localhost:8088>, admin / admin at `/wp-admin`.
+
+The script creates the database itself if the user you give it has `CREATE`
+rights. If it does not, the script says so and prints the `CREATE DATABASE` and
+`GRANT` to run — it does not fail two steps later with a connection error.
+
+Expect roughly **four to six minutes**, most of it seeding: 60 products with
+generated imagery, 8 customers, 24 orders and 148 reviews. It is idempotent —
+re-run it any time and it skips what is already done.
 
 That is the documented default: MySQL or MariaDB for the database, Redis for the
 object cache. It is what the reference build was measured on — MariaDB 10.11,
@@ -35,11 +58,6 @@ It also sets `WP_ENVIRONMENT_TYPE=development` in `wp-config.php`. That is what
 tells `BrandProfile` to rewrite absolute SEO URLs onto the canonical host;
 without it a local install emits `localhost` URLs in its schema and Open Graph
 tags, because on production `home_url()` is already correct.
-
-**Requirements:** PHP 8.2+ with `gd`, WP-CLI, Composer, Node 18+, `curl`,
-`unzip`, `git`. Add the PHP `redis` extension if you want the object cache — the
-script checks for it and skips the Redis step with a message rather than failing
-if it is missing.
 
 **Redis:** set `REDIS_HOST` (and `REDIS_PORT`, default `6379`). The script clones
 the `redis-cache` plugin, sets `WP_REDIS_HOST`, `WP_REDIS_PORT` and a
@@ -93,7 +111,7 @@ npm run test:e2e                         # needs the store running
 
 Unit tests need nothing — no WordPress, no database, no server: 73 tests, 136
 assertions, and they finish faster than the shell that started them. Run them on
-every save. The integration suite (62 assertions) needs a seeded store; the
+every save. The integration suite (73 assertions) needs a seeded store; the
 Playwright suites need it served.
 
 `npm run lint` is `lint:css` (stylelint over the SCSS), `lint:js` (eslint over
@@ -106,7 +124,7 @@ There are four browser suites, and `test:e2e` is only the first of them:
 
 ```bash
 npm run test:e2e      # purchase-flow.mjs — 13 checks, catalogue to order received
-npm run test:admin    # admin-screens.mjs — the plugin's own admin pages
+npm run test:admin    # admin-screens.mjs — plugin and WooCommerce admin screens
 npm run test:vitals   # web-vitals.mjs — 6 measurements, fails above 0.1 CLS or 2500ms LCP
 npm run test:a11y     # accessibility.mjs — 24 renders through axe-core
 ```
@@ -239,6 +257,9 @@ it should be automatic.
 
 | Symptom | Cause |
 |---|---|
+| "Error establishing a database connection" | The database server is not running, or the credentials are wrong. Start it before the script — `sudo service mariadb start` |
+| Setup stops asking you to create the database | The DB user has no `CREATE` right. The script prints the `CREATE DATABASE` and `GRANT` to run |
+| Orders open at `post.php` instead of `admin.php?page=wc-orders` | HPOS is off. Setup enables it; an install predating that runs `wp wc hpos sync && wp wc hpos enable` |
 | "Not enough units in stock" at checkout | SQLite; the dev mu-plugin is missing. See [deployment.md](deployment.md#running-on-sqlite) |
 | Query counts in the dozens on every page | No persistent object cache — `wp bhc health-check` says so on the "Persistent object cache" row |
 | Health check says "Active. Not Redis." | The drop-in is some other cache, or `wp redis enable` never ran |

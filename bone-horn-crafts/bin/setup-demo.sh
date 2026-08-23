@@ -153,6 +153,24 @@ fi
 # ---------------------------------------------------------------------------
 say "Installing WordPress"
 
+# On the MySQL path the database has to exist before `core install` can write to
+# it, and the error it gives when it does not ("Error establishing a database
+# connection") reads like bad credentials rather than a missing schema. Creating
+# it here makes the documented one-liner work against a bare server. The user
+# still needs CREATE rights; if they do not have them, the message below says so
+# in those words rather than leaving it to be inferred two steps later.
+#
+# Skipped entirely on the SQLite path, where there is no server to ask.
+if [ -n "${DB_HOST:-}" ] && ! $WP db check >/dev/null 2>&1; then
+	if ! $WP db create 2>/dev/null; then
+		echo "NOTE: could not create the database automatically."
+		echo "      Create it yourself and re-run, e.g.:"
+		echo "        mysql -h ${DB_HOST} -u <admin-user> -p \\"
+		echo "          -e \"CREATE DATABASE ${DB_NAME:-bhc_demo};"
+		echo "              GRANT ALL ON ${DB_NAME:-bhc_demo}.* TO '${DB_USER:-root}'@'${DB_HOST}';\""
+	fi
+fi
+
 if ! $WP core is-installed 2>/dev/null; then
 	$WP core install \
 		--url="${SITE_URL}" \
