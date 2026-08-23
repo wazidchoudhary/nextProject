@@ -1,7 +1,7 @@
 name: Bone Horn Crafts
 
-# Scoped to the WooCommerce reference build. Nothing here touches the Next.js
-# application at the repository root.
+# The WooCommerce store lives in bone-horn-crafts/; the repository root holds
+# nothing but this workflow.
 on:
   push:
     paths:
