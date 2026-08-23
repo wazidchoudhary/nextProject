@@ -41,24 +41,64 @@ function check( passed, label, detail ) {
 }
 
 /**
- * Reads the displayed prices from the product grid, in DOM order.
+ * Reads the sort key each card displays, in DOM order.
  *
- * Variable products render a range ("$12.00 – $30.00"); the first number is the
- * one WooCommerce sorts a low-to-high list on, so only the first is taken.
+ * Three details decide which number on a card is the one WooCommerce actually
+ * ordered on, and getting any of them wrong makes a working sort look broken:
  *
- * @param {import('playwright').Page} target Page under test.
+ * 1. The selector targets this theme's own card markup, not WooCommerce's
+ *    `ul.products li.product`. The loop template delegates to the plugin's card
+ *    so archives, rails, search results and AJAX results share one component,
+ *    and the default loop classes are not emitted on the item.
+ * 2. A variable product renders a range, "$63.99 – $108.79". WooCommerce sorts
+ *    low-to-high on the range minimum and high-to-low on its maximum, so the
+ *    end of the range to read depends on the direction being tested.
+ * 3. A product on sale renders the regular price inside <del> and the active
+ *    price inside <ins>. The lookup table holds the *active* price, so the
+ *    struck-out number is not a sort key and has to be removed before parsing —
+ *    otherwise a $89.99-was, $79.99-now product reads as 89.99 and appears to
+ *    sit out of order.
  *
- * @return {Promise<number[]>} Prices in grid order.
+ * Only `.woocommerce-Price-amount` spans are read, never the block's whole
+ * text: the card appends a unit label, and "pack of 10 blanks" contributes a 10
+ * that outranks every real price on the page.
+ *
+ * @param {import('playwright').Page} target    Page under test.
+ * @param {boolean}                   ascending Direction being tested.
+ *
+ * @return {Promise<number[]>} Sort keys in grid order.
  */
-async function gridPrices( target ) {
-	return target.$$eval( 'ul.products li.product .price', ( nodes ) =>
-		nodes
-			.map( ( node ) => {
-				const match = node.textContent.replace( /,/g, '' ).match( /\d+(\.\d+)?/ );
+async function gridPrices( target, ascending ) {
+	return target.$$eval(
+		'.bhc-grid .bhc-card__price',
+		( nodes, asc ) =>
+			nodes
+				.map( ( node ) => {
+					const copy = node.cloneNode( true );
 
-				return match ? parseFloat( match[ 0 ] ) : null;
-			} )
-			.filter( ( value ) => value !== null ),
+					copy.querySelectorAll( 'del, .screen-reader-text' ).forEach( ( el ) =>
+						el.remove(),
+					);
+
+					// Only the amount spans. Reading the block's whole
+					// textContent picks up the unit label too, and "pack of 10
+					// blanks" contributes a 10 that outranks the price.
+					const numbers = Array.from( copy.querySelectorAll( '.woocommerce-Price-amount' ) )
+						.map( ( amount ) => {
+							const match = amount.textContent.replace( /,/g, '' ).match( /\d+(\.\d+)?/ );
+
+							return match ? parseFloat( match[ 0 ] ) : null;
+						} )
+						.filter( ( value ) => value !== null );
+
+					if ( numbers.length === 0 ) {
+						return null;
+					}
+
+					return asc ? numbers[ 0 ] : numbers[ numbers.length - 1 ];
+				} )
+				.filter( ( value ) => value !== null ),
+		ascending,
 	);
 }
 
@@ -136,7 +176,7 @@ for ( const path of [ '/shop/', '/?s=bone&post_type=product' ] ) {
 		page.url(),
 	);
 
-	const ascending = await gridPrices( page );
+	const ascending = await gridPrices( page, true );
 
 	check(
 		ascending.length > 1 && isSorted( ascending, true ),
@@ -146,7 +186,7 @@ for ( const path of [ '/shop/', '/?s=bone&post_type=product' ] ) {
 
 	await sortBy( page, 'price-desc' );
 
-	const descending = await gridPrices( page );
+	const descending = await gridPrices( page, false );
 
 	check(
 		descending.length > 1 && isSorted( descending, false ),
