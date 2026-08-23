@@ -6,16 +6,30 @@ would work through before it did — not as evidence that it has been.
 
 ---
 
-## Development-only code that must not ship
+## Development-only code and settings that must not ship
 
-**`tools/dev-mu-plugins/bhc-sqlite-dev.php`.** Installed by `bin/setup-demo.sh`
-only when the store runs on SQLite. It returns `0` from
-`woocommerce_order_hold_stock_minutes` because the SQLite layer cannot execute
-WooCommerce's stock reservation query (`INSERT … FROM DUAL … ON DUPLICATE KEY
-UPDATE`), which otherwise blocks checkout with "Not enough units in stock". It
-carries an admin notice saying so. **Delete it on any MySQL deployment** —
-leaving it in disables stock holds during checkout, which is exactly what you
-want under load and exactly what this file switches off.
+**Demo payment gateways.** A fresh WooCommerce install has every gateway
+disabled, so a seeded store fails at the last step of checkout with "Invalid
+payment method". `DemoSeeder::seed_payment_gateways()` therefore enables
+WooCommerce's two offline gateways — Cash on delivery, retitled "Pay on invoice
+(demo)", and Bank transfer, retitled "Bank transfer (demo)". Both descriptions
+say plainly that no payment is taken. That is what makes the purchase flow
+demonstrable end to end; it is also two gateways that accept an order without
+collecting a penny. **Disable both in WooCommerce → Settings → Payments before a
+real launch**, or reconfigure them deliberately. The seeder will not overwrite a
+gateway that is already enabled, so it cannot silently undo your settings on a
+re-run — but it also will not turn them off for you.
+
+**`tools/dev-mu-plugins/bhc-sqlite-dev.php`.** `bin/setup-demo.sh` copies this
+into `wp-content/mu-plugins/` **only when `DB_HOST` is unset**, i.e. only on the
+SQLite build. It returns `0` from `woocommerce_order_hold_stock_minutes` because
+the SQLite layer cannot execute WooCommerce's stock reservation query
+(`INSERT … FROM DUAL … ON DUPLICATE KEY UPDATE`), which otherwise blocks
+checkout with "Not enough units in stock". It carries an admin notice saying so.
+A MySQL build never has this file — but check `wp-content/mu-plugins/` anyway
+before you go live, because stock reservation is the protection against
+overselling during concurrent checkouts and this file is the switch that turns
+it off.
 
 **The demo dataset.** `wp bhc demo reset --yes --orphans` before a real
 catalogue is imported. The `Demo\` namespace itself is harmless in production
@@ -24,6 +38,12 @@ catalogue is imported. The `Demo\` namespace itself is harmless in production
 **`SCRIPT_DEBUG`, `WP_DEBUG`, `WP_DEBUG_LOG`** are set by the setup script.
 Turn all three off, and make sure `WP_DEBUG_DISPLAY` stays false.
 
+**`WP_ENVIRONMENT_TYPE`** is set to `development` by the setup script, and that
+is not cosmetic. Outside production, `BrandProfile::canonical_host()` rewrites
+absolute SEO URLs onto the configured canonical host, and the theme versions its
+assets by `filemtime()` instead of the theme version. Set it to `production` on
+the real site.
+
 ---
 
 ## Pre-deployment checklist
@@ -31,42 +51,63 @@ Turn all three off, and make sure `WP_DEBUG_DISPLAY` stays false.
 ### Environment
 
 - [ ] PHP 8.2+ with `gd`, `intl`, `mbstring`, `curl`, `zip`, `opcache`
-- [ ] MySQL 8.0+ or MariaDB 10.6+ — **not** SQLite (see below)
+- [ ] MySQL 8.0+ or MariaDB 10.6+ — **not** SQLite (see below). The stack
+      verified here is MariaDB 10.11 with Redis 7 on PHP 8.4, WordPress 7.0.4,
+      WooCommerce 10.9.0
 - [ ] `WP_DEBUG=false`, `WP_DEBUG_DISPLAY=false`, `SCRIPT_DEBUG=false`
+- [ ] `WP_ENVIRONMENT_TYPE=production`
 - [ ] `DISALLOW_FILE_EDIT=true`
 - [ ] Fresh salts in `wp-config.php` — signed cookies derive from `wp_salt()`,
       so shipping the development salts would let anyone forge one
 - [ ] `WP_MEMORY_LIMIT` at least 256 M
 - [ ] OPcache enabled, `opcache.validate_timestamps=0` with a deploy-time reset
+- [ ] An image editor that can write WebP (`gd` with WebP support, or Imagick)
+      — see below
 
 ### Build
 
 - [ ] `composer install --no-dev --optimize-autoloader` in the plugin directory
 - [ ] `npm ci && npm run build` — `main.css` and `critical.css` are committed,
-      but rebuild so they match the SCSS in the deployed commit
-- [ ] `npm run lint` clean
+      but rebuild so they match the SCSS in the deployed commit. `critical.css`
+      is built but not loaded by default; see the note on
+      `bhc_async_main_stylesheet` below
+- [ ] `npm run lint` clean (stylelint, eslint, phpcs)
 - [ ] `npm run test:unit` green
 - [ ] `wp eval-file bin/integration-tests.php` green against a staging copy
-- [ ] `npm run test:e2e`, `npm run test:admin`, `npm run test:vitals` green
-      against staging
+- [ ] `npm run test:e2e`, `npm run test:admin`, `npm run test:vitals`,
+      `npm run test:a11y` green against staging — those are the four browser
+      suites, and it is easy to run three of them and think you are done
 
 ### Database
 
 - [ ] Activate the plugin so `Database\Installer` runs `dbDelta()`
 - [ ] `wp bhc health-check --strict` exits 0
-- [ ] Confirm the three custom tables exist with their indexes
+- [ ] Confirm the three custom tables exist with their indexes —
+      `bhc_wishlist`, `bhc_product_affinity`, `bhc_product_stats`
 - [ ] **Do not** enable "Delete data on uninstall" unless you mean it
 
 ### Caching
 
 - [ ] Persistent object cache (Redis or Memcached) installed and confirmed by
-      `wp bhc health-check`. This is the single biggest remaining win: it removes
-      roughly 30 queries per page — the WooCommerce CRUD meta reads and the
-      transient option reads — and the plugin uses it automatically when present
+      `wp bhc health-check`, which names Redis when Redis is what is serving.
+      This is the single biggest remaining win: measured warm on the same
+      catalogue, the home page renders in 6 queries on MySQL + Redis against 131
+      on SQLite with no object cache, the shop page 5 against 83, a product page
+      5 against 116. Those two columns differ in database *and* cache, so the
+      split between the two was not measured separately — but the end-to-end gap
+      is not marginal, and the plugin uses an object cache automatically when
+      one is present. Full table in [performance.md](performance.md)
 - [ ] Page cache in front, with cart, checkout, my-account and the wishlist
       endpoint excluded
 - [ ] `wp bhc cache warm` after deploy
-- [ ] `object-cache.php` drop-in present and matching the Redis version
+- [ ] `object-cache.php` drop-in present and matching the Redis version.
+      `bin/setup-demo.sh` installs and enables the drop-in itself when
+      `REDIS_HOST` is set and the PHP `redis` extension is loaded; it skips the
+      step and says so when the extension is missing
+
+The cost of the object cache is an extra service to run, monitor and secure, and
+a second place where stale data can hide. The store works without one — it falls
+back to transients — and the health screen says which path is live.
 
 ### Background work
 
@@ -88,20 +129,22 @@ Turn all three off, and make sure `WP_DEBUG_DISPLAY` stays false.
 
 ### SEO
 
-- [ ] `canonical_host` set to the production host, before launch. A staging
-      deployment that emits canonicals pointing at itself is how staging sites
-      end up in an index
+- [ ] `canonical_host` set to the production host, before launch. It is
+      validated as a host, not as free text: input that does not parse keeps the
+      previous value. Outside production it is what absolute SEO URLs are
+      rewritten onto, which is how a staging copy avoids advertising itself
 - [ ] Real Organization details in the settings (e-mail, phone, social handle,
-      manufacturing entity)
+      manufacturing entity). `organization_email` is validated by meaning too
 - [ ] Submit `/sitemap.xml`
-- [ ] Confirm `noindex` on cart, checkout, my-account and filtered views in the
-      **production** response, not on staging
+- [ ] Confirm `noindex` on cart, checkout, my-account, the wishlist page and
+      filtered views in the **production** response, not on staging
 - [ ] Validate the JSON-LD graph with the Rich Results test
 - [ ] `robots.txt` does not block anything indexable
 
 ### Commerce
 
-- [ ] Payment gateways configured and tested with a real transaction
+- [ ] Demo gateways off (see above) — payment gateways configured and tested
+      with a real transaction
 - [ ] Tax configuration reviewed by somebody qualified — the plugin stores HSN
       codes and GST rates but **makes no compliance claim**
 - [ ] Shipping zones and rates set for the real markets
@@ -112,9 +155,35 @@ Turn all three off, and make sure `WP_DEBUG_DISPLAY` stays false.
 
 - [ ] Uptime and TLS-expiry monitoring
 - [ ] PHP error log shipped somewhere a person will see it
-- [ ] `wp bhc health-check --strict` in the deploy pipeline, failing the deploy
+- [ ] `wp bhc health-check --strict` in the deploy pipeline, failing the deploy.
+      Without `--strict` a warning is reported as a warning and the command
+      still exits 0
 - [ ] Core Web Vitals from field data, not just the lab suite here
 - [ ] Alert on Action Scheduler failures
+
+---
+
+## Images and WebP
+
+The theme maps JPEG sub-sizes to WebP through an `image_editor_output_format`
+filter (`bhc_webp_subsizes()` in
+`wp-content/themes/bhc-theme/inc/performance.php`). Only the derivatives change
+format: the original upload is kept as uploaded, so an editor downloading the
+full-size file gets the JPEG they put in, and PNG is left alone.
+
+Measured on the 600×600 card size: 16,599 bytes as JPEG against 6,278 as WebP,
+62% smaller. A 12-card shop page pulls roughly 83KB of imagery in total.
+
+Two things to check on the server:
+
+* The image editor must be able to write WebP. If it cannot, WordPress ignores
+  the filter and keeps producing JPEGs — nothing breaks, the pages just get
+  heavier, and there is nothing to feature-detect.
+* Disk goes up, not down. The original and its WebP sub-sizes both live in
+  `uploads/`, so back-ups grow.
+
+Sub-sizes are generated at upload time, so a catalogue imported before the theme
+was active needs `wp media regenerate` to pick this up.
 
 ---
 
@@ -143,19 +212,35 @@ add_filter( 'bhc_security_headers', function ( array $headers ): array {
 
 ## Running on SQLite
 
-The demo runs on the [SQLite integration
-plugin](https://github.com/WordPress/sqlite-database-integration) so it needs no
-database server. **This is a development convenience, not a deployment option.**
+MySQL or MariaDB is the normal path, and the primary demo is built on one:
+`bin/setup-demo.sh` uses the SQLite integration plugin only when `DB_HOST` is
+unset. SQLite exists here so the whole store can be installed without a database
+server. **It is a development convenience, not a deployment option.**
 
 One WooCommerce behaviour genuinely differs: stock reservation during checkout
 uses SQL that the SQLite translation layer cannot execute, so checkout fails with
-"Not enough units in stock" until hold-stock is disabled. `bin/setup-demo.sh`
-installs a dev-only mu-plugin that does exactly that, through the supported
-`woocommerce_order_hold_stock_minutes` filter. On MySQL, delete it and let
-WooCommerce hold stock normally.
+"Not enough units in stock" until hold-stock is disabled. The setup script
+installs the dev-only mu-plugin above to do exactly that, through the supported
+`woocommerce_order_hold_stock_minutes` filter. The cost is real — that build
+cannot protect against overselling under concurrent checkouts, which is why the
+file is not installed and must not be installed on MySQL.
 
-Everything else in this repository — the plugin, the theme, the tests, the
-measurements — is database-agnostic and runs unchanged on MySQL.
+The plugin, the theme and the tests themselves are database-agnostic and run
+unchanged on either. The *measurements* are not interchangeable: the SQLite
+build is also the build with no persistent object cache, and the query-count
+table in [performance.md](performance.md) shows how far apart the two ends up.
+
+## Asynchronous main stylesheet
+
+`main.css` is 45,000 bytes raw, 7,920 gzipped, and is loaded normally — render
+blocking. The inline-critical-CSS plus async-swap pattern was built, measured and
+reverted: at this stylesheet size it bought nothing measurable on LCP and made
+CLS a race, with the same page scoring 0.0000 on one run and 0.2234 on the next.
+
+Both halves are still in the theme behind the `bhc_async_main_stylesheet`
+filter, default `false`. A deployment whose stylesheet has grown well past this
+one can turn it on — and should then re-run `npm run test:vitals`, which fails
+above 0.1 CLS or 2.5s LCP, on the pages it actually serves.
 
 ## Classic cart and checkout
 
@@ -169,6 +254,14 @@ Store API and block checkout is the natural next step. Until then, a deployment
 that wants block checkout should expect to reimplement them as block checkout
 integrations.
 
+## Container scaffolding
+
+`deploy/docker-compose.yml`, `deploy/nginx.conf` and `deploy/.env.example`
+describe a MySQL + Redis + PHP-FPM stack behind nginx. They were written but
+**never executed** — there was no Docker daemon in the environment they were
+authored in — so treat them as a starting point to debug, not a tested recipe.
+Host requirements and the choices behind them are in [hosting.md](hosting.md).
+
 ## Rollback
 
 Deployments are reversible if you keep them so:
@@ -176,8 +269,13 @@ Deployments are reversible if you keep them so:
 * Tag every release; deploy tags, not branches.
 * `dbDelta()` is additive, so a rollback of code does not need a rollback of
   schema — but take a database snapshot before any deploy that changes
-  `Installer::DB_VERSION`.
+  `Installer::DB_VERSION` (currently `3`).
 * The three custom tables survive deactivation. Only `uninstall.php` drops them,
-  and only when the setting says so.
+  and only when the setting says so: it reads `bhc_settings` and returns
+  immediately unless `delete_data_on_uninstall` is set, which is `false` by
+  default. The switch is "Delete data on uninstall" on the plugin's Settings
+  screen (Bone Horn Crafts → Settings). When it is on, deleting the plugin drops
+  the wishlist, affinity and stats tables and removes the plugin's options.
+  Deactivation, a failed update and a host migration all leave the data alone.
 * Cache group versions are integers in an option; flushing after a rollback is
   `wp bhc cache flush`.

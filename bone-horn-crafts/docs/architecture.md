@@ -21,11 +21,16 @@ they live in `templates/` and are overridable by the theme (see
 
 ## Plugin architecture
 
+`src/` holds 152 PHP files across 31 namespaces: 137 final classes, 5 abstract
+classes and 10 interfaces. There are no non-final concrete classes — extension
+happens through the container, the provider filter and the interfaces below, not
+through subclassing a shipped service.
+
 ### Boot sequence
 
 ```
 bhc-commerce-core.php
-  ├── requirement gate            PHP 8.2+, WooCommerce present and new enough
+  ├── requirement gate            PHP 8.2+, WordPress 6.5+, WooCommerce 8.0+
   ├── HPOS + Cart/Checkout blocks compatibility declarations
   ├── autoloader                  Composer's, or the bundled PSR-4 fallback
   └── Plugin::instance()->boot()
@@ -88,7 +93,7 @@ Analytics/    Product stats and the merchandising indexer.
 CLI/          WP-CLI commands, each one a thin call into a service.
 Cache/        Cache abstraction and the three stores.
 Checkout/     Address, postcode and phone validation; delivery estimation.
-Contracts/    The 10 interfaces the rest of the code depends on.
+Contracts/    8 of the 10 interfaces; the other two sit beside their stores.
 Customer/     Roles, wholesale eligibility, account endpoints.
 Database/     Schema, installer, AbstractRepository.
 Demo/         Seeder, catalogue, imagery, content. Isolated from everything else.
@@ -100,11 +105,18 @@ Pricing/      Tier rules, discount calculation, formatting.
 Product/      Query builder, repository, meta, attributes, badges.
 Recommendations/  Strategies and the service that blends them.
 SEO/          Meta tags, canonicals, robots, breadcrumbs, the schema graph.
-Search/       Filter request parsing, facets, search service.
+Search/       RequestParser, FilterRequest, facets, search service, filter panel.
 Security/     Sanitiser, capabilities, REST guard, rate limiter, headers, cookies.
 Support/      Context, options, templates, small helpers.
 Wishlist/     Storage strategies, repository, service, renderer.
 ```
+
+`Support/` is the one directory whose name differs from the original brief, which
+called it `Utilities/`. It was renamed because "utilities" invites a junk drawer;
+`Support/` holds `Context`, `Options`, `Template`, `Requirements`, the PSR-4
+fallback autoloader and two small `Arr`/`Str` helpers, and nothing else has been
+allowed in. Every other directory matches the brief's name, so anyone reading the
+brief against the tree has exactly one rename to absorb.
 
 ### The dependency rule
 
@@ -121,13 +133,48 @@ Controllers / Renderers / CLI commands
 ```
 
 A controller never touches `$wpdb`. A repository never echoes. A service never
-reads `$_POST`. The one place all three would otherwise meet — the admin save
-handler — reads and sanitises input, then hands typed values to a service.
+reads `$_GET` or `$_POST`. The one place all three would otherwise meet — the
+admin save handler — reads and sanitises input, then hands typed values to a
+service.
+
+### Where the request is read: `Search\RequestParser`
+
+The storefront filter panel was the exception to the rule above.
+`SearchService` (a service) and `FilterPanelRenderer` (a renderer) both needed to
+know what the visitor had filtered by, and both reached into `$_GET` themselves.
+That put request parsing inside two layers that are not supposed to know a
+request exists, and it meant neither class could be exercised in a unit test
+without faking a superglobal.
+
+`Search\RequestParser` is now the only class in `src/Search/` that touches a
+superglobal — `RequestParser::current()` and `RequestParser::orderby()` are the
+two methods that read `$_GET`, and nothing else in the namespace does.
+`SearchService` and `FilterPanelRenderer` take it by constructor injection from
+`SearchServiceProvider`, which binds it as a singleton:
+
+```php
+$container->singleton( RequestParser::class, static fn (): RequestParser => new RequestParser() );
+```
+
+Parsing happens once and is memoised, so the service and the renderer cannot
+disagree about what was asked for. `set()` replaces the parsed request outright,
+which is how tests inject a `FilterRequest` and how the REST controllers hand
+over parameters that came from `WP_REST_Request` rather than the query string.
+
+What it costs: one more object in the graph, and one more constructor argument on
+two classes. What it bought: `$_GET` appears in exactly one file in the
+namespace, and the filter logic became testable without global state.
+
+`orderby()` is deliberately not routed through `FilterRequest`'s allow-list —
+WooCommerce's own sort dropdown posts values this plugin does not define, so the
+value is `sanitize_key()`ed and passed on rather than rejected.
 
 ### Interfaces
 
 Ten interfaces exist, each because there is (or plausibly will be) more than one
-implementation:
+implementation. Eight live in `src/Contracts/`; `Cache\StoreInterface` and
+`SEO\Schema\SchemaPieceInterface` live beside their implementations because
+nothing outside those namespaces depends on them.
 
 | Interface | Implementations |
 |---|---|
@@ -138,7 +185,7 @@ implementation:
 | `LoggerInterface` | `Logger` |
 | `PricingRuleInterface` | `WholesaleTierRule` |
 | `RecommendationStrategyInterface` | 5 strategies, over one abstract base |
-| `SchemaPieceInterface` | `Organization`, `WebSite`, `Product`, `Article`, `BreadcrumbList` |
+| `SchemaPieceInterface` | `OrganizationSchema`, `WebSiteSchema`, `ProductSchema`, `ArticleSchema`, `BreadcrumbListSchema` |
 | `ServiceProviderInterface` | 20 providers |
 | `WishlistStorageInterface` | `UserWishlistStorage`, `GuestWishlistStorage` |
 
@@ -166,7 +213,9 @@ holds attribute definitions. Both are filterable.
 
 **Value object** — `Badge`, `PriceContext`, `RecommendationContext`,
 `FilterRequest`, `CountryProfile`. Immutable, constructed once, no setters.
-`FilterRequest::from_array()` is the only place a filter query string is parsed.
+`FilterRequest::from_array()` is the only place a filter query string is turned
+into a validated object; `RequestParser` is the only place that array comes from
+a superglobal.
 
 **Template method** — `AbstractBatchJob` owns the batching loop, retry with
 backoff, and structured logging; subclasses implement `collect()` and
@@ -190,7 +239,7 @@ what an agency integrator will already expect.
 
 ### Extension points
 
-24 filters and 5 actions. The ones worth knowing:
+27 filters and 5 actions. The ones worth knowing:
 
 | Hook | Use |
 |---|---|
@@ -208,7 +257,9 @@ what an agency integrator will already expect.
 
 ## Theme architecture
 
-`bhc-theme` is a classic PHP theme. No page builder, no block theme, no jQuery.
+`bhc-theme` is a classic PHP theme. No page builder, no block theme, and no
+jQuery of its own — but WooCommerce's jQuery bundle is not gone everywhere. See
+[jQuery](#jquery) below.
 
 ### `functions.php` and `inc/`
 
@@ -217,23 +268,59 @@ what an agency integrator will already expect.
 | File | Responsibility |
 |---|---|
 | `inc/setup.php` | `add_theme_support`, image sizes, menus, sidebar |
-| `inc/enqueue.php` | Critical CSS inlining, async main stylesheet, the ES module |
-| `inc/performance.php` | Dequeues, cart-fragment limiting, LCP preload, srcset capping |
+| `inc/enqueue.php` | Stylesheet and module enqueueing; the critical-CSS/async path, off by default |
+| `inc/performance.php` | Dequeues, cart-fragment limiting, LCP preload, srcset capping, WebP derivatives |
 | `inc/security.php` | Front-end hardening that belongs to presentation |
-| `inc/seo.php` | Bridges the plugin's SEO services into `wp_head` |
+| `inc/seo.php` | Bridges the plugin's SEO services into `wp_head`; defines `bhc_breadcrumbs()` |
 | `inc/woocommerce.php` | Wrapper markup, hook re-ordering, template routing |
-| `inc/template-tags.php` | The theme's vocabulary: `bhc_products_for()`, `bhc_product_cards()`, `bhc_section_header()`, `bhc_breadcrumbs()`, `bhc_prime_product_rails()` |
+| `inc/template-tags.php` | The theme's vocabulary: `bhc_service()`, `bhc_products_for()`, `bhc_product_cards()`, `bhc_section_header()`, `bhc_prime_product_rails()` |
 
 ### How the theme talks to the plugin
 
 Through exactly two mechanisms:
 
 1. **`bhc_service( Class::class )`** — resolves a service from the container, and
-   returns `null` when the plugin is inactive. Every call site handles `null`.
+   returns `null` when the plugin is inactive (it catches `Throwable` and returns
+   `null` rather than letting a resolution failure white-screen a page). Every
+   call site handles `null`.
 2. **CSS custom properties** — the plugin's `storefront.css` styles its own
    components using variables (`--bhc-color-ink`, `--bhc-space-4`, …) that the
    theme defines. The theme can restyle a plugin component without the plugin
    knowing.
+
+### WooCommerce template overrides
+
+The theme overrides eight WooCommerce templates, in
+`wp-content/themes/bhc-theme/woocommerce/`:
+
+```
+archive-product.php              content-product.php
+content-single-product.php       cart/cart-empty.php
+loop/loop-start.php              loop/loop-end.php
+single-product/product-image.php single-product/tabs/tabs.php
+```
+
+`single-product/tabs/tabs.php` is the one that exists for a correctness reason
+rather than a styling one. WooCommerce's own template emits `role="tab"` and
+`role="tabpanel"` but never `aria-selected` — its jQuery sets the state after
+load, so before scripts run a screen-reader user hears five tabs with no
+indication of which is showing. The theme drives the tabs itself in `theme.js`,
+so the override puts the state in the markup:
+
+* `aria-selected` on every tab, `true` on the first;
+* roving `tabindex` (`0` on the active tab, `-1` on the rest), so Tab reaches the
+  strip once and the arrow keys move within it instead of tabbing through all
+  five;
+* `hidden` on inactive panels, so they leave the accessibility tree rather than
+  merely going out of sight.
+
+`theme.js` then adds ArrowLeft/ArrowRight wrap-around, Home and End, and deep
+links — `/product/x/#tab-reviews` opens that tab on load, falling back to the
+first tab when the hash matches nothing.
+
+The cost of the override is the usual one: it is a copy of a core template, so it
+has to be re-checked against WooCommerce on upgrade. The header comment records
+the WooCommerce template version it was taken from.
 
 ### SCSS
 
@@ -245,22 +332,51 @@ layout/       container, grid, header, footer
 pages/        home, shop, product, checkout
 ```
 
-Two entry points compile: `main.scss` (44 KB raw, 7.8 KB gzip) and
-`critical.scss` (11.5 KB raw, 3.1 KB gzip). `components/_woocommerce.scss`
-exists because the theme dequeues WooCommerce's three stylesheets and takes
-responsibility for the markup they styled.
+Two entry points compile: `main.scss` → `main.css` (44,999 bytes raw, 7,920
+gzip) and `critical.scss` → `critical.css` (14,966 raw, 3,534 gzip).
+`components/_woocommerce.scss` exists because the theme dequeues WooCommerce's
+three stylesheets and takes responsibility for the markup they styled.
+
+`main.css` is loaded **normally**, as a render-blocking stylesheet. The
+critical-CSS-inline plus async-swap pattern is built and both halves are still in
+`inc/enqueue.php`, behind the `bhc_async_main_stylesheet` filter, defaulting to
+`false`. It was measured and reverted: at this stylesheet size it bought nothing
+on LCP, and it made CLS a race — the same page scored 0.0000 on one run and
+0.2234 on the next. The trade is deliberate: ~8KB gzip of render-blocking CSS in
+exchange for a layout that does not shift. A site whose stylesheet grows past the
+point where that trade flips can turn the filter on without writing any code.
+Numbers and method in (performance.md).
 
 ### JavaScript
 
-One ES module per side, both `defer`red, no framework, no jQuery:
+No framework. `theme.js` is emitted with `type="module"` and the `defer`
+strategy via a `script_loader_tag` filter; `storefront.js` is enqueued in the
+footer by the plugin's `Frontend\Assets`.
 
-* `theme.js` (7.9 KB) — navigation, the gallery, sticky add-to-cart, the mobile
-  filter drawer.
-* `storefront.js` (9.0 KB) — wishlist toggles, AJAX filtering with
+* `theme.js` (10,030 bytes raw, 3,026 gzip) — navigation, the gallery, sticky
+  add-to-cart, the mobile filter drawer, the product tabs state machine.
+* `storefront.js` (9,143 raw, 3,182 gzip) — wishlist toggles, AJAX filtering with
   `history.pushState`, the delivery estimator, recently-viewed tracking.
 
 Both talk to `bhc/v1` with `fetch`, send the REST nonce, and degrade to a normal
-form submission when JavaScript is unavailable.
+form submission when JavaScript is unavailable. No storefront page makes a
+third-party request; review avatars are inline SVG monograms rather than
+Gravatar.
+
+### jQuery
+
+Home, shop, category and blog pages load no jQuery: `bhc_trim_woocommerce_scripts()`
+in `inc/performance.php` dequeues `wc-add-to-cart`, `woocommerce`,
+`jquery-blockui`, `js-cookie` and the order-attribution pair everywhere except
+cart, checkout and account, and drops `jquery-migrate` from jQuery's dependencies
+across the whole front end.
+
+**Product pages do load jQuery**, because WooCommerce's variation form and its
+review star-rating widget are built on it. Deferring it there was tried and
+reverted: WooCommerce prints inline `jQuery(...)` calls in the body, which run
+before a deferred script has loaded and throw "jQuery is not defined". Removing
+it entirely would mean re-implementing the variation form, which is not attempted
+here. Any claim that this storefront ships no jQuery is wrong.
 
 ---
 
@@ -273,12 +389,14 @@ The files worth reading if you want to see the design, not the feature list:
 | `src/Container.php` | Lazy factories, autowiring, circular-dependency detection |
 | `src/Plugin.php` | Boot orchestration and provider gating |
 | `src/AbstractServiceProvider.php` | The provider contract |
-| `src/Contracts/*.php` | The 10 interfaces the code depends on |
+| `src/Contracts/*.php` | 8 of the 10 interfaces the code depends on |
 | `src/Cache/CacheManager.php` | Group versioning, memoisation, `remember()` |
 | `src/Cache/StoreInterface.php` + 3 stores | Strategy, chosen at runtime |
 | `src/Product/ProductQuery.php` | Query builder with scoped, self-detaching filters |
 | `src/Product/ProductRepository.php` | Bounded queries, id-level caching, batch priming |
 | `src/Database/AbstractRepository.php` | Prepared statements, table naming, bounded deletes |
+| `src/Search/RequestParser.php` | The one class in `Search/` that reads a superglobal |
+| `src/Search/FilterRequest.php` | Immutable, validated filter state; builds its own cache key |
 | `src/Recommendations/Strategies/AbstractQueryStrategy.php` | Template method + strategy |
 | `src/Pricing/TieredPricingService.php` | Rule chain over `PricingRuleInterface` |
 | `src/Jobs/AbstractBatchJob.php` | Batching, retry with backoff, structured logging |
@@ -286,3 +404,4 @@ The files worth reading if you want to see the design, not the feature list:
 | `src/Wishlist/WishlistService.php` | Strategy selection: user table vs signed cookie |
 | `src/Security/RestGuard.php` | Every permission callback in one auditable file |
 | `src/Support/Context.php` | Memoised request classification |
+| `src/Support/Template.php` | Theme-first resolution, path hardening, per-request memoisation |

@@ -747,7 +747,8 @@ final class DemoSeeder {
 				(string) $definition['shape'],
 				$name,
 				$alt,
-				$view
+				$view,
+				(string) ( $definition['colour'] ?? '' )
 			);
 
 			if ( $attachment_id <= 0 ) {

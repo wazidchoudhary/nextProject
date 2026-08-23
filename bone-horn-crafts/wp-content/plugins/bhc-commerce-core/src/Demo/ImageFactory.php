@@ -52,6 +52,34 @@ final class ImageFactory {
 	];
 
 	/**
+	 * Per-colour palettes, keyed by the catalogue's colour attribute.
+	 *
+	 * A material palette alone is not enough: acrylic is sold in half a dozen
+	 * colours and bone is dyed, so keying only on material meant every acrylic
+	 * product rendered in the same blue — including one named "Ivory
+	 * Alternative", whose own copy says cream. The catalogue has carried a
+	 * per-product `colour` since it was written; it simply was not reaching
+	 * here.
+	 *
+	 * Where a colour has no entry the material palette stands, which is the
+	 * right answer for anything sold in its natural shade.
+	 *
+	 * @var array<string, string[]>
+	 */
+	private const COLOUR_PALETTES = [
+		'natural-white' => [ '#EFE7D6', '#FBF6EA', '#D8CCB4', '#C2B393' ],
+		'cream'         => [ '#EDE3CC', '#F9F2E2', '#D5C7A9', '#BFAF8D' ],
+		'black'         => [ '#2B2724', '#4A423A', '#141210', '#5E5145' ],
+		'charcoal'      => [ '#3E3A36', '#5C554E', '#232019', '#736858' ],
+		'amber'         => [ '#B87A2E', '#E0A755', '#8A5518', '#5E390C' ],
+		'honey'         => [ '#C08F3C', '#E6BB6C', '#8E6520', '#63450F' ],
+		'indigo'        => [ '#2E3A63', '#55659B', '#1A2140', '#7C8ABF' ],
+		'forest-green'  => [ '#2F4A35', '#4C7154', '#1B2C1F', '#6E9377' ],
+		'marbled'       => [ '#8A7A63', '#C6B598', '#4E4335', '#D9CBB0' ],
+		'two-tone'      => [ '#6B5B45', '#E4D6BC', '#332B21', '#A08D6E' ],
+	];
+
+	/**
 	 * Constructor.
 	 *
 	 * @param LoggerInterface $logger Logger.
@@ -77,7 +105,7 @@ final class ImageFactory {
 	 *
 	 * @return int Attachment id, or 0 on failure.
 	 */
-	public function create( string $sku, string $material, string $shape, string $title, string $alt, int $view = 0 ): int {
+	public function create( string $sku, string $material, string $shape, string $title, string $alt, int $view = 0, string $colour = '' ): int {
 		$filename = sanitize_file_name( strtolower( $sku ) . '-' . $view . '.jpg' );
 
 		$existing = $this->find_existing( $filename );
@@ -90,7 +118,7 @@ final class ImageFactory {
 			return 0;
 		}
 
-		$binary = $this->render( $sku, $material, $shape, $view );
+		$binary = $this->render( $sku, $material, $shape, $view, $colour );
 
 		if ( '' === $binary ) {
 			return 0;
@@ -171,7 +199,7 @@ final class ImageFactory {
 	 * @param string $shape    Shape family.
 	 * @param int    $view     View index.
 	 */
-	private function render( string $sku, string $material, string $shape, int $view ): string {
+	private function render( string $sku, string $material, string $shape, int $view, string $colour = '' ): string {
 		$seed = crc32( $sku . '|' . $view );
 
 		// Deterministic imagery: the same SKU and view must always regenerate the
@@ -191,7 +219,7 @@ final class ImageFactory {
 
 		$this->paint_backdrop( $canvas, $view );
 
-		$texture = $this->build_texture( $material, $shape, $seed );
+		$texture = $this->build_texture( $material, $shape, $seed, $colour );
 
 		if ( false !== $texture ) {
 			$this->place_object( $canvas, $texture, $shape, $view );
@@ -250,8 +278,12 @@ final class ImageFactory {
 	 *
 	 * @return \GdImage|false
 	 */
-	private function build_texture( string $material, string $shape, int $seed ) {
-		$palette = self::PALETTES[ $material ] ?? self::PALETTES['cattle-bone'];
+	private function build_texture( string $material, string $shape, int $seed, string $colour = '' ) {
+		// Colour wins where the catalogue states one, because that is the
+		// property a customer is actually looking at.
+		$palette = self::COLOUR_PALETTES[ $colour ]
+			?? self::PALETTES[ $material ]
+			?? self::PALETTES['cattle-bone'];
 
 		$texture = imagecreatetruecolor( self::TEXTURE, self::TEXTURE );
 
