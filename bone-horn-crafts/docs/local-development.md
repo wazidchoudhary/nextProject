@@ -92,15 +92,56 @@ two commands of every session.
 > and measured on native Linux, not through WSL, so treat the package list as a
 > starting point rather than a tested transcript.
 
+### Pointing it at a WordPress you already have
+
+`bin/setup-demo.sh` does two separable jobs: it provisions infrastructure
+(WordPress, WooCommerce, a database), and it installs *this project* into it
+(symlinks, Composer, the asset build, activation, HPOS, the catalogue). If you
+already have a WordPress — a **Local** site, MAMP, a host's one-click install —
+only the second job is left, and the script skips the first on its own:
+
+```
+==> WordPress 7.0.4 -> /path/to/site
+Already present, skipping download.
+==> Database configuration
+wp-config.php already present, keeping its database settings.
+==> Installing WordPress
+Already installed, skipping.
+==> WooCommerce 10.9.0
+Plugin 'woocommerce' is already active.
+```
+
+Point it at the site's document root and pass the database settings that site
+already uses:
+
+```bash
+DB_HOST=<host> DB_NAME=<name> DB_USER=<user> DB_PASSWORD=<pass> \
+SITE_URL=http://mysite.local \
+bin/setup-demo.sh /path/to/site
+```
+
+It keeps the existing `wp-config.php` database settings and writes only the
+development constants over the top.
+
+**On Windows this still needs a bash shell**, so it means running from WSL2
+against the Local site's folder under `/mnt/c/…`, and reaching Local's MySQL on
+the port it exposes rather than on `localhost` — WSL2 does not see the Windows
+host as localhost. It works, but if you already have WSL2 there is little reason
+to keep Local in the loop: the script provisions WordPress and MySQL itself.
+
 ### Other ways in
 
 * **Docker Desktop** — `deploy/docker-compose.yml` is in the repository, with the
   caveats recorded in [hosting.md](hosting.md#docker--reproducible-good-for-teams).
   It has not been executed.
+* **Local (by WP Engine)** — gives you WordPress, PHP and MySQL per site, with
+  WP-CLI in its site shell. No Redis, so the store runs without a persistent
+  object cache and the health screen will say so. See the section above for
+  pointing the script at an existing site.
 * **Laragon, XAMPP, WampServer** — these give you PHP, MySQL and Apache on
-  Windows natively, but `bin/setup-demo.sh` will not run on them. You would be
-  installing WordPress, WooCommerce, the theme and the plugin by hand and then
-  running `wp bhc demo seed` for the catalogue. Workable, and more steps than
+  Windows natively, but `bin/setup-demo.sh` will not run on them, and XAMPP
+  ships no WP-CLI — which means no `wp bhc demo seed`, and the catalogue is the
+  demo. Workable only if you install WP-CLI separately, and more steps than
   WSL2 for no benefit.
 
 That is the documented default: MySQL or MariaDB for the database, Redis for the
@@ -329,6 +370,8 @@ it should be automatic.
 | On WSL: everything works, then fails after a reboot | WSL has no systemd; re-run `sudo service mariadb start` and `sudo service redis-server start` |
 | On WSL: `composer install` and seeding crawl | The checkout is under `/mnt/c/`. Move it into the Linux filesystem |
 | `bin/setup-demo.sh: not found` on Windows | Running in PowerShell or CMD rather than in the Ubuntu shell |
+| Health check says environment "production" on a laptop | Predates the fix that writes the dev constants to an existing `wp-config.php`; re-run setup, or `wp config set WP_ENVIRONMENT_TYPE development` |
+| Setup stopped at the Redis step with no catalogue | Predates the fix making that step non-fatal; start Redis and re-run, or re-run with `REDIS_HOST` unset |
 | Setup stops asking you to create the database | The DB user has no `CREATE` right. The script prints the `CREATE DATABASE` and `GRANT` to run |
 | Orders open at `post.php` instead of `admin.php?page=wc-orders` | HPOS is off. Setup enables it; an install predating that runs `wp wc hpos sync && wp wc hpos enable` |
 | "Not enough units in stock" at checkout | SQLite; the dev mu-plugin is missing. See [deployment.md](deployment.md#running-on-sqlite) |

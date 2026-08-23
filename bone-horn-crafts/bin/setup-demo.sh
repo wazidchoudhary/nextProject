@@ -88,19 +88,24 @@ if [ ! -f "${INSTALL_DIR}/wp-config.php" ]; then
 		--dbpass="${DB_PASSWORD:-}" \
 		--dbhost="${DB_HOST:-127.0.0.1}" \
 		--skip-check
-	$WP config set WP_DEBUG true --raw
-	$WP config set WP_DEBUG_DISPLAY false --raw
-	$WP config set WP_DEBUG_LOG true --raw
-	$WP config set SCRIPT_DEBUG true --raw
-	# A local demo is not production. Beyond the obvious, WordPress's
-	# environment type is what tells BrandProfile to rewrite absolute SEO URLs
-	# onto the canonical host: on production home_url() is already correct, so
-	# leaving this unset makes a local install emit localhost URLs in its
-	# schema and Open Graph tags.
-	$WP config set WP_ENVIRONMENT_TYPE development
 else
-	echo "wp-config.php already present, skipping."
+	echo "wp-config.php already present, keeping its database settings."
 fi
+
+# Set outside the branch above, deliberately. These used to be written only when
+# the script created wp-config.php itself, so pointing it at a WordPress that
+# already existed — a Local site, a MAMP site, a host's one-click install — left
+# every one of them unset. The store then ran as "production" on a laptop, and
+# WP_ENVIRONMENT_TYPE is what tells BrandProfile to rewrite absolute SEO URLs
+# onto the canonical host: on production home_url() is already correct, so the
+# schema and Open Graph tags came out full of localhost URLs.
+#
+# `wp config set` overwrites in place, so re-running is harmless.
+$WP config set WP_DEBUG true --raw
+$WP config set WP_DEBUG_DISPLAY false --raw
+$WP config set WP_DEBUG_LOG true --raw
+$WP config set SCRIPT_DEBUG true --raw
+$WP config set WP_ENVIRONMENT_TYPE development
 
 if [ -z "${DB_HOST:-}" ] && [ ! -f "${INSTALL_DIR}/wp-content/db.php" ]; then
 	say "No DB_HOST set — installing the SQLite integration plugin"
@@ -271,7 +276,16 @@ if [ -n "${REDIS_HOST:-}" ]; then
 		$WP config set WP_CACHE_KEY_SALT "$( basename "${INSTALL_DIR}" )"
 
 		$WP plugin activate redis-cache
-		$WP redis enable
+
+		# Not fatal. The object cache is an optimisation the health screen
+		# reports on honestly, and the store is fully functional without it —
+		# but `set -e` used to turn an unreachable Redis into an abort here,
+		# before any seeding, so a stopped service cost you the whole catalogue
+		# rather than just the cache.
+		if ! $WP redis enable; then
+			echo "WARNING: could not enable the Redis object cache; continuing without it."
+			echo "         Check the server is running, then re-run: $WP redis enable"
+		fi
 	fi
 fi
 
