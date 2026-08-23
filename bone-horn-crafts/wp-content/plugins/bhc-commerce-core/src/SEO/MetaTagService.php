@@ -132,6 +132,12 @@ final class MetaTagService implements HookableInterface {
 			printf( "<meta name=\"description\" content=\"%s\" />\n", esc_attr( $description ) );
 		}
 
+		$keywords = $this->keywords();
+
+		if ( '' !== $keywords ) {
+			printf( "<meta name=\"keywords\" content=\"%s\" />\n", esc_attr( $keywords ) );
+		}
+
 		printf( "<meta property=\"og:site_name\" content=\"%s\" />\n", esc_attr( $this->brand->name() ) );
 		printf( "<meta property=\"og:type\" content=\"%s\" />\n", esc_attr( $this->og_type() ) );
 		printf( "<meta property=\"og:title\" content=\"%s\" />\n", esc_attr( $title ) );
@@ -298,6 +304,18 @@ final class MetaTagService implements HookableInterface {
 
 			if ( $term instanceof WP_Term ) {
 				$description = $term->description;
+
+				// An imported catalogue arrives with category names and no
+				// term descriptions, which left every category page with no
+				// meta description at all — search engines then invent one
+				// from whatever text is nearest the top of the template.
+				// A generated sentence built from the term's own name, parent
+				// and product count is not prose, but it is accurate and it is
+				// specific to the page. Writing real copy into the term
+				// description overrides it.
+				if ( '' === trim( (string) $description ) ) {
+					$description = $this->generated_term_description( $term );
+				}
 			}
 		} elseif ( function_exists( 'is_shop' ) && is_shop() ) {
 			$description = __( 'Browse knife handle scales, guitar parts, pen blanks, drinking horns and finishing stock in camel bone, cattle bone, water buffalo horn, rams horn and stabilized wood.', 'bhc-commerce-core' );
@@ -339,6 +357,242 @@ final class MetaTagService implements HookableInterface {
 		 * @param string $description Meta description.
 		 */
 		return (string) apply_filters( 'bhc_meta_description', Str::truncate( $description, 155, '' ) );
+	}
+
+	/**
+	 * Composes a description for a term that has none of its own.
+	 *
+	 * @param WP_Term $term Queried term.
+	 */
+	private function generated_term_description( WP_Term $term ): string {
+		$parent = null;
+
+		if ( $term->parent > 0 ) {
+			$found = get_term( (int) $term->parent, $term->taxonomy );
+
+			if ( $found instanceof WP_Term ) {
+				$parent = $found;
+			}
+		}
+
+		$count = (int) $term->count;
+
+		if ( $count > 0 && null !== $parent ) {
+			return sprintf(
+				/* translators: 1: number of products, 2: category name, 3: parent category name. */
+				_n(
+					'%1$d %2$s product in our %3$s range, cut and finished in our workshop and shipped worldwide from India.',
+					'%1$d %2$s products in our %3$s range, cut and finished in our workshop and shipped worldwide from India.',
+					$count,
+					'bhc-commerce-core'
+				),
+				$count,
+				$term->name,
+				$parent->name
+			);
+		}
+
+		if ( $count > 0 ) {
+			return sprintf(
+				/* translators: 1: number of products, 2: category name. */
+				_n(
+					'%1$d %2$s product, cut and finished in our workshop and shipped worldwide from India. Wholesale and sample quantities available.',
+					'%1$d %2$s products, cut and finished in our workshop and shipped worldwide from India. Wholesale and sample quantities available.',
+					$count,
+					'bhc-commerce-core'
+				),
+				$count,
+				$term->name
+			);
+		}
+
+		return sprintf(
+			/* translators: %s: category name. */
+			__( '%s from Bone Horn Crafts — hand-finished bone, horn and wood craft materials, made to order and shipped worldwide from India.', 'bhc-commerce-core' ),
+			$term->name
+		);
+	}
+
+	/**
+	 * Builds the meta keywords value.
+	 *
+	 * A note on what this is worth, because it is easy to over-sell: Google
+	 * stopped using the keywords meta tag for ranking in 2009 and has said so
+	 * publicly since. Bing treats it, at best, as a spam signal. Nothing here
+	 * will move a Google ranking.
+	 *
+	 * It is emitted anyway for two defensible reasons. Several regional search
+	 * engines and a lot of B2B product-directory crawlers still read it, and it
+	 * is what most SEO audit tools tick off. What matters is that the value is
+	 * derived from taxonomy terms the product genuinely carries — categories,
+	 * tags, material and colour — rather than stuffed. A tag listing terms the
+	 * page does not sell is the version that actually hurts.
+	 *
+	 * Return an empty string from `bhc_meta_keywords` to drop the tag.
+	 */
+	public function keywords(): string {
+		$terms = [];
+
+		if ( function_exists( 'is_product' ) && is_product() ) {
+			$terms = $this->product_keywords( get_queried_object_id() );
+		} elseif ( is_tax( 'product_cat' ) || is_tax( 'product_tag' ) ) {
+			$term = get_queried_object();
+
+			if ( $term instanceof WP_Term ) {
+				$terms = $this->term_keywords( $term );
+			}
+		} elseif ( is_front_page() || ( function_exists( 'is_shop' ) && is_shop() ) ) {
+			$terms = $this->catalogue_keywords();
+		}
+
+		$terms = $this->normalise_keywords( $terms );
+
+		/**
+		 * Filters the meta keywords list.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param string[] $terms Keyword terms, already de-duplicated.
+		 */
+		$terms = (array) apply_filters( 'bhc_meta_keywords', $terms );
+
+		return implode( ', ', array_map( 'strval', $terms ) );
+	}
+
+	/**
+	 * Keywords for a single product: its own taxonomy terms.
+	 *
+	 * @param int $product_id Product id.
+	 *
+	 * @return string[]
+	 */
+	private function product_keywords( int $product_id ): array {
+		$terms = [];
+
+		foreach ( [ 'product_cat', 'product_tag' ] as $taxonomy ) {
+			$names = wp_get_post_terms( $product_id, $taxonomy, [ 'fields' => 'names' ] );
+
+			if ( ! is_wp_error( $names ) ) {
+				$terms = array_merge( $terms, array_map( 'strval', $names ) );
+			}
+		}
+
+		$product = wc_get_product( $product_id );
+
+		if ( $product instanceof WC_Product ) {
+			array_unshift( $terms, $product->get_name() );
+
+			foreach ( $product->get_attributes() as $attribute ) {
+				if ( ! $attribute instanceof \WC_Product_Attribute || ! $attribute->is_taxonomy() ) {
+					continue;
+				}
+
+				$names = wc_get_product_terms( $product_id, $attribute->get_name(), [ 'fields' => 'names' ] );
+
+				if ( ! is_wp_error( $names ) ) {
+					$terms = array_merge( $terms, array_map( 'strval', $names ) );
+				}
+			}
+		}
+
+		return $terms;
+	}
+
+	/**
+	 * Keywords for a category or tag archive: the term, its ancestors and its
+	 * immediate children.
+	 *
+	 * @param WP_Term $term Queried term.
+	 *
+	 * @return string[]
+	 */
+	private function term_keywords( WP_Term $term ): array {
+		$terms = [ $term->name ];
+
+		foreach ( (array) get_ancestors( $term->term_id, $term->taxonomy, 'taxonomy' ) as $ancestor_id ) {
+			$ancestor = get_term( (int) $ancestor_id, $term->taxonomy );
+
+			if ( $ancestor instanceof WP_Term ) {
+				$terms[] = $ancestor->name;
+			}
+		}
+
+		$children = get_terms(
+			[
+				'taxonomy'   => $term->taxonomy,
+				'parent'     => $term->term_id,
+				'hide_empty' => true,
+				'number'     => 8,
+				'fields'     => 'names',
+			]
+		);
+
+		if ( ! is_wp_error( $children ) ) {
+			$terms = array_merge( $terms, array_map( 'strval', $children ) );
+		}
+
+		return $terms;
+	}
+
+	/**
+	 * Keywords for the front page and shop: the top-level categories that
+	 * actually hold stock.
+	 *
+	 * @return string[]
+	 */
+	private function catalogue_keywords(): array {
+		$names = get_terms(
+			[
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => true,
+				'number'     => 12,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+				'fields'     => 'names',
+			]
+		);
+
+		if ( is_wp_error( $names ) ) {
+			return [];
+		}
+
+		return array_map( 'strval', $names );
+	}
+
+	/**
+	 * Trims, de-duplicates case-insensitively and caps the keyword list.
+	 *
+	 * @param string[] $terms Raw terms.
+	 *
+	 * @return string[]
+	 */
+	private function normalise_keywords( array $terms ): array {
+		$seen = [];
+
+		foreach ( $terms as $term ) {
+			$term = trim( wp_strip_all_tags( (string) $term ) );
+
+			if ( '' === $term ) {
+				continue;
+			}
+
+			// Case-insensitive so "Bone" and "bone" do not both survive, but
+			// the first spelling encountered is the one kept.
+			$key = strtolower( $term );
+
+			if ( isset( $seen[ $key ] ) ) {
+				continue;
+			}
+
+			$seen[ $key ] = $term;
+
+			if ( count( $seen ) >= 15 ) {
+				break;
+			}
+		}
+
+		return array_values( $seen );
 	}
 
 	/**
