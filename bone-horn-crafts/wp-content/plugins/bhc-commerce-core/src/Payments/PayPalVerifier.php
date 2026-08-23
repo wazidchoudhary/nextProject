@@ -67,6 +67,7 @@ final class PayPalVerifier {
 			[
 				'timeout' => 30,
 				'headers' => [
+					// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.obfuscation_base64_encode -- HTTP Basic auth is defined as base64 of "id:secret"; this is the wire format, not obfuscation.
 					'Authorization' => 'Basic ' . base64_encode(
 						(string) ( $settings['client_id'] ?? '' ) . ':' . (string) ( $settings['client_secret'] ?? '' )
 					),
@@ -92,28 +93,32 @@ final class PayPalVerifier {
 		$body   = is_array( $body ) ? $body : [];
 
 		if ( 200 === $status ) {
+			/* translators: 1: live or sandbox, 2: token lifetime in seconds. */
+			$success = __( 'Authenticated against PayPal %1$s. Token valid for %2$d seconds.', 'bhc-commerce-core' );
+
 			return [
 				'ok'      => true,
 				'status'  => $status,
 				'mode'    => $mode,
 				'scopes'  => (string) ( $body['scope'] ?? '' ),
-				/* translators: 1: live or sandbox, 2: token lifetime in seconds. */
 				'message' => sprintf(
-					__( 'Authenticated against PayPal %1$s. Token valid for %2$d seconds.', 'bhc-commerce-core' ),
+					$success,
 					$mode,
 					(int) ( $body['expires_in'] ?? 0 )
 				),
 			];
 		}
 
+		/* translators: 1: HTTP status, 2: PayPal error description. */
+		$rejected = __( 'PayPal rejected the credentials (HTTP %1$d): %2$s', 'bhc-commerce-core' );
+
 		return [
 			'ok'      => false,
 			'status'  => $status,
 			'mode'    => $mode,
 			'scopes'  => '',
-			/* translators: 1: HTTP status, 2: PayPal error description. */
 			'message' => sprintf(
-				__( 'PayPal rejected the credentials (HTTP %1$d): %2$s', 'bhc-commerce-core' ),
+				$rejected,
 				$status,
 				(string) ( $body['error_description'] ?? ( $body['error'] ?? __( 'no detail given', 'bhc-commerce-core' ) ) )
 			),

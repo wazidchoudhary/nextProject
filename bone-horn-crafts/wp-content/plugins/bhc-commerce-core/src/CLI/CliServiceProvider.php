@@ -16,6 +16,7 @@ use BoneHornCrafts\Core\Admin\HealthReport;
 use BoneHornCrafts\Core\Analytics\MerchandisingIndexer;
 use BoneHornCrafts\Core\Cache\CacheManager;
 use BoneHornCrafts\Core\Import\FirebaseImporter;
+use BoneHornCrafts\Core\Import\ImageImporter;
 use BoneHornCrafts\Core\Container;
 use BoneHornCrafts\Core\Contracts\ContainerInterface;
 use BoneHornCrafts\Core\Demo\DemoSeeder;
@@ -72,9 +73,15 @@ final class CliServiceProvider extends AbstractServiceProvider {
 		);
 
 		$container->singleton(
+			ImageImporter::class,
+			static fn (): ImageImporter => new ImageImporter()
+		);
+
+		$container->singleton(
 			ImportCommand::class,
 			static fn ( Container $c ): ImportCommand => new ImportCommand(
 				$c->get( FirebaseImporter::class ),
+				$c->get( ImageImporter::class ),
 				$c->get( CacheManager::class )
 			)
 		);

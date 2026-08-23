@@ -91,6 +91,55 @@ final class CommandRegistrar {
 		$container = $this->container;
 
 		WP_CLI::add_command(
+			'bhc import images',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				$container->get( ImportCommand::class )->images( $args, $assoc_args );
+			},
+			[
+				'shortdesc' => 'Attach product imagery from a local folder.',
+				'longdesc'  => "Runs in two passes. Files matched exactly — through the export manifest, a SKU folder or filename, or an identical product name — are attached directly. Anything less certain is proposed in a review CSV and never applied on its own, because similarity matching measured against a real catalogue was confidently wrong.\n\n## EXAMPLES\n\n    wp bhc import images ./images --plan=mapping.csv\n    wp bhc import images ./images --apply=mapping.csv",
+				'synopsis'  => [
+					[
+						'type'        => 'positional',
+						'name'        => 'directory',
+						'description' => 'Folder holding the images.',
+						'optional'    => false,
+					],
+					[
+						'type'        => 'assoc',
+						'name'        => 'manifest',
+						'description' => 'Export JSON used for exact filename matching.',
+						'optional'    => true,
+					],
+					[
+						'type'        => 'assoc',
+						'name'        => 'plan',
+						'description' => 'Write a review CSV here and change nothing.',
+						'optional'    => true,
+					],
+					[
+						'type'        => 'assoc',
+						'name'        => 'apply',
+						'description' => 'Attach images according to a reviewed CSV.',
+						'optional'    => true,
+					],
+					[
+						'type'        => 'flag',
+						'name'        => 'replace',
+						'description' => 'Replace existing imagery.',
+						'optional'    => true,
+					],
+					[
+						'type'        => 'flag',
+						'name'        => 'dry-run',
+						'description' => 'Report without writing.',
+						'optional'    => true,
+					],
+				],
+			]
+		);
+
+		WP_CLI::add_command(
 			'bhc import firebase',
 			static function ( array $args, array $assoc_args ) use ( $container ): void {
 				$container->get( ImportCommand::class )->firebase( $args, $assoc_args );
