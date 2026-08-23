@@ -33,6 +33,15 @@ use WP_Query;
 final class SearchService implements HookableInterface {
 
 	/**
+	 * Shortest term that will also be matched against SKUs.
+	 *
+	 * Below this a SKU match is noise: two characters appear inside most of
+	 * the catalogue's part numbers.
+	 */
+	private const MIN_SKU_SEARCH_LENGTH = 3;
+
+
+	/**
 	 * Constructor.
 	 *
 	 * @param ProductRepository $products       Product read model.
@@ -120,6 +129,28 @@ final class SearchService implements HookableInterface {
 	/**
 	 * Extends product search to match SKUs.
 	 *
+	 * Two details here are load-bearing, and both were wrong once.
+	 *
+	 * **The prepared fragment must have its placeholder escaping removed.**
+	 * `$wpdb->prepare()` replaces every literal `%` with a per-request hash and
+	 * relies on `remove_placeholder_escape()` running once over the finished
+	 * query to put them back. `WP_Query` has already escaped its own LIKE
+	 * values that way by the time `posts_search` fires, and it un-escapes the
+	 * whole string exactly once. Concatenating a second, separately prepared
+	 * fragment breaks that accounting: the hashes survive into the executed
+	 * SQL and every LIKE then matches the literal hash text rather than the
+	 * search term. The symptom is not a broken SKU search — it is product
+	 * search returning nothing at all, for every query.
+	 *
+	 * **The injection point is the search group's own closing parenthesis.**
+	 * `WP_Query` appends ` AND (post_password = '')` to `$search` *before*
+	 * running this filter, so the last `)` in the string closes the password
+	 * clause, not the search. Injecting there ORs the SKU match against
+	 * `post_password = ''`, which is true for every row — a clause that reads
+	 * as if it works and matches nothing extra. The scan below walks
+	 * parenthesis depth from the first `(` so it lands on the right one no
+	 * matter what core appends afterwards.
+	 *
 	 * @param string   $search Search SQL.
 	 * @param WP_Query $query  Query object.
 	 */
@@ -136,7 +167,13 @@ final class SearchService implements HookableInterface {
 
 		$term = trim( (string) $query->get( 's' ) );
 
-		if ( strlen( $term ) < 3 ) {
+		if ( strlen( $term ) < self::MIN_SKU_SEARCH_LENGTH ) {
+			return $search;
+		}
+
+		$position = self::search_group_end( $search );
+
+		if ( null === $position ) {
 			return $search;
 		}
 
@@ -145,21 +182,68 @@ final class SearchService implements HookableInterface {
 		$lookup = $wpdb->wc_product_meta_lookup;
 		$like   = '%' . $wpdb->esc_like( $term ) . '%';
 
+		// EXISTS rather than `ID IN (SELECT ... LIMIT n)`: MySQL and MariaDB both
+		// reject a LIMIT inside an IN subquery outright — "This version of
+		// MariaDB doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery'" — and
+		// WP_Query swallows the resulting error, so the whole product search
+		// returned zero rows on the primary stack rather than failing loudly.
+		// The correlated form also short-circuits on the lookup table's
+		// product_id index instead of materialising a list.
 		$sku_clause = $wpdb->prepare(
 			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table identifiers cannot be bound; both come from $wpdb, and the search term is the %s placeholder.
-			"OR ({$wpdb->posts}.ID IN (SELECT product_id FROM {$lookup} WHERE sku LIKE %s LIMIT 50))",
+			"OR EXISTS (SELECT 1 FROM {$lookup} bhc_sku WHERE bhc_sku.product_id = {$wpdb->posts}.ID AND bhc_sku.sku LIKE %s)",
 			$like
 		);
 
-		// `$search` always arrives wrapped in " AND (...)"; inject before the
-		// closing parenthesis so the SKU match ORs with the text match.
-		$position = strrpos( $search, ')' );
-
-		if ( false === $position ) {
-			return $search;
-		}
+		// See the docblock: without this the placeholder hashes leak into the
+		// executed query and break every LIKE in it, not just this one.
+		$sku_clause = $wpdb->remove_placeholder_escape( $sku_clause );
 
 		return substr( $search, 0, $position ) . ' ' . $sku_clause . ' ' . substr( $search, $position );
+	}
+
+	/**
+	 * Finds the closing parenthesis of the leading ` AND ( ... )` search group.
+	 *
+	 * Written as a depth scan rather than a regular expression because the
+	 * group contains nested parentheses of its own — one per searched column,
+	 * plus whatever other plugins have already added — and a regex either stops
+	 * at the first `)` or runs to the last one. Both are wrong.
+	 *
+	 * @param string $search Search SQL as `posts_search` receives it.
+	 *
+	 * @return int|null Offset of the closing parenthesis, or null if the string
+	 *                  is not the shape this expects.
+	 */
+	private static function search_group_end( string $search ): ?int {
+		$open = strpos( $search, '(' );
+
+		if ( false === $open ) {
+			return null;
+		}
+
+		$depth  = 0;
+		$length = strlen( $search );
+
+		for ( $i = $open; $i < $length; $i++ ) {
+			if ( '(' === $search[ $i ] ) {
+				++$depth;
+
+				continue;
+			}
+
+			if ( ')' !== $search[ $i ] ) {
+				continue;
+			}
+
+			--$depth;
+
+			if ( 0 === $depth ) {
+				return $i;
+			}
+		}
+
+		return null;
 	}
 
 	/**

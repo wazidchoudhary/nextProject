@@ -529,6 +529,100 @@ if ( null !== $product_for_schema ) {
 }
 
 // ---------------------------------------------------------------------------
+$t->group( 'Product search' );
+
+// Regression: `add_sku_search()` injected `ID IN (SELECT ... LIMIT 50)`, and
+// both MySQL and MariaDB reject a LIMIT inside an IN subquery outright. The
+// query errored, WP_Query swallowed the error, and every product search
+// returned nothing on the primary stack. Two smaller bugs rode along: the
+// clause was spliced in at the last `)` in the string, which belongs to the
+// password clause core appends after the search group, and the separately
+// prepared fragment left placeholder hashes in the SQL.
+//
+// Asserted over HTTP rather than through WP_Query: SearchService only hooks
+// when `Context::is_frontend()`, so under WP-CLI the filter never registers and
+// an in-process query would pass while the storefront stayed broken.
+
+/**
+ * Counts product cards on a storefront URL.
+ *
+ * @param string $url URL to fetch.
+ *
+ * @return array{status:int, cards:int, body:string}
+ */
+$bhc_fetch_cards = static function ( string $url ): array {
+	$response = wp_remote_get( $url, [ 'timeout' => 25, 'redirection' => 0 ] );
+
+	if ( is_wp_error( $response ) ) {
+		return [
+			'status' => 0,
+			'cards'  => 0,
+			'body'   => $response->get_error_message(),
+		];
+	}
+
+	$body = (string) wp_remote_retrieve_body( $response );
+
+	return [
+		'status' => (int) wp_remote_retrieve_response_code( $response ),
+		'cards'  => substr_count( $body, 'bhc-card__title' ),
+		'body'   => $body,
+	];
+};
+
+$search_text = $bhc_fetch_cards( home_url( '/?s=horn&post_type=product' ) );
+
+$t->assert(
+	'a text search renders product cards',
+	$search_text['cards'] > 0,
+	$search_text['cards'] . ' card(s), HTTP ' . $search_text['status']
+);
+
+$t->assert(
+	'the search page is not an error page',
+	200 === $search_text['status'],
+	'HTTP ' . $search_text['status']
+);
+
+// A SKU prefix matches nothing in any title, excerpt or body, so a hit can only
+// come from the lookup-table clause.
+$sku_prefix = '';
+
+foreach ( wc_get_products( [ 'limit' => 20 ] ) as $sku_product ) {
+	$candidate = (string) $sku_product->get_sku();
+
+	if ( str_starts_with( $candidate, 'BHC-' ) ) {
+		$sku_prefix = substr( $candidate, 0, 6 );
+
+		break;
+	}
+}
+
+if ( '' !== $sku_prefix ) {
+	$search_sku = $bhc_fetch_cards( home_url( '/?s=' . rawurlencode( $sku_prefix ) . '&post_type=product' ) );
+
+	$t->assert(
+		'a SKU prefix matches through the lookup table',
+		$search_sku['cards'] > 0,
+		$sku_prefix . ' => ' . $search_sku['cards'] . ' card(s)'
+	);
+}
+
+$search_none = $bhc_fetch_cards( home_url( '/?s=zzzznotathinginthecatalogue&post_type=product' ) );
+
+$t->assert(
+	'a term matching nothing renders no cards',
+	0 === $search_none['cards'],
+	$search_none['cards'] . ' card(s)'
+);
+
+$t->assert(
+	'the empty state is shown rather than a blank page',
+	str_contains( $search_none['body'], 'bhc-empty' ) || str_contains( $search_none['body'], 'No matches' ),
+	'no empty-state markup found'
+);
+
+// ---------------------------------------------------------------------------
 $t->group( 'Store pages' );
 
 // Regression: `write_store_pages()` used to mark WooCommerce's Shop page as
