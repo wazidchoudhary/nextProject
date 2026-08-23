@@ -286,6 +286,12 @@ final class CommandRegistrar {
 						'optional'    => true,
 					],
 					[
+						'type'        => 'assoc',
+						'name'        => 'only',
+						'description' => 'Comma-separated buckets to remove (products,attachments,orders,customers,comments,pages,posts,menus,zones,terms). Default: all of them.',
+						'optional'    => true,
+					],
+					[
 						'type'        => 'flag',
 						'name'        => 'orphans',
 						'description' => 'Also remove demo-marked objects that are no longer tracked.',

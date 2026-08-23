@@ -1895,22 +1895,34 @@ final class DemoSeeder {
 	}
 
 	/**
-	 * Removes every object the seeder created.
+	 * Removes the objects the seeder created.
 	 *
 	 * Only ids recorded in {@see DemoState} are touched. Anything a real
 	 * merchandiser added by hand survives a reset, which is the entire reason
 	 * the state option exists.
 	 *
-	 * @param bool $include_orphans Also sweep objects that carry the demo
-	 *                              marker but are no longer tracked, which can
-	 *                              happen if a seeding run was interrupted.
+	 * `$buckets` narrows what is removed. A full reset takes the pages, journal
+	 * posts, menus and shipping zones with it, which is right when the demo is
+	 * being thrown away and wrong when a real catalogue is replacing the
+	 * fictional one: there the site structure is worth keeping and only the
+	 * products, their imagery, the invented orders, customers and reviews
+	 * should go. Passing `[ 'products', 'attachments', 'orders', 'customers',
+	 * 'comments' ]` does exactly that.
+	 *
+	 * @param bool     $include_orphans Also sweep objects that carry the demo
+	 *                                  marker but are no longer tracked, which
+	 *                                  can happen if a seeding run was
+	 *                                  interrupted.
+	 * @param string[] $buckets         Buckets to remove. Empty means all of
+	 *                                  them.
 	 *
 	 * @return array<string, int>
 	 */
-	public function reset( bool $include_orphans = false ): array {
+	public function reset( bool $include_orphans = false, array $buckets = [] ): array {
 		$removed = [];
+		$wanted  = static fn ( string $bucket ): bool => [] === $buckets || in_array( $bucket, $buckets, true );
 
-		foreach ( [ 'orders', 'products', 'attachments', 'pages', 'posts' ] as $bucket ) {
+		foreach ( array_filter( [ 'orders', 'products', 'attachments', 'pages', 'posts' ], $wanted ) as $bucket ) {
 			$count = 0;
 
 			foreach ( $this->state->get( $bucket ) as $id ) {
@@ -1948,7 +1960,7 @@ final class DemoSeeder {
 
 		$removed['comments'] = 0;
 
-		foreach ( $this->state->get( 'comments' ) as $comment_id ) {
+		foreach ( $wanted( 'comments' ) ? $this->state->get( 'comments' ) : [] as $comment_id ) {
 			if ( 'yes' === (string) get_comment_meta( $comment_id, '_bhc_demo', true ) && wp_delete_comment( $comment_id, true ) ) {
 				++$removed['comments'];
 			}
@@ -1960,7 +1972,7 @@ final class DemoSeeder {
 			require_once ABSPATH . 'wp-admin/includes/user.php';
 		}
 
-		foreach ( $this->state->get( 'customers' ) as $user_id ) {
+		foreach ( $wanted( 'customers' ) ? $this->state->get( 'customers' ) : [] as $user_id ) {
 			if ( 'yes' === (string) get_user_meta( $user_id, '_bhc_demo', true ) && wp_delete_user( $user_id ) ) {
 				++$removed['customers'];
 			}
@@ -1968,7 +1980,7 @@ final class DemoSeeder {
 
 		$removed['menus'] = 0;
 
-		foreach ( $this->state->get( 'menus' ) as $menu_id ) {
+		foreach ( $wanted( 'menus' ) ? $this->state->get( 'menus' ) : [] as $menu_id ) {
 			if ( wp_delete_nav_menu( $menu_id ) ) {
 				++$removed['menus'];
 			}
@@ -1977,7 +1989,7 @@ final class DemoSeeder {
 		$removed['zones'] = 0;
 
 		if ( class_exists( \WC_Shipping_Zones::class ) ) {
-			foreach ( $this->state->get( 'zones' ) as $zone_id ) {
+			foreach ( $wanted( 'zones' ) ? $this->state->get( 'zones' ) : [] as $zone_id ) {
 				$zone = \WC_Shipping_Zones::get_zone( (int) $zone_id );
 
 				if ( $zone instanceof \WC_Shipping_Zone ) {
@@ -1990,7 +2002,7 @@ final class DemoSeeder {
 
 		$removed['terms'] = 0;
 
-		foreach ( $this->state->get( 'terms' ) as $term_id ) {
+		foreach ( $wanted( 'terms' ) ? $this->state->get( 'terms' ) : [] as $term_id ) {
 			$term = get_term( $term_id );
 
 			if ( $term instanceof WP_Term && wp_delete_term( $term_id, $term->taxonomy ) ) {
@@ -2004,10 +2016,19 @@ final class DemoSeeder {
 
 		// Derived tables describe the catalogue that was just removed, so they
 		// are emptied rather than left pointing at deleted products.
-		( new \BoneHornCrafts\Core\Analytics\ProductStatsRepository() )->truncate();
-		( new \BoneHornCrafts\Core\Recommendations\AffinityRepository() )->truncate();
+		if ( $wanted( 'products' ) ) {
+			( new \BoneHornCrafts\Core\Analytics\ProductStatsRepository() )->truncate();
+			( new \BoneHornCrafts\Core\Recommendations\AffinityRepository() )->truncate();
+		}
 
-		$this->state->forget();
+		// Only a full reset has nothing left to track. After a partial one the
+		// untracked buckets still exist, and forgetting them would strand the
+		// pages and menus this run deliberately spared.
+		if ( [] === $buckets ) {
+			$this->state->forget();
+		} else {
+			$this->state->forget_buckets( $buckets );
+		}
 
 		delete_option( 'bhc_wishlist_page_id' );
 

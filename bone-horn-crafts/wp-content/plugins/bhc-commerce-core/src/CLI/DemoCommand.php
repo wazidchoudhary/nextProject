@@ -150,7 +150,29 @@ final class DemoCommand {
 			return;
 		}
 
+		$only = (string) WP_CLI\Utils\get_flag_value( $assoc_args, 'only', '' );
+
+		$buckets = '' === $only
+			? []
+			: array_values( array_filter( array_map( 'trim', explode( ',', $only ) ) ) );
+
+		$unknown = array_diff( $buckets, DemoState::BUCKETS );
+
+		if ( [] !== $unknown ) {
+			WP_CLI::error(
+				sprintf(
+					'Unknown bucket(s): %s. Valid buckets: %s.',
+					implode( ', ', $unknown ),
+					implode( ', ', DemoState::BUCKETS )
+				)
+			);
+		}
+
 		$summary = $this->state->summary();
+
+		if ( [] !== $buckets ) {
+			$summary = array_intersect_key( $summary, array_flip( $buckets ) );
+		}
 
 		WP_CLI::log( 'This will permanently delete the recorded demo objects:' );
 
@@ -160,7 +182,7 @@ final class DemoCommand {
 
 		WP_CLI::confirm( 'Delete the demo dataset? Content added by hand is not affected.', $assoc_args );
 
-		$removed = $this->seeder->reset( $sweep_orphans );
+		$removed = $this->seeder->reset( $sweep_orphans, $buckets );
 
 		foreach ( Invalidator::ALL_GROUPS as $group ) {
 			$this->cache->flush_group( $group );

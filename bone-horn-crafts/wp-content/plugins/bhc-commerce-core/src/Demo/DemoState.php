@@ -177,4 +177,28 @@ final class DemoState {
 
 		delete_option( self::OPTION );
 	}
+
+	/**
+	 * Clears only the named buckets, leaving the rest recorded.
+	 *
+	 * A partial reset removes some of what was seeded and spares the rest, so
+	 * the state has to survive it: dropping the whole option would strand the
+	 * pages, menus and shipping zones that were deliberately kept, leaving a
+	 * later full reset with no record of them.
+	 *
+	 * @param string[] $buckets Buckets to clear.
+	 */
+	public function forget_buckets( array $buckets ): void {
+		$state = $this->all();
+
+		foreach ( $buckets as $bucket ) {
+			if ( isset( $state[ $bucket ] ) ) {
+				$state[ $bucket ] = [];
+			}
+		}
+
+		$this->state = $state;
+
+		update_option( self::OPTION, $state, false );
+	}
 }
