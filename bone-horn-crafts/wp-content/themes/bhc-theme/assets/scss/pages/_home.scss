@@ -29,6 +29,44 @@
 	z-index: -2;
 }
 
+// On a phone the banner cannot be a background. A 2.5:1 photograph cropped
+// into a 390 x 690 slot shows a narrow vertical slice of it — the products
+// stop being recognisable and it reads as dark texture, which wastes the one
+// photograph the page loads. So below 'lg' the copy sits on a solid ground and
+// the banner runs underneath it at its own aspect ratio, whole.
+@media (width < 64em) {
+	.hero--banner {
+		display: flex;
+		flex-direction: column;
+		background-color: #1a1410;
+	}
+
+	.hero--banner .hero__inner {
+		order: 1;
+	}
+
+	.hero--banner .hero__backdrop {
+		position: static;
+		order: 2;
+
+		// Slightly taller than the file's own 2.5:1, so the strip has some
+		// presence rather than reading as a rule. The crop it costs comes off
+		// the left, which is the empty drapery — object-position below keeps
+		// the arrangement itself intact.
+		aspect-ratio: 2 / 1;
+	}
+
+	.hero--banner .hero__backdrop-image {
+		object-position: 70% 50%;
+	}
+
+	// The scrim exists to protect text sitting over the image. Nothing sits
+	// over it here.
+	.hero--banner::before {
+		content: none;
+	}
+}
+
 .hero__backdrop-image {
 	inline-size: 100%;
 	block-size: 100%;
@@ -42,8 +80,8 @@
 	// below 'lg' the crop drops the subject to the bottom of the frame and the
 	// scrim runs vertically instead — the photograph becomes ground for the
 	// copy and shows itself under the stats.
-	object-position: 70% 100%;
-
+	// Only meaningful from 'lg', where the image is a cropped background. Below
+	// that it renders at its own ratio and there is nothing to crop.
 	@include m.from('lg') {
 		object-position: 78% 50%;
 	}
@@ -56,7 +94,8 @@
 	inset: 0;
 	z-index: -1;
 
-	// Vertical on small screens, where the copy sits over the whole width.
+	// Vertical on small screens for the gradient-only hero. The banner hero
+	// drops the scrim entirely below 'lg' — see the media query above.
 	background: linear-gradient(
 		180deg,
 		rgba(24, 18, 13, 0.93) 0%,

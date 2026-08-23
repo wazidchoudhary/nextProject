@@ -55,9 +55,14 @@ $hero_product = bhc_hero_product();
 				// srcset to build — it is emitted as a plain img with the same
 				// loading hints.
 				?>
+				<?php $banner_srcset = bhc_hero_banner_fallback_srcset(); ?>
 				<img
 					class="hero__backdrop-image"
 					src="<?php echo esc_url( $banner_url ); ?>"
+					<?php if ( '' !== $banner_srcset ) : ?>
+						srcset="<?php echo esc_attr( $banner_srcset ); ?>"
+						sizes="100vw"
+					<?php endif; ?>
 					alt=""
 					fetchpriority="high"
 					loading="eager"

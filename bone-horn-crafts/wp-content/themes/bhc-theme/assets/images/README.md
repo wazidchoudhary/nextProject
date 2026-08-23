@@ -29,8 +29,30 @@ nothing else needs changing.
   file the home page loads. WebP is usually half the bytes of the equivalent
   JPEG, and a photographic PNG can be several times larger than either.
 
+### Sizes
+
+A bundled file has no attachment record, so WordPress cannot build a srcset for
+it and a phone would otherwise download the full-width image. Commit narrower
+copies beside the base file and they are picked up automatically:
+
+    hero-banner.webp        full width, and the srcset's largest candidate
+    hero-banner-1440.webp
+    hero-banner-960.webp
+
+Only 960 and 1440 are looked for. Add or remove either and the srcset follows.
+
 Convert with:
 
     cwebp -q 82 hero.png -o hero-banner.webp
+    cwebp -q 82 -resize 1440 0 hero.png -o hero-banner-1440.webp
+    cwebp -q 82 -resize 960 0 hero.png -o hero-banner-960.webp
 
-Aim for under 300KB. Anything over about 500KB is worth another look.
+The banner shipped here went from a 1.68MB PNG to 82KB at full width. Aim for
+under 300KB; anything over about 500KB is worth another look.
+
+### On small screens
+
+Below 1024px the banner is not a background. A 2.5:1 photograph cropped into a
+phone-shaped box shows a narrow vertical slice and stops being recognisable, so
+the copy sits on a solid ground and the banner runs beneath it at close to its
+own ratio, whole.

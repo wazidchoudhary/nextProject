@@ -193,6 +193,52 @@ function bhc_hero_banner_fallback_url(): string {
 }
 
 /**
+ * Srcset for the bundled banner.
+ *
+ * A bundled file has no attachment record, so WordPress cannot build a srcset
+ * for it and a phone would otherwise download the full-width image. This is the
+ * hero, which means it is the LCP element on the busiest page of the site, so
+ * that is worth avoiding.
+ *
+ * Widths are discovered by looking for `hero-banner-<width>.<ext>` beside the
+ * base file: drop one in and it joins the set, remove it and it leaves.
+ *
+ * @return string A srcset value, or '' when only the base file exists.
+ */
+function bhc_hero_banner_fallback_srcset(): string {
+	$base = bhc_hero_banner_fallback_url();
+
+	if ( '' === $base ) {
+		return '';
+	}
+
+	$extension  = pathinfo( $base, PATHINFO_EXTENSION );
+	$candidates = [];
+
+	foreach ( [ 960, 1440, 1983 ] as $width ) {
+		$relative = 'assets/images/hero-banner-' . $width . '.' . $extension;
+
+		if ( is_readable( BHC_THEME_DIR . '/' . $relative ) ) {
+			$candidates[] = BHC_THEME_URI . '/' . $relative . ' ' . $width . 'w';
+		}
+	}
+
+	if ( [] === $candidates ) {
+		return '';
+	}
+
+	// The base file is the largest candidate, and its own width is not encoded
+	// in its name, so it is measured once and memoised by WordPress.
+	$size = @getimagesize( BHC_THEME_DIR . '/assets/images/hero-banner.' . $extension ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- A malformed file must degrade to "no srcset", not warn on every page load.
+
+	if ( is_array( $size ) && isset( $size[0] ) ) {
+		$candidates[] = $base . ' ' . (int) $size[0] . 'w';
+	}
+
+	return implode( ', ', array_unique( $candidates ) );
+}
+
+/**
  * Returns the newest product that actually has a photograph.
  *
  * The hero used to take `bhc_products_for( 'new', 1 )` and render its image.
