@@ -12,6 +12,7 @@ namespace BoneHornCrafts\Core\SEO;
 defined( 'ABSPATH' ) || exit;
 
 use BoneHornCrafts\Core\Contracts\HookableInterface;
+use BoneHornCrafts\Core\Product\Attributes\AttributeCatalog;
 use BoneHornCrafts\Core\Wishlist\WishlistRenderer;
 
 /**
@@ -31,23 +32,33 @@ use BoneHornCrafts\Core\Wishlist\WishlistRenderer;
 final class RobotsPolicy implements HookableInterface {
 
 	/**
-	 * Query parameters that mark a filtered catalogue view.
+	 * Non-attribute query parameters that mark a filtered catalogue view.
+	 *
+	 * The attribute parameters are not repeated here — they come from
+	 * AttributeCatalog, which already owns that list. This used to carry its
+	 * own copy of the six attribute names, which is how it also managed to
+	 * miss `category`: a ?category= view is exactly as much a facet permutation
+	 * as ?material= and was being left indexable.
 	 *
 	 * @var string[]
 	 */
 	private const FILTER_PARAMS = [
-		'material',
-		'finish',
-		'application',
-		'colour',
-		'size',
-		'product-type',
+		'category',
 		'min_price',
 		'max_price',
 		'in_stock',
 		'on_sale',
 		'orderby',
 	];
+
+	/**
+	 * Every query parameter that marks a filtered catalogue view.
+	 *
+	 * @return string[]
+	 */
+	private function filter_params(): array {
+		return array_merge( AttributeCatalog::facet_slugs(), self::FILTER_PARAMS );
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -150,7 +161,7 @@ final class RobotsPolicy implements HookableInterface {
 	 * Whether the current request carries catalogue filter parameters.
 	 */
 	public function is_filtered_view(): bool {
-		foreach ( self::FILTER_PARAMS as $param ) {
+		foreach ( $this->filter_params() as $param ) {
 			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only inspection of the query string.
 			if ( isset( $_GET[ $param ] ) && '' !== $_GET[ $param ] ) {
 				return true;

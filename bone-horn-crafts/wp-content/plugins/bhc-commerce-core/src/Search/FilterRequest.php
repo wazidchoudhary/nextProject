@@ -71,15 +71,20 @@ final class FilterRequest {
 	public static function from_array( array $input ): self {
 		$attributes = [];
 
-		foreach ( AttributeCatalog::all() as $slug => $definition ) {
+		foreach ( AttributeCatalog::facet_slugs() as $slug ) {
 			if ( ! isset( $input[ $slug ] ) ) {
 				continue;
 			}
 
 			$selected = Sanitizer::slug_list( $input[ $slug ], 12 );
 
-			// Only terms that actually exist in the catalogue are accepted.
-			$valid = array_values( array_intersect( $selected, array_keys( $definition['terms'] ) ) );
+			// Only terms that exist in the live taxonomy are accepted. This
+			// used to check against AttributeCatalog's hardcoded vocabulary,
+			// which is the installer's term list, not the store's: a catalogue
+			// imported from outside carries its own terms, and every one of
+			// them was being rejected here — the URL said ?colour=walnut, the
+			// panel offered it, and the filter silently returned everything.
+			$valid = self::existing_term_slugs( $slug, $selected );
 
 			if ( [] !== $valid ) {
 				$attributes[ $slug ] = $valid;
@@ -192,6 +197,46 @@ final class FilterRequest {
 			'count_total'   => true,
 			'visibility'    => '' !== $this->search ? 'search' : 'catalog',
 		];
+	}
+
+	/**
+	 * The subset of the selected slugs that exist in the attribute's taxonomy.
+	 *
+	 * One `get_terms()` per attribute that actually appears in the input, so an
+	 * unfiltered request costs nothing, and the lookup is served from the term
+	 * cache on a warm store. Input order is preserved: the canonical query
+	 * string sorts later, and the visitor's order is otherwise meaningful.
+	 *
+	 * @param string   $slug     Attribute slug without prefix.
+	 * @param string[] $selected Sanitised candidate slugs.
+	 *
+	 * @return string[]
+	 */
+	private static function existing_term_slugs( string $slug, array $selected ): array {
+		if ( [] === $selected ) {
+			return [];
+		}
+
+		$taxonomy = AttributeCatalog::taxonomy( $slug );
+
+		if ( ! taxonomy_exists( $taxonomy ) ) {
+			return [];
+		}
+
+		$existing = get_terms(
+			[
+				'taxonomy'   => $taxonomy,
+				'slug'       => $selected,
+				'hide_empty' => false,
+				'fields'     => 'slugs',
+			]
+		);
+
+		if ( is_wp_error( $existing ) ) {
+			return [];
+		}
+
+		return array_values( array_intersect( $selected, array_map( 'strval', $existing ) ) );
 	}
 
 	/**

@@ -14,9 +14,19 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Declarative definition of the store's global product attributes.
  *
- * Keeping the taxonomy in data rather than in an installer script means the
- * same definition drives creation, the admin filters, the faceted search
- * facets and the demo seeder — there is exactly one list to change.
+ * Two different things live here, and the distinction matters:
+ *
+ * The *attributes* — their slugs, labels, ordering and facet flags — are the
+ * store's schema. FacetRepository decides which filter groups exist from them,
+ * FilterRequest decides which query parameters to read, RobotsPolicy derives
+ * its noindex parameters, and AttributeRegistrar creates the taxonomies.
+ *
+ * The *terms* under each attribute are only a starting vocabulary: what the
+ * installer seeds and the demo catalogue assigns. The storefront never reads
+ * them — facet options and filter validation come from the live taxonomy
+ * tables, because a store that imported a real catalogue carries its own
+ * terms, and building the panel from this list once made every imported term
+ * invisible and unfilterable.
  */
 final class AttributeCatalog {
 

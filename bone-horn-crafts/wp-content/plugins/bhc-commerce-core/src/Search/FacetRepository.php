@@ -116,19 +116,46 @@ final class FacetRepository extends AbstractRepository {
 			$counts   = $this->counts_for_taxonomy( $taxonomy );
 			$options  = [];
 
-			foreach ( $definition['terms'] as $term_slug => $term_label ) {
-				$count = $counts[ $term_slug ] ?? 0;
+			// The options come from the taxonomy tables, never from the
+			// hardcoded vocabulary in AttributeCatalog. That vocabulary is what
+			// the installer creates and the demo seeder assigns — on a store
+			// that imported a real catalogue, the live terms are different, and
+			// building the panel from the hardcoded list meant real terms were
+			// invisible and could not be filtered on, while the panel offered
+			// demo terms that matched nothing. The catalog still decides which
+			// attributes are facets and what the group is labelled; the
+			// database decides what is in them.
+			//
+			// No orderby is passed on purpose: WooCommerce's get_terms_defaults
+			// filter orders an attribute taxonomy by its configured sort.
+			$terms = get_terms(
+				[
+					'taxonomy'   => $taxonomy,
+					'hide_empty' => true,
+				]
+			);
+
+			if ( is_wp_error( $terms ) ) {
+				$terms = [];
+			}
+
+			foreach ( $terms as $term ) {
+				// hide_empty counts any attached object; ours count published
+				// products only, so a term used solely by drafts still drops.
+				$count = $counts[ (string) $term->slug ] ?? 0;
 
 				if ( 0 === $count ) {
 					continue;
 				}
 
 				$options[] = [
-					'slug'  => $term_slug,
-					'label' => wp_specialchars_decode( (string) $term_label ),
+					'slug'  => (string) $term->slug,
+					'label' => wp_specialchars_decode( (string) $term->name ),
 					'count' => $count,
 				];
 			}
+
+			$options = $this->cap_options( $options, $slug );
 
 			if ( [] === $options ) {
 				continue;
@@ -142,6 +169,48 @@ final class FacetRepository extends AbstractRepository {
 		}
 
 		return $facets;
+	}
+
+	/**
+	 * Caps a facet's option list at a usable length.
+	 *
+	 * The imported catalogue carries 144 size terms. Rendering all of them
+	 * turns a filter into a directory, so past the cap only the most-populated
+	 * terms are kept — the long tail is reachable through search and the
+	 * category pages, and a term used by two products was never going to be
+	 * how anyone navigates. The survivors keep the taxonomy's own order so the
+	 * list does not reshuffle as stock moves.
+	 *
+	 * @param array<int, array{slug:string, label:string, count:int}> $options Options in taxonomy order.
+	 * @param string                                                  $slug    Attribute slug, for the filter.
+	 *
+	 * @return array<int, array{slug:string, label:string, count:int}>
+	 */
+	private function cap_options( array $options, string $slug ): array {
+		/**
+		 * Filters the maximum number of options one facet may show.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param int    $limit Maximum options. Zero or below disables the cap.
+		 * @param string $slug  Attribute slug.
+		 */
+		$limit = (int) apply_filters( 'bhc_facet_option_limit', 20, $slug );
+
+		if ( $limit <= 0 || count( $options ) <= $limit ) {
+			return $options;
+		}
+
+		$by_count = $options;
+
+		usort( $by_count, static fn ( array $a, array $b ): int => $b['count'] <=> $a['count'] );
+
+		$keep = array_column( array_slice( $by_count, 0, $limit ), 'slug' );
+		$keep = array_flip( $keep );
+
+		return array_values(
+			array_filter( $options, static fn ( array $option ): bool => isset( $keep[ $option['slug'] ] ) )
+		);
 	}
 
 	/**
