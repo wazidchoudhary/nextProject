@@ -6,39 +6,125 @@
 @use '../abstracts/functions' as f;
 @use '../abstracts/mixins' as m;
 
+// The hero is a full-bleed banner with the copy set over it. The earlier
+// two-column split put a product photograph shot on white beside a cream page
+// and the image had no edge to read against, so it looked like a missing asset.
+//
+// Everything here assumes the banner may be any photograph the shop owner
+// uploads: the scrim guarantees text contrast rather than trusting the image to
+// be dark in the right place, and the copy column is capped so it never runs
+// over the subject of a wide banner.
 .hero {
 	position: relative;
-	background-color: v.$color-paper-warm;
-	border-block-end: 1px solid v.$color-line;
+	isolation: isolate;
+	color: v.$color-paper;
+	background-color: #2a211a;
+	border-block-end: 1px solid rgba(0, 0, 0, 0.35);
 	overflow: hidden;
+}
+
+.hero__backdrop {
+	position: absolute;
+	inset: 0;
+	z-index: -2;
+}
+
+.hero__backdrop-image {
+	inline-size: 100%;
+	block-size: 100%;
+	object-fit: cover;
+
+	// The banner keeps its subject to the right and its negative space to the
+	// left, which is what the horizontal scrim below is built around.
+	//
+	// That split does not survive a phone: at 390px there is no left half to
+	// put copy in, and the subject ended up directly behind the headline. So
+	// below 'lg' the crop drops the subject to the bottom of the frame and the
+	// scrim runs vertically instead — the photograph becomes ground for the
+	// copy and shows itself under the stats.
+	object-position: 70% 100%;
+
+	@include m.from('lg') {
+		object-position: 78% 50%;
+	}
+}
+
+// Contrast scrim. Strong at the copy edge, clear over the subject.
+.hero::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+
+	// Vertical on small screens, where the copy sits over the whole width.
+	background: linear-gradient(
+		180deg,
+		rgba(24, 18, 13, 0.93) 0%,
+		rgba(24, 18, 13, 0.88) 55%,
+		rgba(24, 18, 13, 0.62) 100%
+	);
+
+	@include m.from('lg') {
+		background: linear-gradient(
+			100deg,
+			rgba(24, 18, 13, 0.94) 0%,
+			rgba(24, 18, 13, 0.86) 26%,
+			rgba(24, 18, 13, 0.45) 52%,
+			rgba(24, 18, 13, 0.12) 74%,
+			rgba(24, 18, 13, 0.3) 100%
+		);
+	}
+}
+
+// Without a banner the section still has to look intentional rather than empty.
+.hero--plain::before {
+	background:
+		radial-gradient(70% 80% at 82% 30%, rgba(122, 92, 62, 0.5), transparent 70%),
+		linear-gradient(100deg, #1c1611 0%, #2e241b 60%, #3a2c20 100%);
 }
 
 .hero__inner {
 	@include m.container(v.$container-wide);
 
+	position: relative;
 	display: grid;
 	gap: f.space('lg');
 	padding-block: f.space('2xl');
-	align-items: center;
+	align-items: end;
 
 	@include m.from('lg') {
-		grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
-		gap: f.space('3xl');
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: f.space('xl');
 		padding-block: f.space('3xl');
+		min-block-size: 32rem;
 	}
+}
+
+.hero__content {
+	max-inline-size: 34rem;
+}
+
+.hero__eyebrow {
+	@include m.label;
+
+	display: block;
+	color: v.$color-brass-light;
+	margin-block-end: f.space('2xs');
 }
 
 .hero__title {
 	@include m.display(v.$size-3xl);
 
+	color: v.$color-paper;
 	margin-block-end: f.space('sm');
+	text-wrap: balance;
 }
 
 .hero__body {
 	font-size: v.$size-md;
-	color: v.$color-ink;
+	color: rgba(247, 242, 232, 0.86);
 	line-height: v.$leading-relaxed;
-	max-width: 46ch;
+	max-width: 44ch;
 }
 
 .hero__actions {
@@ -46,23 +132,28 @@
 	flex-wrap: wrap;
 	gap: f.space('2xs');
 	margin-block-start: f.space('md');
-}
 
-.hero__media {
-	@include m.media-box(1.1);
+	// Stacked buttons of two different widths read as a mistake. On a phone
+	// they share the column; from 'sm' there is room for them side by side.
+	> * {
+		flex: 1 1 100%;
+		justify-content: center;
+	}
 
-	border-radius: v.$radius-sm;
-	border: 1px solid v.$color-line-strong;
-	box-shadow: v.$shadow-md;
+	@include m.from('sm') {
+		> * {
+			flex: 0 0 auto;
+		}
+	}
 }
 
 .hero__stats {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+	grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
 	gap: f.space('md');
 	margin-block-start: f.space('lg');
 	padding-block-start: f.space('sm');
-	border-block-start: 1px solid v.$color-line-strong;
+	border-block-start: 1px solid rgba(247, 242, 232, 0.28);
 	list-style: none;
 	padding-inline: 0;
 
@@ -70,14 +161,103 @@
 		display: block;
 		font-family: v.$font-display;
 		font-size: v.$size-lg;
-		color: v.$color-ink;
+		color: v.$color-paper;
 	}
 
 	span {
 		font-size: v.$size-xs;
-		color: v.$color-ink-muted;
+		color: rgba(247, 242, 232, 0.7);
 		letter-spacing: v.$tracking-wide;
 		text-transform: uppercase;
+		text-wrap: balance;
+	}
+}
+
+// A card for the newest cut piece, sitting in the banner's own space. It gives
+// the right-hand side something to anchor to and links the hero to stock.
+.hero__feature {
+	display: none;
+
+	@include m.from('lg') {
+		display: flex;
+		align-items: center;
+		gap: f.space('2xs');
+		inline-size: 19rem;
+		padding: f.space('2xs');
+		border-radius: v.$radius-md;
+		border: 1px solid rgba(247, 242, 232, 0.22);
+		// Dark enough to carry paper-toned text over any banner a shop owner
+		// uploads, not just a dark one.
+		background-color: rgba(16, 12, 9, 0.82);
+		backdrop-filter: blur(10px) saturate(1.2);
+		text-decoration: none;
+		transition: border-color 0.2s ease, transform 0.2s ease;
+
+		&:hover,
+		&:focus-visible {
+			border-color: rgba(247, 242, 232, 0.5);
+			transform: translateY(-2px);
+		}
+	}
+}
+
+.hero__feature-image {
+	inline-size: 4.5rem;
+	block-size: 4.5rem;
+	object-fit: cover;
+	border-radius: v.$radius-sm;
+	flex: 0 0 auto;
+}
+
+.hero__feature-text {
+	display: grid;
+	gap: 2px;
+	min-inline-size: 0;
+}
+
+.hero__feature-label {
+	@include m.label;
+
+	font-size: 0.6875rem;
+	color: v.$color-brass-light;
+}
+
+.hero__feature-name {
+	font-family: v.$font-display;
+	font-size: v.$size-sm;
+	line-height: 1.3;
+	color: v.$color-paper;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.hero__feature-price {
+	font-size: v.$size-xs;
+	font-weight: v.$weight-semibold;
+
+	// get_price_html() returns WooCommerce's own markup, and
+	// .woocommerce-Price-amount carries a dark ink colour from the catalogue
+	// styles. On a near-black card that renders the price almost invisible, so
+	// the colour is forced onto the descendants rather than set on the wrapper
+	// and inherited — it will not be.
+	&,
+	& * {
+		color: rgba(247, 242, 232, 0.88);
+	}
+
+	del,
+	del * {
+		color: rgba(247, 242, 232, 0.5);
+	}
+
+	del {
+		margin-inline-end: 4px;
+	}
+
+	ins {
+		text-decoration: none;
 	}
 }
 

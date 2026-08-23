@@ -49,6 +49,10 @@ final class Options {
 			'delivery_estimator_enabled' => true,
 			'schema_enabled'             => true,
 			'social_image_id'            => 0,
+			// The home page banner. A media-library id rather than a bundled
+			// theme file, so the shop owner can change the front of the store
+			// without a deploy.
+			'hero_image_id'              => 0,
 			'twitter_handle'             => '@bonehorncrafts',
 			'organization_email'         => 'info@bonehorncrafts.com',
 			'organization_phone'         => '+91 87007 53517',

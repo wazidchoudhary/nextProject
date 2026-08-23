@@ -42,7 +42,11 @@
 
 	@include m.from('lg') {
 		display: block;
-		flex: 1 1 auto;
+
+		// Was `1 1 auto`, so the nav absorbed all the free width and the search
+		// field sat permanently at its shrink size with a clipped placeholder.
+		// Taking only what it needs lets space-between hand the remainder back.
+		flex: 0 1 auto;
 	}
 }
 

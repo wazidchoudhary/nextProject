@@ -60,6 +60,31 @@ final class AdminAssets implements HookableInterface {
 			$this->plugin->version()
 		);
 
+		if ( $is_plugin ) {
+			// The settings screen carries a media-library picker for the home
+			// page banner.
+			wp_enqueue_media();
+
+			wp_enqueue_script(
+				'bhc-admin-image-field',
+				$this->plugin->url() . 'assets/js/admin-image-field.js',
+				[ 'media-editor' ],
+				$this->plugin->version(),
+				true
+			);
+
+			wp_add_inline_script(
+				'bhc-admin-image-field',
+				'window.bhcImageField = ' . wp_json_encode(
+					[
+						'frameTitle'  => __( 'Select image', 'bhc-commerce-core' ),
+						'frameButton' => __( 'Use this image', 'bhc-commerce-core' ),
+					]
+				) . ';',
+				'before'
+			);
+		}
+
 		if ( $is_product ) {
 			wp_enqueue_script(
 				'bhc-admin-product',

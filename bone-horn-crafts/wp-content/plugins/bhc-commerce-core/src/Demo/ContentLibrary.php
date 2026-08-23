@@ -295,7 +295,7 @@ final class ContentLibrary {
 				'title'   => 'Materials Made for Makers',
 				'body'    => 'Bone, horn and wood handle stock, matched in pairs and finished so your build starts right. Shipped worldwide from the bench that cut it.',
 				'cta'     => 'Shop New Arrivals',
-				'cta_alt' => 'Browse the full catalogue',
+				'cta_alt' => 'Browse the catalogue',
 			],
 			'why'        => [
 				'title' => 'Why Bone Horn Crafts',

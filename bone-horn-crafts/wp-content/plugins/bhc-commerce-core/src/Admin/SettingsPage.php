@@ -125,6 +125,12 @@ final class SettingsPage {
 		$this->checkbox_row( 'tiered_pricing_enabled', __( 'Quantity pricing', 'bhc-commerce-core' ), __( 'Apply wholesale price breaks in the cart.', 'bhc-commerce-core' ), (bool) $settings['tiered_pricing_enabled'] );
 		$this->checkbox_row( 'delivery_estimator_enabled', __( 'Delivery estimator', 'bhc-commerce-core' ), __( 'Show the destination delivery estimate on product pages.', 'bhc-commerce-core' ), (bool) $settings['delivery_estimator_enabled'] );
 		$this->checkbox_row( 'schema_enabled', __( 'Structured data', 'bhc-commerce-core' ), __( 'Output the JSON-LD schema graph.', 'bhc-commerce-core' ), (bool) $settings['schema_enabled'] );
+		$this->image_row(
+			'hero_image_id',
+			__( 'Home page banner', 'bhc-commerce-core' ),
+			(int) $settings['hero_image_id'],
+			__( 'The image behind the home page hero. A wide landscape shot works best: the headline sits over its left, and the crop holds the right edge as the window narrows, so keep the subject to the right and that side comparatively empty.', 'bhc-commerce-core' )
+		);
 		$this->text_row( 'canonical_host', __( 'Canonical host', 'bhc-commerce-core' ), (string) $settings['canonical_host'], __( 'Used to normalise absolute URLs in metadata when the site is served from a staging domain.', 'bhc-commerce-core' ) );
 		$this->text_row( 'twitter_handle', __( 'Social handle', 'bhc-commerce-core' ), (string) $settings['twitter_handle'], '' );
 		$this->text_row( 'organization_email', __( 'Public contact email', 'bhc-commerce-core' ), (string) $settings['organization_email'], '' );
@@ -180,6 +186,42 @@ final class SettingsPage {
 			(int) $value,
 			(int) $min,
 			(int) $max
+		);
+	}
+
+	/**
+	 * Renders a media-library picker.
+	 *
+	 * The value stored is an attachment id, not a URL, so the image keeps
+	 * working through a domain change and WordPress can still serve the right
+	 * size for the viewport.
+	 *
+	 * @param string $key         Setting key.
+	 * @param string $label       Field label.
+	 * @param int    $value       Current attachment id.
+	 * @param string $description Help text.
+	 */
+	private function image_row( string $key, string $label, int $value, string $description ): void {
+		$preview = $value > 0 ? wp_get_attachment_image( $value, 'medium', false, [ 'class' => 'bhc-image-field__preview' ] ) : '';
+
+		printf(
+			'<tr><th scope="row">%1$s</th><td>'
+				. '<div class="bhc-image-field" data-bhc-image-field>'
+				. '<input type="hidden" id="bhc_%2$s" name="bhc_%2$s" value="%3$s" data-bhc-image-value />'
+				. '<div class="bhc-image-field__frame" data-bhc-image-preview>%4$s</div>'
+				. '<p class="bhc-image-field__actions">'
+				. '<button type="button" class="button" data-bhc-image-choose>%5$s</button> '
+				. '<button type="button" class="button-link" data-bhc-image-clear%6$s>%7$s</button>'
+				. '</p>%8$s</div></td></tr>',
+			esc_html( $label ),
+			esc_attr( $key ),
+			esc_attr( (string) $value ),
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_get_attachment_image() returns escaped markup.
+			$preview,
+			esc_html__( 'Choose image', 'bhc-commerce-core' ),
+			$value > 0 ? '' : ' hidden',
+			esc_html__( 'Remove', 'bhc-commerce-core' ),
+			'' === $description ? '' : '<p class="description">' . esc_html( $description ) . '</p>'
 		);
 	}
 

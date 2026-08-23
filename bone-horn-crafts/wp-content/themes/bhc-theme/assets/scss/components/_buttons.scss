@@ -67,6 +67,21 @@
 	}
 }
 
+// For the hero banner, where --ghost's dark ink on a dark photograph is
+// invisible. Outlined in paper, filling to solid on hover.
+.bhc-button--onDark {
+	background-color: transparent;
+	border-color: rgba(247, 242, 232, 0.55);
+	color: v.$color-paper;
+
+	&:hover,
+	&:focus-visible {
+		background-color: v.$color-paper;
+		border-color: v.$color-paper;
+		color: v.$color-ink;
+	}
+}
+
 .bhc-button--quiet {
 	border-color: v.$color-line-strong;
 	background-color: transparent;

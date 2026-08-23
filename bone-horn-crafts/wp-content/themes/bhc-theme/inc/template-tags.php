@@ -125,6 +125,58 @@ function bhc_products_for( string $source, int $limit = 8, string $value = '' ):
 }
 
 /**
+ * The configured home page banner.
+ *
+ * A media-library attachment rather than a file bundled with the theme: the
+ * front of the store is the thing a shop owner most wants to change, and it
+ * should not need a deploy. Set it under Bone Horn Crafts → Settings, or with
+ * `wp bhc setup hero <file>`.
+ *
+ * @return int Attachment id, or 0 when none is set.
+ */
+function bhc_hero_banner_id(): int {
+	$options = bhc_service( \BoneHornCrafts\Core\Support\Options::class );
+
+	$id = null !== $options ? (int) $options->get( 'hero_image_id', 0 ) : 0;
+
+	/**
+	 * Filters the home page banner attachment.
+	 *
+	 * @param int $id Attachment id, or 0 for none.
+	 */
+	$id = (int) apply_filters( 'bhc_hero_banner_id', $id );
+
+	// A deleted attachment must not leave the hero pointing at a 404.
+	return $id > 0 && wp_attachment_is_image( $id ) ? $id : 0;
+}
+
+/**
+ * Returns the newest product that actually has a photograph.
+ *
+ * The hero used to take `bhc_products_for( 'new', 1 )` and render its image.
+ * On an imported catalogue the newest product is frequently the one whose
+ * photography has not been attached yet, and the hero's whole media column is
+ * behind an `if` — so the section silently collapsed to a column of text with
+ * a large empty space beside it, which reads as a broken page rather than a
+ * design choice.
+ *
+ * Looking a little further down the same rail costs one already-cached call
+ * and means the hero only falls back when the store has no product imagery at
+ * all.
+ *
+ * @param int $depth How many of the newest products to consider.
+ */
+function bhc_hero_product( int $depth = 12 ): ?WC_Product {
+	foreach ( bhc_products_for( 'new', max( 1, $depth ) ) as $product ) {
+		if ( $product instanceof WC_Product && (int) $product->get_image_id() > 0 ) {
+			return $product;
+		}
+	}
+
+	return null;
+}
+
+/**
  * Warms the caches for every product rail a page is about to render.
  *
  * ProductRepository::prime() batches its lookups, but it can only batch what it

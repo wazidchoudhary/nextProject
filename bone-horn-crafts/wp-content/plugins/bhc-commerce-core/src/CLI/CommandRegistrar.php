@@ -58,6 +58,7 @@ final class CommandRegistrar {
 
 		$this->register_pages_command();
 		$this->register_contact_command();
+		$this->register_hero_command();
 
 		WP_CLI::add_command(
 			'bhc setup accounts',
@@ -93,6 +94,100 @@ final class CommandRegistrar {
 			[
 				'shortdesc' => 'Turn on customer registration on My Account and at checkout.',
 				'longdesc'  => "Three independent switches control whether people can create an account: WordPress's own users_can_register, WooCommerce's My Account registration setting, and its checkout signup setting. Setting one and testing that page makes the other two look fine, which is why a store can appear to offer accounts and not actually do so.\n\nApplied automatically when the plugin's schema installs. Run this to apply it to a store that predates that, or after deliberately changing one of the settings back.\n\n## EXAMPLES\n\n    wp bhc setup accounts",
+			]
+		);
+	}
+
+	/**
+	 * `wp bhc setup hero`.
+	 */
+	private function register_hero_command(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc setup hero',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				$options = $container->get( \BoneHornCrafts\Core\Support\Options::class );
+				$source  = (string) ( $args[0] ?? '' );
+
+				if ( '' === $source ) {
+					$current = (int) $options->get( 'hero_image_id', 0 );
+
+					if ( $current > 0 ) {
+						WP_CLI::log( sprintf( '  id  %d', $current ) );
+						WP_CLI::log( sprintf( '  url %s', (string) wp_get_attachment_url( $current ) ) );
+						WP_CLI::success( 'A home page banner is set.' );
+
+						return;
+					}
+
+					WP_CLI::warning( 'No banner set. Pass an image file or an attachment id.' );
+
+					return;
+				}
+
+				// A bare number is an attachment that is already in the library.
+				if ( ctype_digit( $source ) ) {
+					$attachment = (int) $source;
+
+					if ( ! wp_attachment_is_image( $attachment ) ) {
+						WP_CLI::error( sprintf( '%d is not an image attachment.', $attachment ) );
+					}
+				} else {
+					if ( ! is_readable( $source ) ) {
+						WP_CLI::error( sprintf( 'Cannot read %s', $source ) );
+					}
+
+					require_once ABSPATH . 'wp-admin/includes/media.php';
+					require_once ABSPATH . 'wp-admin/includes/file.php';
+					require_once ABSPATH . 'wp-admin/includes/image.php';
+
+					// Copied into a temp file first: media_handle_sideload()
+					// *moves* what it is given, and a run that pointed straight
+					// at the operator's own file would delete it.
+					$temp = wp_tempnam( basename( $source ) );
+
+					if ( ! $temp || ! copy( $source, $temp ) ) {
+						WP_CLI::error( 'Could not stage the file for import.' );
+					}
+
+					$attachment = media_handle_sideload(
+						[
+							'name'     => basename( $source ),
+							'tmp_name' => $temp,
+						],
+						0,
+						sprintf(
+							/* translators: %s: store name. */
+							__( '%s home page banner', 'bhc-commerce-core' ),
+							get_bloginfo( 'name' )
+						)
+					);
+
+					if ( is_wp_error( $attachment ) ) {
+						if ( file_exists( $temp ) ) {
+							// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Removing our own temp copy after a failed import.
+							unlink( $temp );
+						}
+
+						WP_CLI::error( $attachment->get_error_message() );
+					}
+
+					$attachment = (int) $attachment;
+				}
+
+				$settings                  = $options->all();
+				$settings['hero_image_id'] = $attachment;
+
+				$options->save( $settings );
+
+				WP_CLI::log( sprintf( '  id  %d', $attachment ) );
+				WP_CLI::log( sprintf( '  url %s', (string) wp_get_attachment_url( $attachment ) ) );
+				WP_CLI::success( 'Home page banner set. Flush caches to see it: wp bhc cache flush' );
+			},
+			[
+				'shortdesc' => 'Set the home page hero banner.',
+				'longdesc'  => "The banner is stored as a media-library attachment rather than a file bundled with the theme, so it can be changed without a deploy — from here, or under Bone Horn Crafts \u2192 Settings.\n\nA landscape image works best: the copy is set over the left of it, and the crop holds the right edge as the viewport narrows, so keep the subject to the right and leave the left comparatively empty.\n\nRun with no argument to report the banner currently set.\n\n## OPTIONS\n\n[<file>]\n: Path to an image to import, or the id of an attachment already in the library.\n\n## EXAMPLES\n\n    wp bhc setup hero\n    wp bhc setup hero ~/banner.jpg\n    wp bhc setup hero 1234",
 			]
 		);
 	}

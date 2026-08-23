@@ -30,6 +30,11 @@ $color-accent: #7a5c3e;
 $color-accent-dark: #5b4229;
 $color-brass: #a9832f;
 
+// The brass accent is tuned for dark type on pale paper. On the hero banner it
+// sits on near-black, where #a9832f measures only 3.1:1 — this is the same hue
+// lifted to 8.4:1 for use on dark grounds.
+$color-brass-light: #d8b25e;
+
 // Low-stock messaging is the copy a shopper most needs to read, so it cannot
 // borrow the decorative brass: #a9832f measures 2.92-3.46:1 against the three
 // paper tones and fails WCAG AA for body text. Same hue, taken to 4.95-5.87:1.

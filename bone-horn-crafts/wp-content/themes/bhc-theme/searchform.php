@@ -29,7 +29,7 @@ $bhc_search_label = isset( $args['aria_label'] ) && '' !== (string) $args['aria_
 		id="<?php echo esc_attr( $bhc_search_id ); ?>"
 		name="s"
 		value="<?php echo esc_attr( get_search_query() ); ?>"
-		placeholder="<?php esc_attr_e( 'Search material or SKU', 'bhc-theme' ); ?>"
+		placeholder="<?php esc_attr_e( 'Search or SKU', 'bhc-theme' ); ?>"
 		autocomplete="off"
 	/>
 

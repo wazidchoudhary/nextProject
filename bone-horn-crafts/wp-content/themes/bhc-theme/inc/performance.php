@@ -198,8 +198,13 @@ function bhc_resource_hints(): void {
 	$lcp_image_id = bhc_lcp_image_id();
 
 	if ( $lcp_image_id > 0 ) {
-		$src    = wp_get_attachment_image_url( $lcp_image_id, 'bhc-hero' );
-		$srcset = wp_get_attachment_image_srcset( $lcp_image_id, 'bhc-hero' );
+		// The front page renders the banner at full width, so the preload has
+		// to request the same candidate the markup will: a 'bhc-hero' preload
+		// beside a 'full' <img> downloads two different files.
+		$size = is_front_page() ? 'full' : 'bhc-hero';
+
+		$src    = wp_get_attachment_image_url( $lcp_image_id, $size );
+		$srcset = wp_get_attachment_image_srcset( $lcp_image_id, $size );
 
 		if ( is_string( $src ) ) {
 			printf(
@@ -236,11 +241,15 @@ function bhc_lcp_image_id(): int {
 	// already emitted its hints. Resolving it here means the preload is in the
 	// head where it is useful. The lookup is the same cached repository call
 	// the hero itself makes, so it costs nothing extra.
-	if ( is_front_page() && function_exists( 'bhc_products_for' ) ) {
-		$hero = bhc_products_for( 'new', 1 )[0] ?? null;
+	// The front page LCP element is the hero banner. It is a background image
+	// inside the section, so the preload scanner finds it in the markup, but
+	// the head hint still gets it started ahead of the stylesheet's own
+	// dependencies.
+	if ( is_front_page() && function_exists( 'bhc_hero_banner_id' ) ) {
+		$banner = bhc_hero_banner_id();
 
-		if ( $hero instanceof WC_Product ) {
-			return (int) $hero->get_image_id();
+		if ( $banner > 0 ) {
+			return $banner;
 		}
 	}
 

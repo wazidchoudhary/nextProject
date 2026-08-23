@@ -14,7 +14,7 @@ declare( strict_types = 1 );
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'BHC_THEME_VERSION', '1.1.0' );
+define( 'BHC_THEME_VERSION', '1.2.0' );
 define( 'BHC_THEME_DIR', get_template_directory() );
 define( 'BHC_THEME_URI', get_template_directory_uri() );
 

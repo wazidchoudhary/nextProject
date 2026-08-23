@@ -48,7 +48,16 @@
 	padding: 0;
 	list-style: none;
 	justify-content: center;
-	flex-wrap: wrap;
+
+	// The nav only renders from 'lg', where it must stay on one line. Wrapping
+	// let the last item drop to a second row as soon as the account links and
+	// the search field took the space — a two-line header on a 1440px desktop.
+	// The search box is the element that yields instead; see .header-search.
+	flex-wrap: nowrap;
+
+	> li {
+		white-space: nowrap;
+	}
 }
 
 .primary-nav__list a {
@@ -208,8 +217,10 @@
 		display: none;
 	}
 
+	// Shrinks before the nav does: a slightly narrower search field costs
+	// nothing, a wrapped navigation costs a whole row of header height.
 	flex: 0 1 15rem;
-	min-inline-size: 11rem;
+	min-inline-size: 8.5rem;
 }
 
 // Mobile bar: Logo | Search | Cart | Menu. Account and wishlist move into the
@@ -281,7 +292,7 @@
 .header-account {
 	display: none;
 	align-items: center;
-	gap: f.space('2xs');
+	gap: f.space('3xs');
 	white-space: nowrap;
 
 	@include m.from('md') {
@@ -289,33 +300,43 @@
 	}
 }
 
+// Deliberately *not* the label mixin. Uppercase plus wide tracking turned
+// "Create account" into a 170px slab, and between it and the search field the
+// primary nav ran out of room and wrapped "Contact" onto a second row — a
+// two-line header on a 1440px desktop. Sentence case at the body font is the
+// same words in roughly half the width.
 .header-account__link {
-	@include m.label;
-
-	color: v.$color-ink;
+	font-family: v.$font-body;
+	font-size: v.$size-sm;
+	font-weight: v.$weight-semibold;
+	line-height: 1;
+	color: v.$color-ink-soft;
 	text-decoration: none;
-	padding-block: f.space('3xs');
+	white-space: nowrap;
+	padding: f.space('3xs') f.space('2xs');
+	border-radius: v.$radius-pill;
+	transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
 
 	&:hover,
 	&:focus-visible {
 		color: v.$color-accent-dark;
-		text-decoration: underline;
-		text-underline-offset: 3px;
+		background-color: rgba(122, 92, 62, 0.08);
 	}
 
-	// The second link is the one being asked for, so it carries the emphasis.
+	// The second link is the one being asked for, so it carries the emphasis —
+	// but as an outlined pill rather than a filled block. At this size a solid
+	// dark rectangle competes with the cart and wishlist icons beside it
+	// instead of sitting alongside them.
 	&--cta {
-		color: v.$color-surface;
-		background-color: v.$color-accent-dark;
-		border-radius: v.$radius-sm;
-		padding: f.space('3xs') f.space('2xs');
-		text-decoration: none;
+		color: v.$color-accent-dark;
+		border: 1px solid v.$color-line-strong;
+		padding-inline: f.space('xs');
 
 		&:hover,
 		&:focus-visible {
 			color: v.$color-surface;
-			background-color: v.$color-ink;
-			text-decoration: none;
+			background-color: v.$color-accent-dark;
+			border-color: v.$color-accent-dark;
 		}
 	}
 }
