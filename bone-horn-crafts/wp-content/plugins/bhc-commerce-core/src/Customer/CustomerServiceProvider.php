@@ -48,6 +48,7 @@ final class CustomerServiceProvider extends AbstractServiceProvider {
 	public function register( ContainerInterface $container ): void {
 		/** @var Container $container */
 		$container->singleton( WholesaleService::class, static fn (): WholesaleService => new WholesaleService() );
+		$container->singleton( AccountSetup::class, static fn (): AccountSetup => new AccountSetup() );
 
 		$container->singleton(
 			AccountEndpoints::class,
@@ -62,6 +63,17 @@ final class CustomerServiceProvider extends AbstractServiceProvider {
 	 */
 	public function boot( ContainerInterface $container ): void {
 		$this->hook( $container, WholesaleService::class );
+
+		// Customer registration is store policy, not sample data, so it is
+		// applied when the schema installs rather than when demo content is
+		// seeded. A store that imported a real catalogue and never ran the
+		// seeder previously got the code and none of the settings.
+		add_action(
+			'bhc_schema_installed',
+			static function () use ( $container ): void {
+				$container->get( AccountSetup::class )->apply_once();
+			}
+		);
 
 		$context = $this->context ?? new Context();
 

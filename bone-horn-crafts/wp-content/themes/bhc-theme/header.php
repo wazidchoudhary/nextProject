@@ -75,10 +75,30 @@ defined( 'ABSPATH' ) || exit;
 				<span class="screen-reader-text"><?php esc_html_e( 'Search', 'bhc-theme' ); ?></span>
 			</button>
 
-			<a class="bhc-icon-button bhc-icon-button--desktop" href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
-				<?php bhc_icon( 'account' ); ?>
-				<span class="screen-reader-text"><?php esc_html_e( 'Your account', 'bhc-theme' ); ?></span>
-			</a>
+			<?php
+			// Signed out, the account icon alone is not an invitation — nothing
+			// on the page says an account can be created at all. Named links are
+			// the entry point; the icon returns for signed-in customers, who
+			// already know what it does.
+			if ( is_user_logged_in() ) :
+				?>
+				<a class="bhc-icon-button bhc-icon-button--desktop" href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
+					<?php bhc_icon( 'account' ); ?>
+					<span class="screen-reader-text"><?php esc_html_e( 'Your account', 'bhc-theme' ); ?></span>
+				</a>
+			<?php else : ?>
+				<span class="header-account">
+					<a class="header-account__link" href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
+						<?php esc_html_e( 'Sign in', 'bhc-theme' ); ?>
+					</a>
+
+					<?php if ( bhc_registration_open() ) : ?>
+						<a class="header-account__link header-account__link--cta" href="<?php echo esc_url( bhc_register_url() ); ?>">
+							<?php esc_html_e( 'Create account', 'bhc-theme' ); ?>
+						</a>
+					<?php endif; ?>
+				</span>
+			<?php endif; ?>
 
 			<a class="bhc-icon-button bhc-icon-button--desktop" href="<?php echo esc_url( bhc_wishlist_url() ); ?>">
 				<?php bhc_icon( 'wishlist' ); ?>
@@ -139,6 +159,15 @@ defined( 'ABSPATH' ) || exit;
 		</nav>
 
 		<ul class="mobile-drawer__account">
+			<?php if ( ! is_user_logged_in() && bhc_registration_open() ) : ?>
+				<li>
+					<a href="<?php echo esc_url( bhc_register_url() ); ?>">
+						<?php bhc_icon( 'account', 20 ); ?>
+						<?php esc_html_e( 'Create account', 'bhc-theme' ); ?>
+					</a>
+				</li>
+			<?php endif; ?>
+
 			<li>
 				<a href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
 					<?php bhc_icon( 'account', 20 ); ?>

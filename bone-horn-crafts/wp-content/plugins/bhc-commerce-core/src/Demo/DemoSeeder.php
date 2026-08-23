@@ -216,41 +216,13 @@ final class DemoSeeder {
 	/**
 	 * Turns on customer accounts.
 	 *
-	 * A store that sells to trade buyers needs accounts: they reorder, they
-	 * track shipments, and they expect their addresses to be remembered. None
-	 * of that is possible while registration is off, and WooCommerce ships with
-	 * it off — `form-login.php` renders its register column only when
-	 * `woocommerce_enable_myaccount_registration` is `yes`, so with the default
-	 * the My Account page offers a login form and no way to create the account
-	 * it is asking you to log into.
-	 *
-	 * Three switches have to agree, which is why this was missed: WordPress's
-	 * own `users_can_register` gates registration at the platform level,
-	 * WooCommerce's `..._myaccount_registration` controls the My Account page,
-	 * and `..._signup_and_login_from_checkout` controls the checkout. Setting
-	 * one of the three and testing that page makes the other two look fine.
-	 *
-	 * Usernames and passwords are generated rather than chosen, because the
-	 * fewer fields between a buyer and an account the better, and a generated
-	 * password is stronger than one picked at a checkout.
+	 * Delegates to {@see \BoneHornCrafts\Core\Customer\AccountSetup}, which
+	 * owns these settings. They used to live here, which meant a store that
+	 * imported a real catalogue and never ran the seeder never got them —
+	 * registration is store policy, not demo content.
 	 */
 	private function configure_accounts(): void {
-		update_option( 'users_can_register', 1 );
-		update_option( 'default_role', 'customer' );
-
-		update_option( 'woocommerce_enable_myaccount_registration', 'yes' );
-		update_option( 'woocommerce_enable_signup_and_login_from_checkout', 'yes' );
-		update_option( 'woocommerce_enable_checkout_login_reminder', 'yes' );
-		update_option( 'woocommerce_registration_generate_username', 'yes' );
-		update_option( 'woocommerce_registration_generate_password', 'yes' );
-
-		// Guest checkout stays on. Forcing an account before a first order is
-		// the single most reliable way to lose one.
-		update_option( 'woocommerce_enable_guest_checkout', 'yes' );
-
-		// A customer who just registered should land in their account, not on
-		// wp-admin, and should never see the admin bar.
-		update_option( 'woocommerce_lock_down_admin', 'yes' );
+		( new \BoneHornCrafts\Core\Customer\AccountSetup() )->apply();
 	}
 
 	/**

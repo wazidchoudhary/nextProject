@@ -272,3 +272,50 @@
 	font-size: v.$size-xs;
 	color: v.$color-ink-muted;
 }
+
+// Signed-out account links.
+//
+// Named links rather than the account icon: an icon says "there is an account
+// area", not "you may create one", and a store that wants registrations has to
+// say so. The icon returns once somebody is signed in.
+.header-account {
+	display: none;
+	align-items: center;
+	gap: f.space('2xs');
+	white-space: nowrap;
+
+	@include m.from('md') {
+		display: inline-flex;
+	}
+}
+
+.header-account__link {
+	@include m.label;
+
+	color: v.$color-ink;
+	text-decoration: none;
+	padding-block: f.space('3xs');
+
+	&:hover,
+	&:focus-visible {
+		color: v.$color-accent-dark;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	// The second link is the one being asked for, so it carries the emphasis.
+	&--cta {
+		color: v.$color-surface;
+		background-color: v.$color-accent-dark;
+		border-radius: v.$radius-sm;
+		padding: f.space('3xs') f.space('2xs');
+		text-decoration: none;
+
+		&:hover,
+		&:focus-visible {
+			color: v.$color-surface;
+			background-color: v.$color-ink;
+			text-decoration: none;
+		}
+	}
+}

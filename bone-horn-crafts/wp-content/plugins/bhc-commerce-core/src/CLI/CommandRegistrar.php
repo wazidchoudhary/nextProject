@@ -47,6 +47,51 @@ final class CommandRegistrar {
 		$this->register_demo_commands();
 		$this->register_import_commands();
 		$this->register_payment_commands();
+		$this->register_setup_commands();
+	}
+
+	/**
+	 * `wp bhc setup accounts`.
+	 */
+	private function register_setup_commands(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc setup accounts',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				unset( $args, $assoc_args );
+
+				$setup = $container->get( \BoneHornCrafts\Core\Customer\AccountSetup::class );
+				$drift = $setup->drift();
+
+				if ( [] === $drift ) {
+					WP_CLI::success( 'Customer accounts are already configured. Nothing to change.' );
+
+					return;
+				}
+
+				foreach ( $drift as $option => $values ) {
+					WP_CLI::log(
+						sprintf(
+							'  %-52s %s -> %s',
+							$option,
+							wp_json_encode( $values['actual'] ),
+							wp_json_encode( $values['expected'] )
+						)
+					);
+				}
+
+				$setup->apply();
+
+				WP_CLI::success(
+					sprintf( '%d setting(s) applied. Registration is now open at the My Account page and at checkout.', count( $drift ) )
+				);
+			},
+			[
+				'shortdesc' => 'Turn on customer registration on My Account and at checkout.',
+				'longdesc'  => "Three independent switches control whether people can create an account: WordPress's own users_can_register, WooCommerce's My Account registration setting, and its checkout signup setting. Setting one and testing that page makes the other two look fine, which is why a store can appear to offer accounts and not actually do so.\n\nApplied automatically when the plugin's schema installs. Run this to apply it to a store that predates that, or after deliberately changing one of the settings back.\n\n## EXAMPLES\n\n    wp bhc setup accounts",
+			]
+		);
 	}
 
 	/**

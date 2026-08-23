@@ -398,3 +398,44 @@ function bhc_legal_menu_fallback(): void {
 
 	printf( '<ul class="footer-legal-menu">%s</ul>', implode( '', $items ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each item is escaped as it is built above.
 }
+
+/**
+ * Whether visitors can create an account.
+ *
+ * Both switches have to agree: WordPress gates registration at the platform
+ * level and WooCommerce controls the My Account form independently. Offering a
+ * "Create account" link that leads to a page with no registration form is worse
+ * than not offering one.
+ */
+function bhc_registration_open(): bool {
+	$setup = bhc_service( \BoneHornCrafts\Core\Customer\AccountSetup::class );
+
+	if ( null !== $setup ) {
+		return $setup->registration_open();
+	}
+
+	return (bool) get_option( 'users_can_register' )
+		&& 'yes' === (string) get_option( 'woocommerce_enable_myaccount_registration' );
+}
+
+/**
+ * URL of the registration form.
+ *
+ * WooCommerce renders login and registration on one page, so there is no
+ * separate URL to link to. The fragment targets the register column, which the
+ * browser scrolls to — a link that lands someone on a login form and leaves
+ * them to find the other half of the page is the reason people assume a store
+ * has no signup.
+ */
+function bhc_register_url(): string {
+	$url = bhc_wc_page_url( 'myaccount' );
+
+	/**
+	 * Filters the registration URL.
+	 *
+	 * Point this at a dedicated page if the store grows one.
+	 *
+	 * @param string $url Registration URL.
+	 */
+	return (string) apply_filters( 'bhc_register_url', $url . '#customer_login' );
+}
