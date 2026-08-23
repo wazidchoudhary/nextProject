@@ -9,14 +9,41 @@ declare( strict_types = 1 );
 
 defined( 'ABSPATH' ) || exit;
 
-$copy     = isset( $args['copy'] ) && is_array( $args['copy'] ) ? $args['copy'] : [];
-$products = bhc_products_for( 'bestsellers', 6 );
+$copy = isset( $args['copy'] ) && is_array( $args['copy'] ) ? $args['copy'] : [];
 
-if ( count( $products ) < 6 ) {
-	$products = array_merge( $products, bhc_products_for( 'new', 6 - count( $products ) ) );
+// Deliberately the *secondary* gallery shots, not the catalogue image. This
+// strip used to reuse the bestsellers' primary images — the same six pictures
+// already on screen two sections higher — which made it read as padding rather
+// than a look at the bench. Every product carries two further photographs that
+// appear nowhere else on the home page.
+$gallery_items = [];
+
+foreach ( bhc_products_for( 'new', 12 ) as $gallery_product ) {
+	foreach ( $gallery_product->get_gallery_image_ids() as $gallery_image_id ) {
+		$gallery_items[ (int) $gallery_image_id ] = $gallery_product;
+
+		// One frame per product, so the strip spans the catalogue rather than
+		// showing the same piece from three angles.
+		break;
+	}
+
+	if ( count( $gallery_items ) >= 6 ) {
+		break;
+	}
 }
 
-if ( [] === $products ) {
+if ( count( $gallery_items ) < 6 ) {
+	// A catalogue without gallery images still gets a strip.
+	foreach ( bhc_products_for( 'bestsellers', 6 ) as $gallery_product ) {
+		$image_id = (int) $gallery_product->get_image_id();
+
+		if ( $image_id > 0 && ! isset( $gallery_items[ $image_id ] ) ) {
+			$gallery_items[ $image_id ] = $gallery_product;
+		}
+	}
+}
+
+if ( [] === $gallery_items ) {
 	return;
 }
 ?>
@@ -30,19 +57,20 @@ if ( [] === $products ) {
 		?>
 
 		<div class="gallery-strip">
-			<?php foreach ( array_slice( $products, 0, 6 ) as $gallery_product ) : ?>
+			<?php foreach ( array_slice( $gallery_items, 0, 6, true ) as $gallery_image_id => $gallery_product ) : ?>
 				<figure>
 					<a href="<?php echo esc_url( (string) $gallery_product->get_permalink() ); ?>">
 						<?php
 						echo wp_get_attachment_image(
-							(int) $gallery_product->get_image_id(),
+							(int) $gallery_image_id,
 							'bhc-card',
 							false,
 							[
 								'loading'  => 'lazy',
 								'decoding' => 'async',
 								'sizes'    => '(min-width: 48em) 16vw, 45vw',
-								'alt'      => esc_attr( $gallery_product->get_name() ),
+								/* translators: %s: product name. */
+								'alt'      => esc_attr( sprintf( __( '%s on the workshop bench', 'bhc-theme' ), $gallery_product->get_name() ) ),
 							]
 						);
 						?>
