@@ -20,6 +20,53 @@ real launch**, or reconfigure them deliberately. The seeder will not overwrite a
 gateway that is already enabled, so it cannot silently undo your settings on a
 re-run — but it also will not turn them off for you.
 
+### PayPal
+
+The store takes payment through **WooCommerce PayPal Payments** (`ppcp-gateway`),
+the official free extension. It works with the classic shortcode checkout this
+build uses.
+
+**Credentials live in `wp-config.php`, never in the database.** The gateway
+stores its client id and secret in the `woocommerce-ppcp-settings` option by
+default, which puts a live secret into every database dump, every staging clone
+made from production, and every backup that gets emailed around.
+`Payments\PayPalCredentials` reads them from constants instead and injects them
+on read; it also strips those keys again on write, so opening the settings
+screen and pressing Save cannot quietly persist to the database exactly what
+this arrangement exists to keep out of it.
+
+```php
+define( 'BHC_PAYPAL_CLIENT_ID',     'your-client-id' );
+define( 'BHC_PAYPAL_CLIENT_SECRET', 'your-secret' );
+define( 'BHC_PAYPAL_SANDBOX',       false );
+```
+
+Define nothing and the plugin behaves normally, storing its own credentials —
+the right default for a store connected through PayPal's onboarding button.
+
+**Verify before trusting it:**
+
+```bash
+wp bhc payments verify
+```
+
+Performs a client-credentials OAuth request. Nothing is charged and nothing is
+created; it exchanges the pair for a bearer token, which is what the gateway
+does before taking a payment. A typo, a sandbox key in a live store, or a secret
+rotated last week all look identical from inside WordPress — this is the only
+check that distinguishes them, and it is far better to fail in a terminal on a
+Tuesday than at a customer's checkout on a Friday.
+
+`wp bhc health-check` reports which gateways reach checkout, but deliberately
+makes no network call: a health screen that phones PayPal on every load hangs
+when the network is the thing being diagnosed.
+
+**Demo gateways are guarded, not merely documented.** The seeder skips them
+entirely on production and whenever a real gateway is already live, and
+`Payments\GatewayGuard` removes them from checkout on production even if they
+were enabled some other way. They are matched on the seeded demo title, so bank
+transfer configured by hand with real account details is left alone.
+
 **`tools/dev-mu-plugins/bhc-sqlite-dev.php`.** `bin/setup-demo.sh` copies this
 into `wp-content/mu-plugins/` **only when `DB_HOST` is unset**, i.e. only on the
 SQLite build. It returns `0` from `woocommerce_order_hold_stock_minutes` because

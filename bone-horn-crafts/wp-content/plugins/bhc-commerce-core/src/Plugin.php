@@ -119,6 +119,7 @@ final class Plugin {
 			Recommendations\RecommendationsServiceProvider::class,
 			Search\SearchServiceProvider::class,
 			Checkout\CheckoutServiceProvider::class,
+			Payments\PaymentsServiceProvider::class,
 			Order\OrderServiceProvider::class,
 			Customer\CustomerServiceProvider::class,
 			Analytics\AnalyticsServiceProvider::class,

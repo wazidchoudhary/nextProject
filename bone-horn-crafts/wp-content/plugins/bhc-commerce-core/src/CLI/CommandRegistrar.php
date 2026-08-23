@@ -46,6 +46,42 @@ final class CommandRegistrar {
 		$this->register_health_command();
 		$this->register_demo_commands();
 		$this->register_import_commands();
+		$this->register_payment_commands();
+	}
+
+	/**
+	 * `wp bhc payments verify`.
+	 */
+	private function register_payment_commands(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc payments verify',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				unset( $args, $assoc_args );
+
+				$result = $container->get( \BoneHornCrafts\Core\Payments\PayPalVerifier::class )->verify();
+
+				WP_CLI::log( sprintf( 'Mode:   %s', $result['mode'] ) );
+				WP_CLI::log( sprintf( 'Status: %d', $result['status'] ) );
+
+				if ( '' !== $result['scopes'] ) {
+					WP_CLI::log( sprintf( 'Scopes: %s', substr( $result['scopes'], 0, 200 ) ) );
+				}
+
+				if ( $result['ok'] ) {
+					WP_CLI::success( $result['message'] );
+
+					return;
+				}
+
+				WP_CLI::error( $result['message'] );
+			},
+			[
+				'shortdesc' => 'Ask PayPal whether the configured credentials work.',
+				'longdesc'  => "Performs a client-credentials OAuth request against PayPal. Nothing is charged and nothing is created — it only exchanges the configured client id and secret for a bearer token, which is the same thing the gateway does before taking a payment.\n\nCredentials come from BHC_PAYPAL_CLIENT_ID and BHC_PAYPAL_CLIENT_SECRET in wp-config.php, so they never reach the database.\n\n## EXAMPLES\n\n    wp bhc payments verify",
+			]
+		);
 	}
 
 	/**

@@ -216,6 +216,87 @@ final class HealthReport {
 			),
 		];
 
+		$checks[] = $this->payment_check();
+
 		return $checks;
+	}
+
+	/**
+	 * Reports whether the store can actually take money.
+	 *
+	 * Deliberately does not call PayPal. A health screen that makes a network
+	 * request on every load is a health screen that hangs when the network is
+	 * the thing that is broken, and this one is loaded to diagnose exactly that
+	 * kind of outage. It reports what is configured; `wp bhc payments verify`
+	 * is the command that asks PayPal whether the configuration is any good.
+	 *
+	 * @return array{label:string, status:string, detail:string}
+	 */
+	private function payment_check(): array {
+		$label = __( 'Payments', 'bhc-commerce-core' );
+
+		if ( ! function_exists( 'WC' ) || null === WC()->payment_gateways() ) {
+			return [
+				'label'  => $label,
+				'status' => 'warn',
+				'detail' => __( 'WooCommerce is not available, so no gateway could be inspected.', 'bhc-commerce-core' ),
+			];
+		}
+
+		$demo_titles = [ 'Pay on invoice (demo)', 'Bank transfer (demo)' ];
+		$real        = [];
+		$demo        = [];
+
+		foreach ( WC()->payment_gateways()->get_available_payment_gateways() as $id => $gateway ) {
+			if ( in_array( $gateway->get_title(), $demo_titles, true ) ) {
+				$demo[] = (string) $id;
+
+				continue;
+			}
+
+			$real[] = (string) $id;
+		}
+
+		if ( [] !== $demo ) {
+			return [
+				'label'  => $label,
+				'status' => 'warn',
+				'detail' => sprintf(
+					/* translators: 1: comma-separated gateway ids, 2: comma-separated gateway ids or "none". */
+					__( 'Demo gateways still live at checkout (%1$s) — they accept an order without taking payment. Real gateways: %2$s.', 'bhc-commerce-core' ),
+					implode( ', ', $demo ),
+					[] === $real ? __( 'none', 'bhc-commerce-core' ) : implode( ', ', $real )
+				),
+			];
+		}
+
+		if ( [] === $real ) {
+			return [
+				'label'  => $label,
+				'status' => 'fail',
+				'detail' => __( 'No payment gateway is available. Checkout will fail at the last step.', 'bhc-commerce-core' ),
+			];
+		}
+
+		$paypal = defined( 'BHC_PAYPAL_CLIENT_ID' ) && '' !== (string) constant( 'BHC_PAYPAL_CLIENT_ID' )
+			? sprintf(
+				/* translators: %s: live or sandbox. */
+				__( ' PayPal credentials come from wp-config (%s).', 'bhc-commerce-core' ),
+				defined( 'BHC_PAYPAL_SANDBOX' ) && constant( 'BHC_PAYPAL_SANDBOX' )
+					? __( 'sandbox', 'bhc-commerce-core' )
+					: __( 'live', 'bhc-commerce-core' )
+			)
+			: '';
+
+		return [
+			'label'  => $label,
+			'status' => 'pass',
+			'detail' => sprintf(
+				/* translators: 1: comma-separated gateway ids, 2: optional PayPal note. */
+				__( 'Available at checkout: %1$s.%2$s', 'bhc-commerce-core' ),
+				implode( ', ', $real ),
+				$paypal
+			),
+		];
 	}
 }

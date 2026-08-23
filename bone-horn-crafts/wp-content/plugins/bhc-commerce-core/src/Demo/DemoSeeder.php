@@ -958,21 +958,39 @@ final class DemoSeeder {
 	}
 
 	/**
-	 * Enables the offline payment gateways so the store can take an order.
+	 * Enables the offline payment gateways so a demo store can take an order.
 	 *
 	 * A fresh WooCommerce install has every gateway disabled, which means a
-	 * seeded demo store looks complete and then fails at the last step of
-	 * checkout with "Invalid payment method". Enabling the two offline gateways
-	 * is what makes the purchase flow demonstrable end to end.
+	 * seeded demo looks complete and then fails at the last step of checkout
+	 * with "Invalid payment method". Enabling the two offline gateways is what
+	 * makes the purchase flow demonstrable end to end.
 	 *
-	 * Both are labelled "(demo)" on the checkout form on purpose: nothing here
-	 * processes a payment, and nobody looking at the store should be left
-	 * wondering whether it does. A real deployment configures a real gateway
-	 * and turns these off — see docs/deployment.md.
+	 * Both are labelled "(demo)" on purpose: nothing here processes a payment,
+	 * and nobody looking at the store should be left wondering whether it does.
+	 *
+	 * **Skipped entirely on production, and skipped whenever a real gateway is
+	 * already live.** Relying on somebody remembering to turn these off after
+	 * a seed is not a control — re-running the seeder on a configured store
+	 * would otherwise quietly put two payment methods that take no money back
+	 * on the checkout beside the one that does. `Payments\GatewayGuard` is the
+	 * second half of that: it removes them from checkout on production even if
+	 * they were enabled some other way.
 	 *
 	 * @return int Number of gateways enabled.
 	 */
 	public function seed_payment_gateways(): int {
+		if ( 'production' === wp_get_environment_type() ) {
+			$this->report( 'Production environment — demo payment gateways not enabled' );
+
+			return 0;
+		}
+
+		if ( $this->has_real_gateway() ) {
+			$this->report( 'A real payment gateway is configured — demo gateways not enabled' );
+
+			return 0;
+		}
+
 		$gateways = [
 			'cod'  => [
 				'enabled'     => 'yes',
@@ -1008,6 +1026,34 @@ final class DemoSeeder {
 		}
 
 		return $enabled;
+	}
+
+	/**
+	 * Whether a gateway that actually takes money is enabled.
+	 *
+	 * Checks for any enabled gateway that is not one of the two offline ones
+	 * the seeder itself manages. Cheques and bank transfer configured by hand
+	 * with real account details are a merchant's decision, so those count only
+	 * when their title is no longer the seeded demo copy.
+	 */
+	private function has_real_gateway(): bool {
+		if ( ! function_exists( 'WC' ) || null === WC()->payment_gateways() ) {
+			return false;
+		}
+
+		$demo_titles = [ 'Pay on invoice (demo)', 'Bank transfer (demo)' ];
+
+		foreach ( WC()->payment_gateways()->payment_gateways() as $gateway ) {
+			if ( 'yes' !== $gateway->enabled ) {
+				continue;
+			}
+
+			if ( ! in_array( $gateway->get_title(), $demo_titles, true ) ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
