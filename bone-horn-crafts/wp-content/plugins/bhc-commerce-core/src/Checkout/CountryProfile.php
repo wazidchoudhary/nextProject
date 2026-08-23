@@ -209,16 +209,16 @@ final class CountryProfile {
 				'zone'    => 'asia',
 			],
 			'AE' => [
-				'label'   => 'PO Box / area',
+				'label'    => 'PO Box / area',
 				// The UAE has no postal code system. The field stays, because
 				// couriers use the PO box or area, but demanding one is asking
 				// a customer for something their country does not issue.
 				'optional' => true,
-				'pattern' => '/^.{0,12}$/',
-				'example' => '00000',
-				'dial'    => '+971',
-				'transit' => [ 4, 7 ],
-				'zone'    => 'middle-east',
+				'pattern'  => '/^.{0,12}$/',
+				'example'  => '00000',
+				'dial'     => '+971',
+				'transit'  => [ 4, 7 ],
+				'zone'     => 'middle-east',
 			],
 			'ZA' => [
 				'label'   => 'Postal code',

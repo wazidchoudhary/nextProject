@@ -168,7 +168,7 @@ function bhc_trim_woocommerce_scripts(): void {
 }
 
 /**
- * jQuery is deliberately NOT deferred.
+ * Why jQuery is deliberately NOT deferred.
  *
  * Product pages still load jQuery, because WooCommerce's variation form and its
  * review star-rating widget are built on it. Deferring it looks like an easy win

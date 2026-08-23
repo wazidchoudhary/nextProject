@@ -89,6 +89,18 @@ jobs:
           --health-interval=5s
           --health-timeout=5s
           --health-retries=20
+      # The object cache is the single biggest performance decision in this
+      # build, so CI exercises the path that has one rather than only the
+      # fallback.
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=5s
+          --health-timeout=3s
+          --health-retries=10
     steps:
       - uses: actions/checkout@v4
 
@@ -96,7 +108,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: gd, mbstring, intl, zip, mysqli, pdo_mysql
+          extensions: gd, mbstring, intl, zip, mysqli, pdo_mysql, redis
           coverage: none
           tools: composer, wp-cli
 
@@ -112,6 +124,7 @@ jobs:
           DB_NAME: bhc_demo
           DB_USER: root
           DB_PASSWORD: root
+          REDIS_HOST: 127.0.0.1
           SITE_URL: http://localhost:8088
         run: bin/setup-demo.sh "${HOME}/wp-demo"
 
@@ -119,8 +132,10 @@ jobs:
       # which is what CI wants: the runner has no persistent object cache, and
       # "no Redis here" is not a broken build. --strict is the production
       # deploy gate — see docs/deployment.md.
+      # --strict here, unlike a bare runner: with Redis wired up there is no
+      # legitimate warning left, so one means something has actually broken.
       - name: Health check
-        run: wp --path="${HOME}/wp-demo" --allow-root bhc health-check
+        run: wp --path="${HOME}/wp-demo" --allow-root bhc health-check --strict
 
       - name: Integration assertions
         run: wp --path="${HOME}/wp-demo" --allow-root eval-file bin/integration-tests.php
@@ -154,3 +169,15 @@ jobs:
 
       - name: Accessibility
         run: npm run test:a11y
+
+      # A store that will not build from nothing is a broken deliverable
+      # regardless of how green the suites are.
+      - name: Setup script is idempotent
+        run: bin/setup-demo.sh "${HOME}/wp-demo"
+        env:
+          DB_HOST: 127.0.0.1
+          DB_NAME: bhc_demo
+          DB_USER: root
+          DB_PASSWORD: root
+          REDIS_HOST: 127.0.0.1
+          SITE_URL: http://localhost:8088

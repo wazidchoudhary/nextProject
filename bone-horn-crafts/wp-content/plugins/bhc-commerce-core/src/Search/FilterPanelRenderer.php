@@ -27,8 +27,9 @@ final class FilterPanelRenderer implements HookableInterface {
 	/**
 	 * Constructor.
 	 *
-	 * @param SearchService $search   Search service.
-	 * @param Template      $template Template renderer.
+	 * @param SearchService $search         Search service.
+	 * @param Template      $template       Template renderer.
+	 * @param RequestParser $request_parser Reads filter input from the request.
 	 */
 	public function __construct(
 		private SearchService $search,

@@ -35,9 +35,10 @@ final class SearchService implements HookableInterface {
 	/**
 	 * Constructor.
 	 *
-	 * @param ProductRepository $products Product read model.
-	 * @param FacetRepository   $facets   Facet counts.
-	 * @param CacheManager      $cache    Cache manager.
+	 * @param ProductRepository $products       Product read model.
+	 * @param FacetRepository   $facets         Facet counts.
+	 * @param CacheManager      $cache          Cache manager.
+	 * @param RequestParser     $request_parser Reads filter input from the request.
 	 */
 	public function __construct(
 		private ProductRepository $products,

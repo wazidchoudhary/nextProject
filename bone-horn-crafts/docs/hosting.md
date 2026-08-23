@@ -24,10 +24,28 @@ you are hosting WordPress. Anything that runs WordPress well runs this.
 | Object cache | none required | Redis 6+ |
 
 The plugin refuses to load below PHP 8.2 or without WooCommerce, with an admin
-notice rather than a fatal.
+notice rather than a fatal. Those two floors are the plugin header's
+`Requires PHP: 8.2` and `WC requires at least: 8.0`.
 
 **Verified here:** WordPress 7.0.4, WooCommerce 10.9.0, PHP 8.4.19, MariaDB
 10.11.14, Redis 7.0.15. The full suite is green on that stack.
+
+### One thing to check in the PHP build: WebP
+
+The theme maps JPEG sub-sizes to WebP with an `image_editor_output_format`
+filter (`bhc_webp_subsizes()` in `wp-content/themes/bhc-theme/inc/performance.php`).
+Only the *derivatives* change format — the original upload is kept as
+uploaded, and PNG is left alone.
+
+That needs an image editor that can actually write WebP: `gd` compiled with
+WebP support, or Imagick. If it cannot, WordPress ignores the filter and keeps
+producing JPEGs. Nothing breaks; the pages just get heavier. Measured on the
+600×600 card size: 16,599 bytes as JPEG against 6,278 as WebP, 62% smaller, and
+a 12-card shop page pulls roughly 83KB of imagery in total. Details in
+[performance.md](performance.md).
+
+The cost is disk: the original and its WebP sub-sizes both sit in `uploads/`,
+so back-up size goes up, not down.
 
 ---
 
@@ -70,6 +88,9 @@ docker compose -f deploy/docker-compose.yml exec wordpress \
   bash /opt/bhc/bin/setup-demo.sh /var/www/html
 ```
 
+The repository root is mounted read-only at `/opt/bhc` inside the `wordpress`
+container, which is why `bin/setup-demo.sh` is reachable at that path.
+
 > **Not verified.** The compose file and nginx config were written against the
 > documented behaviour of those images but could not be executed in the
 > authoring environment, which has no Docker daemon. Everything else in this
@@ -79,8 +100,8 @@ docker compose -f deploy/docker-compose.yml exec wordpress \
 ### Shared cPanel hosting — workable, with caveats
 
 It will run. You will usually not get Redis, often not WP-CLI, and rarely
-control over PHP-FPM. Expect the query counts in the "no object cache" column
-below rather than the Redis one.
+control over PHP-FPM. Expect query counts closer to the no-object-cache column
+below than to the Redis one.
 
 ---
 
@@ -98,8 +119,10 @@ below rather than the Redis one.
 5. **Activate** the theme, then the plugin.
 6. **Turn on Redis** in the host's control panel.
 7. **Verify**: `wp bhc health-check --strict` should exit 0.
-8. **Seed** if you want the demo catalogue: `wp bhc demo seed`. Skip this
-   entirely for a real store and import your own products.
+8. **Seed** if you want the demo catalogue: `wp bhc demo seed`. That also
+   enables two offline payment gateways so checkout is demonstrable — see
+   [Going live](#going-live) before this is public. Skip the seed entirely for a
+   real store and import your own products.
 
 ## Path B: VPS from scratch
 
@@ -117,6 +140,10 @@ apt install -y nginx mariadb-server redis-server certbot python3-certbot-nginx \
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
 ```
+
+Ubuntu's `php8.3-gd` is built with WebP support, so the WebP sub-sizes described
+above will be written. Confirm with
+`php -r 'var_dump( gd_info()["WebP Support"] );'` if you are on another distro.
 
 ### 2. Database
 
@@ -183,6 +210,11 @@ find /var/www/bonehorncrafts -type f -exec chmod 644 {} \;
 chmod 600 /var/www/bonehorncrafts/wp-config.php
 ```
 
+Note `WP_ENVIRONMENT_TYPE production` here. `bin/setup-demo.sh` sets
+`development` instead, which is right for a demo — that is what makes the plugin
+rewrite absolute SEO URLs onto the configured canonical host — and wrong for the
+real domain.
+
 ### 5. This build
 
 ```bash
@@ -190,10 +222,10 @@ cd /var/www/bonehorncrafts
 wp plugin install woocommerce --activate
 
 git clone <your-fork> /opt/bhc
-ln -s /opt/bhc/bone-horn-crafts/wp-content/themes/bhc-theme  wp-content/themes/bhc-theme
-ln -s /opt/bhc/bone-horn-crafts/wp-content/plugins/bhc-commerce-core wp-content/plugins/bhc-commerce-core
+ln -s /opt/bhc/wp-content/themes/bhc-theme  wp-content/themes/bhc-theme
+ln -s /opt/bhc/wp-content/plugins/bhc-commerce-core wp-content/plugins/bhc-commerce-core
 
-cd /opt/bhc/bone-horn-crafts/wp-content/plugins/bhc-commerce-core
+cd /opt/bhc/wp-content/plugins/bhc-commerce-core
 composer install --no-dev --optimize-autoloader
 
 cd /var/www/bonehorncrafts
@@ -216,6 +248,10 @@ wp redis enable
 wp bhc health-check          # should say: Active — Redis
 ```
 
+The health report names Redis specifically when Redis is what is serving, and
+says `Active. Not Redis.` for another persistent backend, so this line is a real
+check rather than a guess.
+
 In `/etc/redis/redis.conf`:
 
 ```
@@ -227,13 +263,17 @@ maxmemory-policy allkeys-lru
 full, and WordPress will keep asking — you get a store that gets slower under
 exactly the load you bought Redis for.
 
+The key salt matters too: cache keys are laid out as
+`bhc:{schema}:{group}:v{version}:{key}`, and two installs sharing one Redis
+without distinct salts will read each other's entries.
+
 ### 7. nginx and TLS
 
 ```bash
-cp /opt/bhc/bone-horn-crafts/deploy/nginx.conf /etc/nginx/sites-available/bonehorncrafts
+cp /opt/bhc/deploy/nginx.conf /etc/nginx/sites-available/bonehorncrafts
 ```
 
-Change `fastcgi_pass wordpress:9000` to
+Change both `fastcgi_pass wordpress:9000` lines to
 `fastcgi_pass unix:/run/php/php8.3-fpm.sock`, set `server_name`, set `root`.
 
 Add to the `http {}` block in `/etc/nginx/nginx.conf` (the vhost references it):
@@ -316,24 +356,36 @@ JSON-LD point at the real domain — on a production environment the plugin uses
 
 ## Measured
 
-Same catalogue, same code, warm caches, measured with `SAVEQUERIES` on both
-stacks in the authoring environment:
+Queries per page, warm, same catalogue, `SAVEQUERIES` on, in the authoring
+environment:
 
-| Page | No object cache | Redis |
+| Page | SQLite, no object cache | MySQL + Redis |
 |---|---:|---:|
-| Home | 117 | **5** |
-| Shop | 84 | **5** |
-| Product | 117 | **5** |
-| Category | 89 | **5** |
+| Home | 131 | **6** |
+| Shop | 83 | **5** |
+| Product | 116 | **5** |
+| Category | 90 | **5** |
 | Cart | 76 | **5** |
-| Blog | 65 | **5** |
+| Blog | 66 | **5** |
 
-A persistent object cache is worth more here than every other hosting decision
-combined. If a host does not offer Redis, that is a reason to change host.
+Read the columns for what they are: two variables move at once. The left is the
+SQLite build with no persistent object cache — the default if you do nothing —
+and the right is MariaDB 10.11 with Redis 7. This is not an isolated measurement
+of Redis against MySQL alone, and it is a count of queries, not wall time.
+
+What it does show is that the uncached path does an order of magnitude more
+database work on every page. A persistent object cache is worth more here than
+every other hosting decision combined. If a host does not offer Redis, that is a
+reason to change host.
+
+What it costs: another service to keep running, patched and monitored, memory
+you have to size, an eviction policy you have to set (see above), and a cache
+key salt per install. On a VPS that is real work; on a managed host it is a
+toggle.
 
 The store works correctly without it — the cache abstraction falls back to
-transients and the health check says so plainly — it is simply doing an order of
-magnitude more database work.
+transients and the health check says so plainly — it is simply doing far more
+database work per request.
 
 ---
 
@@ -345,9 +397,17 @@ actually get wrong:
 1. **`WP_ENVIRONMENT_TYPE=production`** and the site genuinely reachable at the
    canonical host, or your metadata advertises staging.
 2. **Delete `wp-content/mu-plugins/bhc-sqlite-dev.php`** if it exists. It
-   disables stock holds during checkout. It belongs only to the SQLite demo.
-3. **Turn off the demo payment gateways** (`Pay on invoice (demo)`,
-   `Bank transfer (demo)`) and configure a real one.
+   disables stock holds during checkout. It belongs only to the SQLite demo —
+   `bin/setup-demo.sh` copies it there from `tools/dev-mu-plugins/`, and a MySQL
+   build never gets it.
+3. **Turn off the demo payment gateways.** A fresh WooCommerce install has every
+   gateway disabled, so checkout fails with "Invalid payment method"; the seeder
+   therefore enables WooCommerce's two offline gateways — Cash on delivery
+   (`cod`), retitled `Pay on invoice (demo)`, and Bank transfer (`bacs`),
+   retitled `Bank transfer (demo)`. Neither takes a payment. Disable both and
+   configure a real gateway before you take an order. The seeder leaves alone
+   any gateway that is already enabled, so it will not have overwritten one you
+   configured yourself.
 4. **Reset the demo data** — `wp bhc demo reset --yes --orphans` — before
    importing a real catalogue, and change the admin password.
 5. **Confirm cron is firing.** Load WooCommerce → Status → Scheduled Actions
