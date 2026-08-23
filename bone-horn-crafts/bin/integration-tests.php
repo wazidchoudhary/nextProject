@@ -623,6 +623,49 @@ $t->assert(
 );
 
 // ---------------------------------------------------------------------------
+$t->group( 'Customer accounts' );
+
+// Regression: the store shipped with registration off, so My Account showed a
+// login form and no way to create the account it was asking you to sign in to.
+// Three switches have to agree — WordPress's own, WooCommerce's My Account one,
+// and WooCommerce's checkout one — and setting any single one of them makes
+// that page look correct while the others stay broken.
+foreach (
+	[
+		'users_can_register'                               => '1',
+		'woocommerce_enable_myaccount_registration'        => 'yes',
+		'woocommerce_enable_signup_and_login_from_checkout' => 'yes',
+		'woocommerce_registration_generate_password'       => 'yes',
+	] as $account_option => $expected
+) {
+	$t->assert(
+		$account_option . ' is enabled',
+		(string) get_option( $account_option ) === $expected,
+		'is ' . var_export( get_option( $account_option ), true )
+	);
+}
+
+$t->equals( 'new registrations become customers', 'customer', (string) get_option( 'default_role' ) );
+
+$account_page = wp_remote_get( wc_get_page_permalink( 'myaccount' ), [ 'timeout' => 20 ] );
+
+if ( ! is_wp_error( $account_page ) ) {
+	$account_html = (string) wp_remote_retrieve_body( $account_page );
+
+	$t->assert(
+		'the account page renders a registration form',
+		str_contains( $account_html, 'woocommerce-form-register' ),
+		'no register form in the markup'
+	);
+
+	$t->assert(
+		'login and registration are laid out as a pair',
+		str_contains( $account_html, 'id="customer_login"' ),
+		'the two-column wrapper is absent'
+	);
+}
+
+// ---------------------------------------------------------------------------
 $t->group( 'Store pages' );
 
 // Regression: `write_store_pages()` used to mark WooCommerce's Shop page as

@@ -362,6 +362,57 @@ form.cart .product-actions,
 	max-width: 34rem;
 }
 
+// Sign in / create account.
+//
+// WooCommerce emits this pair as `.u-columns.col2-set` with `.col-1` and
+// `.col-2` inside — its own grid classes, which assume a theme that styles
+// them. This one does not, so without the rules below the two forms stack with
+// no separation and the page reads as one long form with two submit buttons.
+#customer_login {
+	display: grid;
+	gap: f.space('lg');
+	align-items: start;
+
+	@include m.from('md') {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: f.space('xl');
+	}
+
+	// The columns are layout only; the forms inside carry the surface.
+	> .col-1,
+	> .col-2 {
+		min-width: 0;
+		display: flex;
+		flex-direction: column;
+		gap: f.space('xs');
+	}
+
+	h2 {
+		@include m.display(v.$size-lg);
+
+		margin: 0;
+	}
+
+	// Inside a column the form fills it, rather than keeping the standalone
+	// width it uses on the edit-account and address screens.
+	.woocommerce-form-login,
+	.woocommerce-form-register {
+		max-width: none;
+		height: 100%;
+	}
+}
+
+// The generated-password notice reads as body copy by default, which buries the
+// one thing a new customer needs to notice on this form.
+.woocommerce-form-register {
+	.woocommerce-privacy-policy-text,
+	> p:not(.form-row, .woocommerce-FormRow) {
+		font-size: v.$size-sm;
+		color: v.$color-ink-muted;
+		margin-block: 0 f.space('2xs');
+	}
+}
+
 .woocommerce-form-login__rememberme {
 	display: inline-flex;
 	gap: f.space('3xs');

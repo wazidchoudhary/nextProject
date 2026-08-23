@@ -109,7 +109,15 @@
 	}
 }
 
-.woocommerce-account .woocommerce {
+// Account: navigation beside content.
+//
+// Scoped to `.logged-in` deliberately. Signed out, this same wrapper holds only
+// the sign-in / create-account pair and there is no navigation column to place,
+// so the unscoped rule dropped that pair into the 15rem track and squeezed both
+// forms to 240px on a 1440px viewport. `.logged-in` is exactly the condition
+// under which the navigation is rendered, and WordPress sets it on body for
+// free.
+.woocommerce-account.logged-in .woocommerce {
 	display: grid;
 	gap: f.space('lg');
 
