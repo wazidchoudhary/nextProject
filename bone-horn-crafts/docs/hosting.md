@@ -59,6 +59,17 @@ so back-up size goes up, not down.
 
 ## Choosing a host
 
+| Option | Named hosts | Pick it when | Watch out for |
+|---|---|---|---|
+| **Managed WordPress** | Kinsta, WP Engine, Pressable, Cloudways, SiteGround, Hostinger, Rocket.net | You are running a real store and want to spend your time on the store | Redis is sometimes a paid add-on; check PHP 8.2+ is selectable |
+| **VPS** | Hetzner, DigitalOcean, Linode, Vultr | You want the whole stack and have hours for patching, TLS and backups | Everything is yours, including the 2am pager |
+| **Container PaaS** | Railway, Render, Fly.io, DigitalOcean App Platform | Demo, staging or a client review link; you are happy shipping code in an image | Ephemeral filesystem — uploads need a volume or object storage |
+| **Docker, self-hosted** | Any of the VPS hosts above | A team needs one reproducible environment | `deploy/` is reviewed, not executed — see the note below |
+| **Shared cPanel** | Namecheap, Bluehost, GoDaddy | Budget is the binding constraint | Usually no Redis, often no WP-CLI |
+
+If you want one answer: **Cloudways or Kinsta for a real store, Railway for a
+demo you want to hand someone a link to.**
+
 ### Managed WordPress hosting — the default answer
 
 Kinsta, WP Engine, Pressable, Cloudways, SiteGround and similar. You get PHP,
@@ -121,6 +132,71 @@ container, which is why `bin/setup-demo.sh` is reachable at that path.
 >   `DB_HOST`, `DB_NAME`, `DB_USER` and `DB_PASSWORD` into the `exec`. The
 >   script also needs `wp`, `composer` and `node` on `PATH`, which the stock
 >   `wordpress:php8.3-fpm-alpine` image does not carry.
+
+### Container PaaS — Railway, Render, Fly.io, DigitalOcean App Platform
+
+These deploy a container from a Git push and attach managed MySQL and Redis
+next to it. They are pleasant to work with and genuinely fine for **a demo, a
+staging site or a client review link**. For a store that takes money, read the
+constraint below before choosing one.
+
+**WordPress expects a writable, persistent filesystem. Container platforms do
+not give you one by default.** Everything outside a mounted volume is reset on
+every deploy. Concretely, on a stock setup:
+
+- Uploading a product image through wp-admin works, and the image disappears at
+  the next deploy.
+- Installing a plugin or updating WordPress through wp-admin works, and is
+  reverted at the next deploy.
+- Two container replicas do not share an uploads directory, so an image
+  uploaded through one is a 404 through the other.
+
+That is survivable, but only if you accept the discipline it forces: **the
+container is immutable, code ships in the image, and uploads live on a volume
+or in object storage.** If instead you want to manage the site the way most
+WordPress sites are managed — installing things from the dashboard — pick
+managed WordPress hosting and skip this whole section.
+
+#### Railway specifically
+
+Railway will run this build. What you need to know before starting:
+
+| Constraint | What it means here |
+|---|---|
+| **One volume per service** | Mount it at `wp-content/uploads`. That is the only directory that genuinely must persist, so one volume is enough — but it does mean you cannot also persist, say, a separate cache directory on the same service. |
+| **Volume size** | 5 GB on Hobby, self-serve up to 1 TB on Pro, billed at $0.15/GB/month. The seeded demo's media library is well under 100 MB. |
+| **Cron minimum interval is 5 minutes** | Fine for Action Scheduler. Set `DISABLE_WP_CRON` and run `wp cron event run --due-now` from a cron service. Do not expect minute-level precision — Railway states execution can vary by a few minutes. |
+| **A cron service must exit when done** | `wp cron event run --due-now` does exit, so this fits. A long-running worker would not. |
+| **Overlapping runs are skipped** | If a job is still running when the next fires, the next is dropped. Keep the cron command short. |
+| **No PHP image with WP-CLI, gd and composer** | You need your own `Dockerfile`. The stock WordPress images do not carry `wp`, `composer` or `node`, all of which `bin/setup-demo.sh` requires. |
+
+Sketch of the services:
+
+```
+web    →  your Dockerfile (PHP 8.2+ with gd, wp-cli, nginx or Apache)
+          volume mounted at /var/www/html/wp-content/uploads
+db     →  Railway MySQL
+cache  →  Railway Redis
+cron   →  same image, schedule "*/5 * * * *",
+          command: wp cron event run --due-now --path=/var/www/html
+```
+
+Set `WP_REDIS_HOST`, `WP_REDIS_PORT` and `WP_REDIS_PASSWORD` from the Redis
+service's variables, `DB_*` from the MySQL service's, and
+`define( 'DISABLE_WP_CRON', true )` in `wp-config.php` so the cron service is
+the only thing running jobs.
+
+> **Not verified.** This section is written from Railway's documented behaviour,
+> not from a deployment made from this repository. The volume, cron-interval and
+> cron-exit constraints above are quoted from their docs; the service layout is
+> a reviewed starting point rather than a tested artefact.
+
+**Render, Fly.io and DigitalOcean App Platform** have the same shape of
+constraint — ephemeral container filesystem, volumes or object storage for
+uploads, a separate scheduler for cron. Fly.io volumes are per-machine, which
+makes multi-region WordPress harder than it looks; DigitalOcean App Platform has
+no persistent volume for its app containers at all, so uploads must go to Spaces
+via an offload plugin.
 
 ### Shared cPanel hosting — workable, with caveats
 

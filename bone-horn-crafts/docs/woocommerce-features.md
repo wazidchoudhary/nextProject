@@ -262,6 +262,37 @@ shop page cannot drift apart. Responses carry cache headers.
 
 ## Admin
 
+### Where the store is actually run
+
+Day-to-day management is **WooCommerce's own admin**, not a replacement for it.
+That is deliberate: a merchant who has used WooCommerce before already knows how
+to work this store, and every WooCommerce guide, tutorial and support answer
+still applies. This build extends those screens rather than shadowing them.
+
+| Task | Where |
+|---|---|
+| Add or edit a product | **Products → Add New**, the standard editor |
+| Craft, wholesale and export fields | The **Bone Horn Crafts** tab inside that editor's Product data box |
+| Stock, variations, shipping class | WooCommerce's own tabs, unchanged |
+| View, edit, refund, fulfil an order | **WooCommerce → Orders** |
+| Workshop and export fields on an order | The **workshop & export** box on the order screen |
+| Export type at a glance | An added column on the order list |
+| Categories, tags, attributes | **Products → Categories / Tags / Attributes** |
+| Coupons | **Marketing → Coupons** |
+| Customers | **WooCommerce → Customers** |
+| Sales reports | **Analytics** |
+| Payments, shipping zones, tax, emails | **WooCommerce → Settings** |
+| Catalogue health, low stock, job status | **Bone Horn Crafts → Dashboard** |
+| Schema, cache and scheduler status | **Bone Horn Crafts → Health check** |
+| This build's own options | **Bone Horn Crafts → Settings** |
+
+`tests/e2e/admin-screens.mjs` signs in and asserts each of these renders without
+a PHP notice, including WooCommerce's own screens — a plugin hook that fatals on
+the product editor means the merchant cannot add a product at all, which no unit
+test would catch.
+
+### The plugin's own screens
+
 * **Dashboard** — catalogue health, low stock, index freshness, recent activity.
 * **Health check** — schema version against the expected version, object cache
   status, Action Scheduler availability, merchandising index population,
@@ -315,8 +346,13 @@ rationale in [performance.md](performance.md#background-work).
 
 ## Compatibility
 
-* **HPOS** — declared compatible and actually compatible: all order meta goes
-  through the CRUD, and the metabox is registered for both order screens.
+* **HPOS** — declared compatible, actually compatible, and **actually enabled**:
+  `bin/setup-demo.sh` turns High-Performance Order Storage on before any order
+  is seeded, so orders live in `wc_orders` and the demo exercises the same
+  storage a current WooCommerce install uses. All order meta goes through the
+  CRUD, and the metabox is registered for both order screens. Setup previously
+  left HPOS off, which meant the store ran the legacy post-based order tables
+  and the HPOS branch of `OrderOperationsMetaBox` was never executed.
 * **Cart/Checkout blocks** — compatibility declared. The demo store uses the
   classic shortcode cart and checkout, because the plugin's export notice and
   field customisations hook into the classic templates; the trade-off is
