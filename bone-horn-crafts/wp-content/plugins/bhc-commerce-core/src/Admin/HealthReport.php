@@ -124,16 +124,32 @@ final class HealthReport {
 			),
 		];
 
+		// Name Redis when it is what is actually running. "Active
+		// (WP_Object_Cache)" is technically true of every drop-in and tells an
+		// operator nothing about whether the thing they installed is the thing
+		// serving them.
+		if ( $report['cache']['persistent'] ) {
+			$cache_detail = $report['cache']['redis']
+				? sprintf(
+					/* translators: %s: cache implementation class. */
+					__( 'Active — Redis (%s).', 'bhc-commerce-core' ),
+					(string) $report['cache']['implementation']
+				)
+				: sprintf(
+					/* translators: %s: cache implementation class. */
+					__( 'Active (%s). Not Redis.', 'bhc-commerce-core' ),
+					(string) $report['cache']['implementation']
+				);
+		} elseif ( $report['cache']['redis_extension'] ) {
+			$cache_detail = __( 'Not active. The PHP redis extension is loaded, so installing an object-cache.php drop-in would enable it.', 'bhc-commerce-core' );
+		} else {
+			$cache_detail = __( 'Not detected. The plugin is falling back to transients, which works but is slower.', 'bhc-commerce-core' );
+		}
+
 		$checks[] = [
 			'label'  => __( 'Persistent object cache', 'bhc-commerce-core' ),
 			'status' => $report['cache']['persistent'] ? 'pass' : 'warn',
-			'detail' => $report['cache']['persistent']
-				? sprintf(
-					/* translators: %s: cache implementation class. */
-					__( 'Active (%s).', 'bhc-commerce-core' ),
-					(string) $report['cache']['implementation']
-				)
-				: __( 'Not detected. The plugin is falling back to transients, which works but is slower.', 'bhc-commerce-core' ),
+			'detail' => $cache_detail,
 		];
 
 		$checks[] = [
@@ -152,6 +168,41 @@ final class HealthReport {
 				__( '%1$d product stat rows, %2$d affinity rows.', 'bhc-commerce-core' ),
 				(int) $report['catalogue']['stats_rows'],
 				(int) $report['catalogue']['affinity_rows']
+			),
+		];
+
+		$checks[] = [
+			'label'  => __( 'WordPress', 'bhc-commerce-core' ),
+			'status' => version_compare( (string) $report['environment']['wordpress'], '6.5', '>=' ) ? 'pass' : 'warn',
+			'detail' => sprintf(
+				/* translators: %s: WordPress version. */
+				__( 'Running WordPress %s.', 'bhc-commerce-core' ),
+				(string) $report['environment']['wordpress']
+			),
+		];
+
+		$wc_active = defined( 'WC_VERSION' );
+
+		$checks[] = [
+			'label'  => __( 'WooCommerce', 'bhc-commerce-core' ),
+			'status' => $wc_active && version_compare( (string) $report['environment']['woocommerce'], '8.0', '>=' ) ? 'pass' : 'fail',
+			'detail' => $wc_active
+				? sprintf(
+					/* translators: %s: WooCommerce version. */
+					__( 'Running WooCommerce %s.', 'bhc-commerce-core' ),
+					(string) $report['environment']['woocommerce']
+				)
+				: __( 'Not active. This plugin requires WooCommerce.', 'bhc-commerce-core' ),
+		];
+
+		$checks[] = [
+			'label'  => __( 'Plugin version', 'bhc-commerce-core' ),
+			'status' => 'pass',
+			'detail' => sprintf(
+				/* translators: 1: plugin version, 2: environment type. */
+				__( 'Bone Horn Crafts Commerce %1$s, environment "%2$s".', 'bhc-commerce-core' ),
+				(string) $report['plugin']['version'],
+				(string) $report['environment']['environment_type']
 			),
 		];
 

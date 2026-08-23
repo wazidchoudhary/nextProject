@@ -21,6 +21,9 @@
 #                MySQL connection. When DB_HOST is unset the script installs the
 #                SQLite integration plugin instead, so no database server is
 #                needed.
+#   REDIS_HOST/REDIS_PORT
+#                Set REDIS_HOST to install the Redis object cache drop-in and
+#                enable it. Optional; the store runs without one.
 #
 # Requires: php >= 8.2 (with gd), wp-cli, composer, node >= 18, curl, unzip.
 
@@ -89,6 +92,12 @@ if [ ! -f "${INSTALL_DIR}/wp-config.php" ]; then
 	$WP config set WP_DEBUG_DISPLAY false --raw
 	$WP config set WP_DEBUG_LOG true --raw
 	$WP config set SCRIPT_DEBUG true --raw
+	# A local demo is not production. Beyond the obvious, WordPress's
+	# environment type is what tells BrandProfile to rewrite absolute SEO URLs
+	# onto the canonical host: on production home_url() is already correct, so
+	# leaving this unset makes a local install emit localhost URLs in its
+	# schema and Open Graph tags.
+	$WP config set WP_ENVIRONMENT_TYPE development
 else
 	echo "wp-config.php already present, skipping."
 fi
@@ -208,6 +217,31 @@ if [ -z "${DB_HOST:-}" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# Optional: wire up a persistent object cache. The plugin works without one and
+# says so on its health screen, but Redis is what the caching abstraction was
+# built for, and the difference is large enough to be worth seeing.
+if [ -n "${REDIS_HOST:-}" ]; then
+	say "Persistent object cache (Redis at ${REDIS_HOST}:${REDIS_PORT:-6379})"
+
+	if ! php -r 'exit( extension_loaded( "redis" ) ? 0 : 1 );'; then
+		echo "The PHP redis extension is not loaded; skipping." >&2
+	else
+		redis_dir="${INSTALL_DIR}/wp-content/plugins/redis-cache"
+
+		[ -d "${redis_dir}" ] || git clone --depth 1 --quiet \
+			https://github.com/rhubarbgroup/redis-cache.git "${redis_dir}"
+
+		$WP config set WP_REDIS_HOST "${REDIS_HOST}"
+		$WP config set WP_REDIS_PORT "${REDIS_PORT:-6379}" --raw
+		# Namespaces the keys so two installs can share one Redis instance.
+		$WP config set WP_CACHE_KEY_SALT "$( basename "${INSTALL_DIR}" )"
+
+		$WP plugin activate redis-cache
+		$WP redis enable
+	fi
+fi
+
+# ---------------------------------------------------------------------------
 say "Seeding the demo catalogue"
 
 $WP bhc demo seed
@@ -221,6 +255,10 @@ cat <<EOM
 
   Store:  ${SITE_URL}
   Admin:  ${SITE_URL}/wp-admin  (${ADMIN_USER} / ${ADMIN_PASS})
+
+  Check it over:
+
+    wp --path=${INSTALL_DIR} --allow-root bhc health-check
 
   Serve it with the built-in PHP server:
 

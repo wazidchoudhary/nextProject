@@ -189,7 +189,13 @@ $render_cards = static function ( array $ids ): void {
 
 		$card_product->get_name();
 		$card_product->get_price_html();
-		$card_product->get_meta( ProductMeta::UNIT_OF_SALE, true );
+
+		// Through the facade, which is the path the card template takes.
+		// Calling $card_product->get_meta() directly would measure
+		// WooCommerce's uncached per-object meta read instead of the
+		// primed one, i.e. the bug rather than the fix.
+		ProductMeta::unit_of_sale( $card_product );
+
 		get_the_terms( $id, 'product_cat' );
 		get_permalink( $id );
 		$card_product->get_image( 'woocommerce_thumbnail' );
@@ -217,10 +223,21 @@ $t->assert(
 	sprintf( '%d primed vs %d unprimed for %d cards', $primed, $unprimed, count( $card_ids ) )
 );
 
+// Warm caches, primed again: the second visitor's cost. An absolute per-card
+// budget would be meaningless here because wp_cache_flush() costs far more to
+// recover from under a persistent object cache (it wipes alloptions and every
+// WooCommerce cache too) than under the non-persistent default. What must hold
+// in every environment is that a render behind warm caches adds no queries at
+// all — which is the actual claim being made about the N+1 work.
+$queries_before = get_num_queries();
+$products->prime( $card_ids );
+$render_cards( $card_ids );
+$warm = get_num_queries() - $queries_before;
+
 $t->assert(
-	'a primed card costs less than three queries',
-	$primed <= ( count( $card_ids ) * 3 ),
-	$primed . ' queries'
+	'a repeat render behind warm caches costs no queries',
+	0 === $warm,
+	$warm . ' queries for ' . count( $card_ids ) . ' cards'
 );
 
 // ---------------------------------------------------------------------------
@@ -485,16 +502,17 @@ if ( null !== $product_for_schema ) {
 
 		// The graph must reference the canonical host, not whatever hostname
 		// the request happened to arrive on.
-		$canonical_host = wp_parse_url(
-			(string) $container->get( BoneHornCrafts\Core\Support\Options::class )->string( 'canonical_host' ),
-			PHP_URL_HOST
-		);
+		// BrandProfile decides the host: the configured canonical host outside
+		// production, home_url() on production, where the site already runs on
+		// the real host. Asserting the configured value directly would fail on
+		// a correctly configured production install.
+		$brand_host = $container->get( BoneHornCrafts\Core\SEO\BrandProfile::class )->canonical_host();
 
-		if ( is_string( $canonical_host ) && '' !== $canonical_host ) {
+		if ( '' !== $brand_host ) {
 			$t->assert(
 				'schema @id uses the canonical host',
-				str_contains( $body, '"@id":"https://' . $canonical_host . '/#organization"' ),
-				$canonical_host
+				str_contains( $body, '"@id":"' . $brand_host . '/#organization"' ),
+				$brand_host
 			);
 		}
 

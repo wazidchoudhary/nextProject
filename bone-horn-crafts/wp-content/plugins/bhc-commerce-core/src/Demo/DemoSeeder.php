@@ -126,7 +126,8 @@ final class DemoSeeder {
 		$counts['products'] = $this->seed_products( (int) $options['products'], (bool) $options['images'] );
 
 		$this->report( 'Configuring shipping zones' );
-		$counts['shipping_zones'] = $this->seed_shipping();
+		$counts['shipping_zones']   = $this->seed_shipping();
+		$counts['payment_gateways'] = $this->seed_payment_gateways();
 
 		$this->report( 'Creating demo customers' );
 		$counts['customers'] = $this->seed_customers();
@@ -877,14 +878,62 @@ final class DemoSeeder {
 	}
 
 	/**
-	 * Creates the export shipping zones.
+	 * Enables the offline payment gateways so the store can take an order.
 	 *
-	 * A store that quotes $0 shipping to every country is a store nobody has
-	 * finished configuring. These zones mirror the transit table published on
-	 * the shipping page, and every zone carries a free-shipping threshold that
-	 * matches the announcement bar — the three surfaces have to agree.
+	 * A fresh WooCommerce install has every gateway disabled, which means a
+	 * seeded demo store looks complete and then fails at the last step of
+	 * checkout with "Invalid payment method". Enabling the two offline gateways
+	 * is what makes the purchase flow demonstrable end to end.
 	 *
-	 * @return int Zones created.
+	 * Both are labelled "(demo)" on the checkout form on purpose: nothing here
+	 * processes a payment, and nobody looking at the store should be left
+	 * wondering whether it does. A real deployment configures a real gateway
+	 * and turns these off — see docs/deployment.md.
+	 *
+	 * @return int Number of gateways enabled.
+	 */
+	public function seed_payment_gateways(): int {
+		$gateways = [
+			'cod'  => [
+				'enabled'     => 'yes',
+				'title'       => __( 'Pay on invoice (demo)', 'bhc-commerce-core' ),
+				'description' => __( 'Demo gateway. No payment is taken and no payment details are stored in this build.', 'bhc-commerce-core' ),
+			],
+			'bacs' => [
+				'enabled'     => 'yes',
+				'title'       => __( 'Bank transfer (demo)', 'bhc-commerce-core' ),
+				'description' => __( 'Demo gateway. No payment is taken and no bank details are stored in this build.', 'bhc-commerce-core' ),
+			],
+		];
+
+		$enabled = 0;
+
+		foreach ( $gateways as $id => $settings ) {
+			$option   = 'woocommerce_' . $id . '_settings';
+			$existing = get_option( $option, [] );
+			$existing = is_array( $existing ) ? $existing : [];
+
+			// Do not overwrite a gateway somebody has already configured.
+			if ( isset( $existing['enabled'] ) && 'yes' === $existing['enabled'] ) {
+				continue;
+			}
+
+			update_option( $option, array_merge( $existing, $settings ) );
+
+			++$enabled;
+		}
+
+		if ( $enabled > 0 ) {
+			$this->report( 'Enabling demo payment gateways' );
+		}
+
+		return $enabled;
+	}
+
+	/**
+	 * Creates the shipping zones and rates.
+	 *
+	 * @return int Number of zones created.
 	 */
 	public function seed_shipping(): int {
 		if ( ! class_exists( \WC_Shipping_Zone::class ) ) {
