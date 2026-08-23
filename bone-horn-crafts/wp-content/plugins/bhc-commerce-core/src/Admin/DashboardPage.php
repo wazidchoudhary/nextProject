@@ -118,9 +118,17 @@ final class DashboardPage {
 					continue;
 				}
 
+				// A variation has no edit screen of its own; WordPress returns
+				// nothing for get_edit_post_link() on one, which would render a
+				// dead link. Send the operator to the parent, where the
+				// variation's stock field actually lives.
+				$edit_id = $product->is_type( 'variation' ) && $product->get_parent_id() > 0
+					? (int) $product->get_parent_id()
+					: (int) $product->get_id();
+
 				printf(
 					'<tr><td><a href="%1$s">%2$s</a></td><td><code>%3$s</code></td><td>%4$s</td></tr>',
-					esc_url( (string) get_edit_post_link( $product->get_id() ) ),
+					esc_url( (string) get_edit_post_link( $edit_id ) ),
 					esc_html( $product->get_name() ),
 					esc_html( $product->get_sku() ),
 					esc_html( (string) $product->get_stock_quantity() )

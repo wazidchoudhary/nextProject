@@ -131,6 +131,11 @@ final class ProductQuery {
 			'max_price'     => null,
 			'on_sale'       => false,
 			'max_stock'     => null,
+			// Almost every catalogue query wants products only. Stock questions
+			// are the exception: on a variable product the stock lives on the
+			// variations, so a low-stock report that looks only at `product`
+			// reports nothing while the shelf is empty.
+			'post_type'     => 'product',
 		];
 	}
 
@@ -143,7 +148,7 @@ final class ProductQuery {
 	 */
 	private function build_query_args( array $args ): array {
 		$query_args = [
-			'post_type'              => 'product',
+			'post_type'              => (array) $args['post_type'],
 			'post_status'            => 'publish',
 			'fields'                 => 'ids',
 			'posts_per_page'         => max( 1, min( 60, (int) $args['limit'] ) ),

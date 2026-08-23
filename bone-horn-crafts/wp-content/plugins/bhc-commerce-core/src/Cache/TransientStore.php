@@ -24,9 +24,11 @@ final class TransientStore implements StoreInterface {
 	/**
 	 * Constructor.
 	 *
-	 * @param int $default_ttl TTL applied when a caller passes 0.
+	 * The store holds no default TTL of its own. CacheManager already applies
+	 * one before it reaches here, and a second substitution at this layer is how
+	 * the "0 means no expiry" contract got broken.
 	 */
-	public function __construct( private int $default_ttl = HOUR_IN_SECONDS ) {}
+	public function __construct() {}
 
 	/**
 	 * {@inheritDoc}
@@ -55,7 +57,25 @@ final class TransientStore implements StoreInterface {
 			$value = [ '__bhc_false' => true ];
 		}
 
-		return set_transient( $this->normalise( $key ), $value, $ttl > 0 ? $ttl : $this->default_ttl );
+		$name = $this->normalise( $key );
+
+		// A zero TTL means "no expiry", matching set_transient()'s own contract
+		// and the other two stores. Substituting a default here — as this used
+		// to — quietly broke cache invalidation on the fallback path: the group
+		// version is written with a TTL of 0 precisely so that it outlives
+		// everything it invalidates, and giving it an hour meant a flush undid
+		// itself an hour later and every orphaned entry came back.
+		if ( $ttl <= 0 ) {
+			// set_transient() with an expiration of 0 updates the value but
+			// leaves any existing timeout row untouched, so a key that once had
+			// a TTL would keep expiring. Deleting first is what actually makes
+			// "no expiry" true.
+			delete_transient( $name );
+
+			return set_transient( $name, $value, 0 );
+		}
+
+		return set_transient( $name, $value, $ttl );
 	}
 
 	/**

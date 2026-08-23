@@ -4,11 +4,13 @@
  *
  * The loading strategy, in one place:
  *
- * 1. A hand-curated critical stylesheet is inlined in `<head>` (≈3KB gzipped)
- *    so the header, hero and typography paint on the first frame.
- * 2. The full stylesheet is fetched with `rel="preload"` and swapped to
- *    `rel="stylesheet"` on load, so it never blocks rendering. A `<noscript>`
- *    fallback keeps it working with JavaScript disabled.
+ * 1. One stylesheet, loaded normally. At 7.8KB over the wire it is cheaper to
+ *    block on than to work around: see bhc_async_main_stylesheet() for the
+ *    measurement that settled it.
+ * 2. The critical-CSS-inline plus async-swap pattern is built and ready behind
+ *    the `bhc_async_main_stylesheet` filter, for a site whose stylesheet grows
+ *    large enough to need it. Both halves switch together — inlining critical
+ *    CSS while the full sheet still blocks only duplicates bytes.
  * 3. One deferred ES module carries every interaction. No jQuery is enqueued by
  *    the theme; WooCommerce still loads its own where it needs it.
  *
@@ -61,6 +63,14 @@ function bhc_critical_css(): string {
  * Prints the inline critical CSS as early as possible in the head.
  */
 function bhc_print_critical_css(): void {
+	// Only useful alongside the async swap. While the main stylesheet blocks
+	// rendering, the page cannot paint before it arrives, so inlining a copy of
+	// the above-the-fold rules adds ~12KB to every HTML response and buys
+	// nothing. The two halves are deliberately governed by the same filter.
+	if ( ! apply_filters( 'bhc_async_main_stylesheet', false ) ) {
+		return;
+	}
+
 	$css = bhc_critical_css();
 
 	if ( '' === $css ) {
@@ -118,6 +128,28 @@ add_action( 'wp_enqueue_scripts', 'bhc_enqueue_assets', 20 );
  */
 function bhc_async_main_stylesheet( string $html, string $handle ): string {
 	if ( 'bhc-main' !== $handle || is_admin() ) {
+		return $html;
+	}
+
+	/**
+	 * Filters whether the main stylesheet is loaded asynchronously.
+	 *
+	 * Off by default, and that is a measured decision rather than an oversight.
+	 * The critical-CSS-plus-async-swap pattern earns its keep when the main
+	 * stylesheet is large enough that blocking on it delays the first paint.
+	 * This one is 7.8KB over the wire. Swapping it in after paint bought
+	 * nothing measurable on LCP and cost real CLS: whether the swap landed
+	 * before or after the first paint was a race, so the same page measured
+	 * 0.0000 on one run and 0.22 on the next. A single small render-blocking
+	 * stylesheet is the better trade here.
+	 *
+	 * A site that grows a much larger stylesheet can turn this back on.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool $async Whether to defer the main stylesheet.
+	 */
+	if ( ! apply_filters( 'bhc_async_main_stylesheet', false ) ) {
 		return $html;
 	}
 

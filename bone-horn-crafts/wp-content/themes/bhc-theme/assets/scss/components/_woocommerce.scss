@@ -183,7 +183,7 @@ form.cart .product-actions,
 	}
 
 	&.low-stock {
-		color: v.$color-brass;
+		color: v.$color-stock;
 	}
 
 	&.out-of-stock {
@@ -255,7 +255,7 @@ form.cart .product-actions,
 
 	.active a,
 	a:hover {
-		color: v.$color-brass;
+		color: v.$color-stock;
 	}
 }
 

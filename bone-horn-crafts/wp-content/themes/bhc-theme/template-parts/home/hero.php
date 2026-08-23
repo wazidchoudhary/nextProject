@@ -15,18 +15,13 @@ defined( 'ABSPATH' ) || exit;
 
 $copy = isset( $args['copy'] ) && is_array( $args['copy'] ) ? $args['copy'] : [];
 
+// The preload for this image is emitted from inc/performance.php, which
+// resolves it the same way during wp_head. Registering a bhc_lcp_image_id
+// filter from here would be too late to matter — templates run after the head
+// is already on the wire.
 $hero_products = bhc_products_for( 'new', 1 );
 $hero_product  = $hero_products[0] ?? null;
 $hero_image_id = $hero_product instanceof WC_Product ? (int) $hero_product->get_image_id() : 0;
-
-if ( $hero_image_id > 0 ) {
-	add_filter(
-		'bhc_lcp_image_id',
-		static function () use ( $hero_image_id ): int {
-			return $hero_image_id;
-		}
-	);
-}
 ?>
 <section class="hero" aria-labelledby="hero-title">
 	<div class="hero__inner">

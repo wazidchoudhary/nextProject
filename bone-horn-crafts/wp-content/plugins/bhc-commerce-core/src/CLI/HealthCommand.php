@@ -87,8 +87,24 @@ final class HealthCommand {
 			WP_CLI::error( sprintf( '%d check(s) failing.', count( $failures ) ) );
 		}
 
-		if ( isset( $assoc_args['strict'] ) && [] !== $warnings ) {
-			WP_CLI::error( sprintf( '%d check(s) need attention (strict mode).', count( $warnings ) ) );
+		if ( [] !== $warnings ) {
+			// --strict turns a warning into a non-zero exit, for a deploy gate.
+			// Without it the command still has to say what it found: printing
+			// "All checks passed" under a table with an Attention row in it is
+			// the kind of summary that gets believed instead of the table.
+			$message = sprintf(
+				/* translators: %d: number of checks needing attention. */
+				_n( '%d check needs attention.', '%d checks need attention.', count( $warnings ), 'bhc-commerce-core' ),
+				count( $warnings )
+			);
+
+			if ( isset( $assoc_args['strict'] ) ) {
+				WP_CLI::error( $message . ' ' . __( '(strict mode)', 'bhc-commerce-core' ) );
+			}
+
+			WP_CLI::warning( $message );
+
+			return;
 		}
 
 		WP_CLI::success( 'All checks passed.' );

@@ -121,6 +121,69 @@ function bhc_limit_cart_fragments(): void {
 add_action( 'wp_enqueue_scripts', 'bhc_limit_cart_fragments', 100 );
 
 /**
+ * Drops WooCommerce's jQuery bundle from pages that do not use it.
+ *
+ * Target: LCP and INP. WooCommerce enqueues jQuery, jquery-migrate, blockUI,
+ * js-cookie and its own frontend helpers on every page of the store. On this
+ * storefront almost none of it runs: product cards link to the product page
+ * rather than adding to the cart in place, so `wc-add-to-cart` — the loop AJAX
+ * handler — has nothing to bind to, and blockUI exists to grey out the cart and
+ * checkout forms while they update.
+ *
+ * Cart and checkout keep the lot. Everywhere else this removes roughly 120KB of
+ * JavaScript, three render-blocking requests, and jQuery itself.
+ *
+ * `jquery-migrate` goes on the whole frontend regardless: it is a compatibility
+ * shim for jQuery 1.x-era code, and nothing here is jQuery-era code.
+ */
+function bhc_trim_woocommerce_scripts(): void {
+	if ( is_admin() || ! function_exists( 'is_cart' ) ) {
+		return;
+	}
+
+	// jquery-migrate is never needed on the front of this site.
+	$jquery = wp_scripts()->registered['jquery'] ?? null;
+
+	if ( $jquery && is_array( $jquery->deps ) ) {
+		$jquery->deps = array_values( array_diff( $jquery->deps, [ 'jquery-migrate' ] ) );
+	}
+
+	// Cart and checkout genuinely need the bundle: quantity updates, coupon
+	// application, shipping recalculation and the blocking overlay all run
+	// through it.
+	if ( is_cart() || is_checkout() || is_account_page() ) {
+		return;
+	}
+
+	foreach ( [ 'wc-add-to-cart', 'woocommerce', 'jquery-blockui', 'js-cookie' ] as $handle ) {
+		wp_dequeue_script( $handle );
+	}
+
+	// Order attribution records how a shopper arrived, and is only read when an
+	// order is created. Loading its two scripts on every page of the catalogue
+	// buys nothing.
+	foreach ( [ 'wc-order-attribution', 'sourcebuster-js' ] as $handle ) {
+		wp_dequeue_script( $handle );
+	}
+}
+
+/**
+ * jQuery is deliberately NOT deferred.
+ *
+ * Product pages still load jQuery, because WooCommerce's variation form and its
+ * review star-rating widget are built on it. Deferring it looks like an easy win
+ * — it is the only render-blocking script left — and it is not: WooCommerce
+ * prints inline `jQuery(...)` calls in the body, which execute before a deferred
+ * script has loaded and throw "jQuery is not defined". Tried, measured, reverted.
+ *
+ * The real fix is to stop loading jQuery on product pages at all, which means
+ * re-implementing the variation form. That is a larger change than it looks and
+ * is not attempted here.
+ */
+
+add_action( 'wp_enqueue_scripts', 'bhc_trim_woocommerce_scripts', 100 );
+
+/**
  * Preloads the LCP image and the main stylesheet.
  *
  * Target: LCP. Only two resources are ever preloaded — preloading more pushes
@@ -167,6 +230,20 @@ function bhc_lcp_image_id(): int {
 		return (int) get_post_thumbnail_id();
 	}
 
+	// The home page hero is the busiest LCP element on the site, and it used to
+	// be the one that never got preloaded: the hero template registered a
+	// `bhc_lcp_image_id` filter, but templates run long after wp_head has
+	// already emitted its hints. Resolving it here means the preload is in the
+	// head where it is useful. The lookup is the same cached repository call
+	// the hero itself makes, so it costs nothing extra.
+	if ( is_front_page() && function_exists( 'bhc_products_for' ) ) {
+		$hero = bhc_products_for( 'new', 1 )[0] ?? null;
+
+		if ( $hero instanceof WC_Product ) {
+			return (int) $hero->get_image_id();
+		}
+	}
+
 	/**
 	 * Filters the attachment id preloaded as the LCP image.
 	 *
@@ -201,7 +278,6 @@ function bhc_skip_lazy_for_first_image( $value, $image = '', $context = '' ) {
 	return 1 === $seen ? false : $value;
 }
 
-add_filter( 'wp_img_tag_add_loading_optimization_attrs', '__return_true' );
 add_filter( 'wp_lazy_loading_enabled', 'bhc_skip_lazy_for_first_image', 10, 3 );
 
 /**

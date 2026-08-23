@@ -31,7 +31,10 @@ interface StoreInterface {
 	 *
 	 * @param string $key   Fully qualified key.
 	 * @param mixed  $value Value.
-	 * @param int    $ttl   TTL in seconds (0 = store default).
+	 * @param int    $ttl   TTL in seconds. 0 means no expiry, and every
+	 *                      implementation must honour that: CacheManager writes
+	 *                      group versions with 0 so they outlive the entries
+	 *                      they invalidate.
 	 */
 	public function write( string $key, mixed $value, int $ttl ): bool;
 

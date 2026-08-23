@@ -57,7 +57,7 @@ final class CacheServiceProvider extends AbstractServiceProvider {
 				// us real cross-request caching instead.
 				return $redis->has_persistent_object_cache()
 					? new ObjectCacheStore( 'bhc_core' )
-					: new TransientStore( HOUR_IN_SECONDS );
+					: new TransientStore();
 			}
 		);
 

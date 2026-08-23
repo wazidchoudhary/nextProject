@@ -16,7 +16,9 @@
 	--bhc-color-surface: #fbf8f3;
 	--bhc-color-accent: #7a5c3e;
 	--bhc-color-sale: #8a3f2c;
-	--bhc-color-stock: #7a6a2f;
+	/* Fallback only: the theme supplies this token. 4.95:1 on the lightest
+	   paper tone, because low-stock copy has to be readable. */
+	--bhc-color-stock: #7d5f14;
 	--bhc-radius: 2px;
 	--bhc-space: 1rem;
 	--bhc-font-ui: inherit;

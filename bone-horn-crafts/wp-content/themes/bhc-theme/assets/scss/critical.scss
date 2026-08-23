@@ -19,3 +19,10 @@
 @use 'layout/header' as layout-header;
 @use 'components/buttons';
 @use 'components/header' as component-header;
+
+// The shop page is the second-most-linked page on the site and its layout is a
+// sidebar plus a grid. Without these two, the filter panel paints full-width
+// above the products and then jumps into the sidebar when main.css swaps in —
+// measured at 0.14 CLS on a 1440px viewport, over the 0.1 budget on its own.
+@use 'layout/grid';
+@use 'pages/shop';

@@ -222,6 +222,13 @@ function initStickyCart() {
 
 				bar.dataset.visible = visible ? 'true' : 'false';
 				bar.setAttribute( 'aria-hidden', visible ? 'false' : 'true' );
+
+				// Keep the tab order in step with the accessibility tree.
+				if ( visible ) {
+					bar.removeAttribute( 'inert' );
+				} else {
+					bar.setAttribute( 'inert', '' );
+				}
 			} );
 		},
 		{ rootMargin: '0px 0px -100% 0px' },
@@ -247,22 +254,55 @@ function initTabs() {
 		return;
 	}
 
+	const panelFor = ( tab ) => document.getElementById( tab.getAttribute( 'aria-controls' ) );
+
+	// The ARIA tabs pattern is a state machine, not a set of attributes: exactly
+	// one tab is aria-selected and focusable, and the other panels are `hidden`
+	// so they leave the accessibility tree rather than just going out of sight.
+	function activate( tab ) {
+		tabs.forEach( ( candidate ) => {
+			const selected = candidate === tab;
+			const panel = panelFor( candidate );
+
+			candidate.setAttribute( 'aria-selected', selected ? 'true' : 'false' );
+			candidate.setAttribute( 'tabindex', selected ? '0' : '-1' );
+
+			if ( panel ) {
+				panel.hidden = ! selected;
+			}
+		} );
+	}
+
 	tabs.forEach( ( tab, index ) => {
+		tab.addEventListener( 'click', ( event ) => {
+			event.preventDefault();
+			activate( tab );
+		} );
+
 		tab.addEventListener( 'keydown', ( event ) => {
-			if ( event.key !== 'ArrowRight' && event.key !== 'ArrowLeft' ) {
+			const keys = {
+				ArrowRight: tabs[ ( index + 1 ) % tabs.length ],
+				ArrowLeft: tabs[ ( index - 1 + tabs.length ) % tabs.length ],
+				Home: tabs[ 0 ],
+				End: tabs[ tabs.length - 1 ],
+			};
+
+			const next = keys[ event.key ];
+
+			if ( ! next ) {
 				return;
 			}
 
 			event.preventDefault();
-
-			const next = event.key === 'ArrowRight'
-				? tabs[ ( index + 1 ) % tabs.length ]
-				: tabs[ ( index - 1 + tabs.length ) % tabs.length ];
-
+			activate( next );
 			next.focus();
-			next.click();
 		} );
 	} );
+
+	// Deep links like /product/x/#tab-reviews should open that tab.
+	const requested = tabs.find( ( tab ) => tab.getAttribute( 'href' ) === window.location.hash );
+
+	activate( requested || tabs[ 0 ] );
 }
 
 /* -------------------------------------------------------------------------

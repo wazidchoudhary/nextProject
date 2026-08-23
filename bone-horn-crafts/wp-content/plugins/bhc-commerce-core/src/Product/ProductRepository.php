@@ -283,6 +283,11 @@ final class ProductRepository {
 					'orderby'       => 'title',
 					'order'         => 'ASC',
 					'visibility'    => 'any',
+					// A variable product holds no stock of its own; its
+					// variations do. Restricting this to `product` meant a
+					// store with 22 variable products reported "nothing is
+					// running low" while three sizes were down to three units.
+					'post_type'     => [ 'product', 'product_variation' ],
 				]
 			),
 			15 * MINUTE_IN_SECONDS

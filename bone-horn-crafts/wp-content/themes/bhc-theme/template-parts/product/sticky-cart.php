@@ -19,7 +19,13 @@ if ( ! $product instanceof WC_Product || ! $product->is_purchasable() ) {
 	return;
 }
 ?>
-<div class="sticky-cart" data-bhc-sticky-cart data-visible="false" aria-hidden="true">
+<?php
+// `inert` as well as aria-hidden. aria-hidden alone removes the bar from the
+// accessibility tree while leaving its button in the tab order, so a keyboard
+// user tabs into a control a screen reader has been told does not exist —
+// which is what axe's aria-hidden-focus rule is for.
+?>
+<div class="sticky-cart" data-bhc-sticky-cart data-visible="false" aria-hidden="true" inert>
 	<div>
 		<p class="sticky-cart__price"><?php echo wp_kses_post( (string) $product->get_price_html() ); ?></p>
 	</div>

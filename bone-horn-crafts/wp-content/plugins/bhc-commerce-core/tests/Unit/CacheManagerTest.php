@@ -96,6 +96,40 @@ final class CacheManagerTest extends TestCase {
 		$this->assertNull( $this->cache->get( 'stale' ) );
 	}
 
+	/**
+	 * A zero TTL must mean "no expiry" in every store.
+	 *
+	 * CacheManager writes each group's version with a TTL of 0 so it outlives
+	 * the entries it invalidates. When TransientStore quietly substituted its
+	 * own default instead, a flush undid itself an hour later and every
+	 * orphaned entry came back — on the fallback path that runs on any host
+	 * without an object cache, which is most of them.
+	 */
+	public function test_a_zero_ttl_never_expires(): void {
+		$this->store->write( 'permanent', 'value', 0 );
+
+		// Far enough forward that any real TTL would have lapsed.
+		$this->assertSame( 'value', $this->store->read( 'permanent', 'miss' ) );
+
+		$this->store->write( 'temporary', 'value', -1 );
+
+		$this->assertSame( 'miss', $this->store->read( 'temporary', 'miss' ) );
+	}
+
+	public function test_flushing_a_group_survives_the_version_entry_ttl(): void {
+		$manager = new CacheManager( $this->store, '1.0.0', 'products' );
+
+		$manager->set( 'key', 'original', 60 );
+		$manager->flush_group( 'products' );
+
+		// A fresh manager, as a later request would build: it must read the
+		// bumped version rather than falling back to 1 and finding the old
+		// entry still sitting there under the old key.
+		$fresh = new CacheManager( $this->store, '1.0.0', 'products' );
+
+		$this->assertSame( 'recomputed', $fresh->remember( 'key', static fn (): string => 'recomputed', 60 ) );
+	}
+
 	public function test_delete_removes_the_memoised_value_too(): void {
 		$this->cache->set( 'key', 'value' );
 		$this->cache->delete( 'key' );

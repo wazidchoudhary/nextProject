@@ -111,7 +111,11 @@ final class Logger implements LoggerInterface {
 		}
 
 		$payload = [
-			'event'   => sanitize_key( str_replace( ' ', '_', $event ) ),
+			// Not sanitize_key(): it strips dots, turning `job.batch_complete`
+			// into `jobbatch_complete` and destroying the namespace these
+			// events are built around. An aggregator cannot group or
+			// prefix-match on `job.` or `wishlist.` once that has happened.
+			'event'   => self::event_name( $event ),
 			'ts'      => gmdate( 'c' ),
 			'level'   => $level,
 			'context' => $this->redact( $context ),
@@ -187,6 +191,17 @@ final class Logger implements LoggerInterface {
 	 */
 	public function error( string $event, array $context = [] ): void {
 		$this->log( 'error', $event, $context );
+	}
+
+	/**
+	 * Normalises an event name, keeping the dotted namespace intact.
+	 *
+	 * @param string $event Raw event name.
+	 */
+	private static function event_name( string $event ): string {
+		$event = strtolower( str_replace( ' ', '_', trim( $event ) ) );
+
+		return (string) preg_replace( '/[^a-z0-9._-]/', '', $event );
 	}
 
 	/**
