@@ -70,6 +70,11 @@ theme and plugin, the built assets and the demo catalogue.
 `sudo service redis-server start`); the script talks to both and the failure
 otherwise reads like bad credentials rather than a stopped server.
 
+**On Windows, run all of this inside WSL2** — the script is bash and the stack is
+a Linux one. See
+[docs/local-development.md](docs/local-development.md#on-windows) for the full
+package list.
+
 ```bash
 DB_HOST=127.0.0.1 DB_NAME=bhc_demo DB_USER=root DB_PASSWORD=secret \
 REDIS_HOST=127.0.0.1 \

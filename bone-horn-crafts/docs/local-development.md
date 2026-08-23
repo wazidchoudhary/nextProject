@@ -35,6 +35,74 @@ Expect roughly **four to six minutes**, most of it seeding: 60 products with
 generated imagery, 8 customers, 24 orders and 148 reviews. It is idempotent —
 re-run it any time and it skips what is already done.
 
+### On Windows
+
+`bin/setup-demo.sh` is a bash script and the stack it builds is a Linux one, so
+run the whole thing inside **WSL2**. This is not a workaround — WSL2 gives you a
+real Ubuntu kernel, and every command in this repository then works exactly as
+written, with no Windows-specific variants to keep in sync.
+
+In PowerShell **as Administrator**, once:
+
+```powershell
+wsl --install
+```
+
+That installs WSL2 and Ubuntu, and asks for a reboot. Open **Ubuntu** from the
+Start menu afterwards and create your Linux user. Everything below runs in that
+Ubuntu shell, not in PowerShell.
+
+```bash
+sudo apt update
+sudo apt install -y \
+  php-cli php-gd php-mysql php-mbstring php-xml php-curl php-zip php-redis \
+  mariadb-server redis-server composer nodejs npm curl unzip git
+
+# WP-CLI
+curl -sO https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+chmod +x wp-cli.phar && sudo mv wp-cli.phar /usr/local/bin/wp
+
+sudo service mariadb start
+sudo service redis-server start
+
+# A database user for the store
+sudo mariadb -e "CREATE USER IF NOT EXISTS 'bhc'@'127.0.0.1' IDENTIFIED BY 'bhc';
+                 GRANT ALL ON *.* TO 'bhc'@'127.0.0.1' WITH GRANT OPTION;
+                 FLUSH PRIVILEGES;"
+```
+
+Then clone and build as above, with `DB_USER=bhc DB_PASSWORD=bhc`.
+
+**Keep the repository inside the Linux filesystem** — `~/projects/…`, not
+`/mnt/c/Users/…`. Windows drives are mounted over a translation layer, and the
+thousands of small file operations in `composer install`, `npm install` and the
+seeder run roughly an order of magnitude slower across it. Clone with `git clone`
+from inside Ubuntu rather than pointing WSL at an existing Windows checkout.
+
+Two things that work better than you might expect: `http://localhost:8088` opens
+directly in your Windows browser, because WSL2 forwards localhost; and VS Code's
+**WSL** extension edits the Linux files natively, so your editor stays on
+Windows while everything else is Linux.
+
+**The services do not survive a reboot.** WSL has no systemd by default, so
+`sudo service mariadb start` and `sudo service redis-server start` are the first
+two commands of every session.
+
+> Written against a standard WSL2 Ubuntu install; the reference build was made
+> and measured on native Linux, not through WSL, so treat the package list as a
+> starting point rather than a tested transcript.
+
+### Other ways in
+
+* **Docker Desktop** — `deploy/docker-compose.yml` is in the repository, with the
+  caveats recorded in [hosting.md](hosting.md#docker--reproducible-good-for-teams).
+  It has not been executed.
+* **Laragon, XAMPP, WampServer** — these give you PHP, MySQL and Apache on
+  Windows natively, but `bin/setup-demo.sh` will not run on them. You would be
+  installing WordPress, WooCommerce, the theme and the plugin by hand and then
+  running `wp bhc demo seed` for the catalogue. Workable, and more steps than
+  WSL2 for no benefit.
+
 That is the documented default: MySQL or MariaDB for the database, Redis for the
 object cache. It is what the reference build was measured on — MariaDB 10.11,
 Redis 7, PHP 8.4, WordPress 7.0.4, WooCommerce 10.9.0. The difference the object
@@ -258,6 +326,9 @@ it should be automatic.
 | Symptom | Cause |
 |---|---|
 | "Error establishing a database connection" | The database server is not running, or the credentials are wrong. Start it before the script — `sudo service mariadb start` |
+| On WSL: everything works, then fails after a reboot | WSL has no systemd; re-run `sudo service mariadb start` and `sudo service redis-server start` |
+| On WSL: `composer install` and seeding crawl | The checkout is under `/mnt/c/`. Move it into the Linux filesystem |
+| `bin/setup-demo.sh: not found` on Windows | Running in PowerShell or CMD rather than in the Ubuntu shell |
 | Setup stops asking you to create the database | The DB user has no `CREATE` right. The script prints the `CREATE DATABASE` and `GRANT` to run |
 | Orders open at `post.php` instead of `admin.php?page=wc-orders` | HPOS is off. Setup enables it; an install predating that runs `wp wc hpos sync && wp wc hpos enable` |
 | "Not enough units in stock" at checkout | SQLite; the dev mu-plugin is missing. See [deployment.md](deployment.md#running-on-sqlite) |
