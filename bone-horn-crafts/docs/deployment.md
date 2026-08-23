@@ -66,10 +66,24 @@ the real site.
 
 ### Build
 
+**Neither build step is required to run the store.** The plugin declares no
+production dependencies — `composer.json` requires only `php: >=8.2`, and
+everything under `require-dev` is tooling — and `bhc-commerce-core.php` falls
+back to `Support\Autoloader` when `vendor/autoload.php` is absent. The compiled
+`main.css` and `critical.css` are committed. A deployment that copies the plugin
+and theme directories and activates them is a working store: verified by hiding
+`vendor/` entirely and running the full purchase flow, which completed a real
+order with all thirteen checks green.
+
+Run them anyway when you have the tooling — the Composer autoloader is faster
+than the fallback, and rebuilding the CSS guarantees it matches the SCSS in the
+deployed commit — but neither is a blocker on a host without Composer or Node.
+
 - [ ] `composer install --no-dev --optimize-autoloader` in the plugin directory
-- [ ] `npm ci && npm run build` — `main.css` and `critical.css` are committed,
-      but rebuild so they match the SCSS in the deployed commit. `critical.css`
-      is built but not loaded by default; see the note on
+      *(optional — generates a classmap autoloader; the plugin runs without it)*
+- [ ] `npm ci && npm run build` *(optional — `main.css` and `critical.css` are
+      committed; rebuild only to guarantee they match the deployed SCSS)*.
+      `critical.css` is built but not loaded by default; see the note on
       `bhc_async_main_stylesheet` below
 - [ ] `npm run lint` clean (stylelint, eslint, phpcs)
 - [ ] `npm run test:unit` green
