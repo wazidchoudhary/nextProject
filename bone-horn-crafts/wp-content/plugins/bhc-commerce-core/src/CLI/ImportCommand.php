@@ -107,24 +107,7 @@ final class ImportCommand {
 			WP_CLI::error( (string) $result['error'] );
 		}
 
-		$stats = $result['stats'] ?? [];
-
-		WP_CLI\Utils\format_items(
-			'table',
-			array_map(
-				static fn ( string $k, int $v ): array => [
-					'item'  => $k,
-					'count' => $v,
-				],
-				array_keys( $stats ),
-				array_values( $stats )
-			),
-			[ 'item', 'count' ]
-		);
-
-		foreach ( (array) ( $result['problems'] ?? [] ) as $problem ) {
-			WP_CLI::warning( (string) $problem );
-		}
+		$this->report( $result );
 
 		if ( $dry_run ) {
 			WP_CLI::success( 'Dry run complete. Nothing was written.' );
@@ -235,6 +218,30 @@ final class ImportCommand {
 			WP_CLI::error( (string) $result['error'] );
 		}
 
+		$this->report( $result );
+
+		if ( $dry_run ) {
+			WP_CLI::success( 'Dry run complete. Nothing was written.' );
+
+			return;
+		}
+
+		foreach ( Invalidator::ALL_GROUPS as $group ) {
+			$this->cache->flush_group( $group );
+		}
+
+		WP_CLI::success( 'Imagery imported.' );
+	}
+
+	/**
+	 * Prints an importer result: the stats table, then any problems.
+	 *
+	 * Both importers return the same `{stats, problems}` shape, and both
+	 * commands used to render it with their own copy of this code.
+	 *
+	 * @param array<string, mixed> $result Importer result.
+	 */
+	private function report( array $result ): void {
 		$stats = (array) ( $result['stats'] ?? [] );
 
 		WP_CLI\Utils\format_items(
@@ -253,18 +260,6 @@ final class ImportCommand {
 		foreach ( (array) ( $result['problems'] ?? [] ) as $problem ) {
 			WP_CLI::warning( (string) $problem );
 		}
-
-		if ( $dry_run ) {
-			WP_CLI::success( 'Dry run complete. Nothing was written.' );
-
-			return;
-		}
-
-		foreach ( Invalidator::ALL_GROUPS as $group ) {
-			$this->cache->flush_group( $group );
-		}
-
-		WP_CLI::success( 'Imagery imported.' );
 	}
 
 	/**

@@ -58,29 +58,22 @@ final class PlaceholderContactRepair {
 	 * @return array<string, string> Setting => new value, for the settings that changed.
 	 */
 	public function apply(): array {
-		$defaults = $this->options->defaults();
-		$changed  = [];
-		$settings = $this->options->all();
+		// drift() is the single decision-maker for what counts as a
+		// placeholder; this method only writes what it reports. The two used
+		// to carry the same twenty-line loop each, which is exactly how a
+		// future placeholder gets added to one and not the other.
+		$drift = $this->drift();
 
-		foreach ( self::PLACEHOLDERS as $key => $placeholders ) {
-			$current = (string) ( $settings[ $key ] ?? '' );
-
-			if ( ! in_array( $current, $placeholders, true ) ) {
-				continue;
-			}
-
-			$replacement = (string) ( $defaults[ $key ] ?? '' );
-
-			if ( '' === $replacement || $replacement === $current ) {
-				continue;
-			}
-
-			$settings[ $key ] = $replacement;
-			$changed[ $key ]  = $replacement;
+		if ( [] === $drift ) {
+			return [];
 		}
 
-		if ( [] === $changed ) {
-			return [];
+		$settings = $this->options->all();
+		$changed  = [];
+
+		foreach ( $drift as $key => $values ) {
+			$settings[ $key ] = $values['replacement'];
+			$changed[ $key ]  = $values['replacement'];
 		}
 
 		$this->options->save( $settings );

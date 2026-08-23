@@ -154,79 +154,38 @@ final class CommandRegistrar {
 		WP_CLI::add_command(
 			'bhc setup hero',
 			static function ( array $args, array $assoc_args ) use ( $container ): void {
-				$options = $container->get( \BoneHornCrafts\Core\Support\Options::class );
-				$source  = (string) ( $args[0] ?? '' );
+				unset( $assoc_args );
+
+				$banner = $container->get( \BoneHornCrafts\Core\Store\HeroBanner::class );
+				$source = (string) ( $args[0] ?? '' );
 
 				if ( '' === $source ) {
-					$current = (int) $options->get( 'hero_image_id', 0 );
+					$current = $banner->current();
 
-					if ( $current > 0 ) {
-						WP_CLI::log( sprintf( '  id  %d', $current ) );
-						WP_CLI::log( sprintf( '  url %s', (string) wp_get_attachment_url( $current ) ) );
-						WP_CLI::success( 'A home page banner is set.' );
+					if ( 0 === $current ) {
+						WP_CLI::warning( 'No banner set. Pass an image file or an attachment id.' );
 
 						return;
 					}
 
-					WP_CLI::warning( 'No banner set. Pass an image file or an attachment id.' );
+					WP_CLI::log( sprintf( '  id  %d', $current ) );
+					WP_CLI::log( sprintf( '  url %s', (string) wp_get_attachment_url( $current ) ) );
+					WP_CLI::success( 'A home page banner is set.' );
 
 					return;
 				}
 
-				// A bare number is an attachment that is already in the library.
-				if ( ctype_digit( $source ) ) {
-					$attachment = (int) $source;
+				// A bare number is an attachment already in the library;
+				// anything else is a file to import.
+				$result = ctype_digit( $source )
+					? $banner->set( (int) $source )
+					: $banner->import( $source );
 
-					if ( ! wp_attachment_is_image( $attachment ) ) {
-						WP_CLI::error( sprintf( '%d is not an image attachment.', $attachment ) );
-					}
-				} else {
-					if ( ! is_readable( $source ) ) {
-						WP_CLI::error( sprintf( 'Cannot read %s', $source ) );
-					}
-
-					require_once ABSPATH . 'wp-admin/includes/media.php';
-					require_once ABSPATH . 'wp-admin/includes/file.php';
-					require_once ABSPATH . 'wp-admin/includes/image.php';
-
-					// Copied into a temp file first: media_handle_sideload()
-					// *moves* what it is given, and a run that pointed straight
-					// at the operator's own file would delete it.
-					$temp = wp_tempnam( basename( $source ) );
-
-					if ( ! $temp || ! copy( $source, $temp ) ) {
-						WP_CLI::error( 'Could not stage the file for import.' );
-					}
-
-					$attachment = media_handle_sideload(
-						[
-							'name'     => basename( $source ),
-							'tmp_name' => $temp,
-						],
-						0,
-						sprintf(
-							/* translators: %s: store name. */
-							__( '%s home page banner', 'bhc-commerce-core' ),
-							get_bloginfo( 'name' )
-						)
-					);
-
-					if ( is_wp_error( $attachment ) ) {
-						if ( file_exists( $temp ) ) {
-							// phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink -- Removing our own temp copy after a failed import.
-							unlink( $temp );
-						}
-
-						WP_CLI::error( $attachment->get_error_message() );
-					}
-
-					$attachment = (int) $attachment;
+				if ( is_wp_error( $result ) ) {
+					WP_CLI::error( $result->get_error_message() );
 				}
 
-				$settings                  = $options->all();
-				$settings['hero_image_id'] = $attachment;
-
-				$options->save( $settings );
+				$attachment = $banner->current();
 
 				WP_CLI::log( sprintf( '  id  %d', $attachment ) );
 				WP_CLI::log( sprintf( '  url %s', (string) wp_get_attachment_url( $attachment ) ) );

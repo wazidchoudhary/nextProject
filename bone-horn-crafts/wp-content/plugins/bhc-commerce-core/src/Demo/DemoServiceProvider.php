@@ -58,7 +58,8 @@ final class DemoServiceProvider extends AbstractServiceProvider {
 				$c->get( ImageFactory::class ),
 				$c->get( AttributeRegistrar::class ),
 				$c->get( LoggerInterface::class ),
-				$c->get( Options::class )
+				$c->get( Options::class ),
+				$c->get( \BoneHornCrafts\Core\Content\PolicyPageInstaller::class )
 			)
 		);
 	}

@@ -135,9 +135,12 @@ function bhc_products_for( string $source, int $limit = 8, string $value = '' ):
  * @return int Attachment id, or 0 when none is set.
  */
 function bhc_hero_banner_id(): int {
-	$options = bhc_service( \BoneHornCrafts\Core\Support\Options::class );
+	// The plugin's HeroBanner owns the setting and the deleted-attachment
+	// check; duplicating that validation here is how the theme and the CLI
+	// drift into disagreeing about whether a banner is set.
+	$banner = bhc_service( \BoneHornCrafts\Core\Store\HeroBanner::class );
 
-	$id = null !== $options ? (int) $options->get( 'hero_image_id', 0 ) : 0;
+	$id = null !== $banner ? $banner->current() : 0;
 
 	/**
 	 * Filters the home page banner attachment.
@@ -146,7 +149,7 @@ function bhc_hero_banner_id(): int {
 	 */
 	$id = (int) apply_filters( 'bhc_hero_banner_id', $id );
 
-	// A deleted attachment must not leave the hero pointing at a 404.
+	// A filtered-in id still has to survive the same check.
 	return $id > 0 && wp_attachment_is_image( $id ) ? $id : 0;
 }
 

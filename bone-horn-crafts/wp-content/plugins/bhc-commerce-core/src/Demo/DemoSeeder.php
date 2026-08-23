@@ -11,6 +11,7 @@ namespace BoneHornCrafts\Core\Demo;
 
 defined( 'ABSPATH' ) || exit;
 
+use BoneHornCrafts\Core\Content\PolicyPageInstaller;
 use BoneHornCrafts\Core\Contracts\LoggerInterface;
 use BoneHornCrafts\Core\Support\Options;
 use BoneHornCrafts\Core\Product\Attributes\AttributeCatalog;
@@ -52,18 +53,20 @@ final class DemoSeeder {
 	/**
 	 * Constructor.
 	 *
-	 * @param DemoState          $state      Demo bookkeeping.
-	 * @param ImageFactory       $images     Image renderer.
-	 * @param AttributeRegistrar $attributes Attribute installer.
-	 * @param LoggerInterface    $logger     Logger.
-	 * @param Options            $options    Plugin settings.
+	 * @param DemoState           $state        Demo bookkeeping.
+	 * @param ImageFactory        $images       Image renderer.
+	 * @param AttributeRegistrar  $attributes   Attribute installer.
+	 * @param LoggerInterface     $logger       Logger.
+	 * @param Options             $options      Plugin settings.
+	 * @param PolicyPageInstaller $policy_pages Policy page owner.
 	 */
 	public function __construct(
 		private DemoState $state,
 		private ImageFactory $images,
 		private AttributeRegistrar $attributes,
 		private LoggerInterface $logger,
-		private Options $options
+		private Options $options,
+		private PolicyPageInstaller $policy_pages
 	) {
 		$this->progress = static function ( string $message ): void {};
 	}
@@ -1708,28 +1711,15 @@ final class DemoSeeder {
 	/**
 	 * Points WooCommerce's policy-page options at the store's own pages.
 	 *
-	 * WooCommerce ships a draft "Refund and Returns Policy" page which
-	 * `purge_default_content()` removes, leaving the option pointing at a post
-	 * that no longer exists; the terms option ships empty. Both surface in
-	 * checkout copy and in the emailed order confirmation, so a store that
-	 * reads as a real business has to wire them to the policies it actually
-	 * publishes.
+	 * Delegates to the installer that owns those pages. This used to be a
+	 * hand-rolled copy of the same wiring with one meaningful difference — it
+	 * overwrote the options unconditionally, where the installer only fills
+	 * them when they are empty or dangling. Two implementations of "which page
+	 * is the terms page" with different answers is how the demo seeder ends up
+	 * clobbering a real store's configuration.
 	 */
 	private function adopt_policy_pages(): void {
-		$policies = [
-			'woocommerce_terms_page_id'          => 'terms-conditions',
-			'woocommerce_refund_returns_page_id' => 'returns-refunds',
-		];
-
-		foreach ( $policies as $option => $slug ) {
-			$page = get_page_by_path( $slug, OBJECT, 'page' );
-
-			if ( ! $page instanceof \WP_Post ) {
-				continue;
-			}
-
-			update_option( $option, $page->ID );
-		}
+		$this->policy_pages->install();
 	}
 
 	/**
