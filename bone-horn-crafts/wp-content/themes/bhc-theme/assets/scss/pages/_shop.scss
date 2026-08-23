@@ -104,3 +104,21 @@
 	color: v.$color-ink-muted;
 	margin-block-end: f.space('md');
 }
+
+// Load more. An addition to the numbered pagination, never a replacement —
+// see archive-product.php for why.
+.bhc-load-more {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: f.space('2xs');
+	margin-block-start: f.space('lg');
+	text-align: center;
+}
+
+.bhc-load-more__status {
+	margin: 0;
+	font-size: v.$size-xs;
+	color: v.$color-ink-muted;
+	min-block-size: 1.2em;
+}

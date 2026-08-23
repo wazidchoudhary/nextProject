@@ -155,35 +155,95 @@ function serialiseFilters( form ) {
 	return params;
 }
 
-function renderProducts( products ) {
-	if ( ! products.length ) {
-		return `<p class="bhc-empty__body">${ strings.noResults || '' }</p>`;
+/**
+ * Appends the next page of results in place.
+ *
+ * Deliberately a button rather than infinite scroll. A crawler does not
+ * scroll, so replacing the numbered pages with a scroll listener takes the
+ * catalogue out of the index; and a shopper who opens a product and comes back
+ * loses their position. This leaves the paged URLs exactly as they were — they
+ * still work with JavaScript off — and adds a way to keep reading without a
+ * full page load.
+ *
+ * The button is hidden in the markup and revealed here, so a visitor without
+ * JavaScript never sees a control that cannot work.
+ */
+function initLoadMore() {
+	const holder = document.querySelector( '[data-bhc-load-more]' );
+	const grid = document.querySelector( '[data-bhc-product-grid], ul.products' );
+
+	if ( ! holder || ! grid || ! api ) {
+		return;
 	}
 
-	return products
-		.map( ( product ) => {
-			const image = product.image || {};
-			const badges = ( product.badges || [] )
-				.map( ( badge ) => `<li class="bhc-badge bhc-badge--${ badge.tone }">${ badge.label }</li>` )
-				.join( '' );
+	const button = holder.querySelector( '[data-bhc-load-more-button]' );
+	const status = holder.querySelector( '[data-bhc-load-more-status]' );
+	const totalPages = parseInt( holder.dataset.totalPages, 10 ) || 1;
 
-			return `
-			<article class="bhc-card" data-product-id="${ product.id }">
-				<div class="bhc-card__media">
-					<a class="bhc-card__link" href="${ product.permalink }" tabindex="-1" aria-hidden="true">
-						<img class="bhc-card__image" src="${ image.src || '' }" srcset="${ image.srcset || '' }" sizes="${ image.sizes || '' }"
-							width="${ image.width || 400 }" height="${ image.height || 400 }" alt="${ image.alt || '' }" loading="lazy" decoding="async" />
-					</a>
-					${ badges ? `<ul class="bhc-badges">${ badges }</ul>` : '' }
-				</div>
-				<div class="bhc-card__body">
-					<h3 class="bhc-card__title"><a href="${ product.permalink }">${ product.name }</a></h3>
-					<p class="bhc-card__price">${ product.price_html }</p>
-					${ product.unit_of_sale ? `<p class="bhc-card__unit">${ product.unit_of_sale }</p>` : '' }
-				</div>
-			</article>`;
-		} )
-		.join( '' );
+	if ( ! button ) {
+		return;
+	}
+
+	// Whatever page the visitor actually landed on, not always 1: /shop/page/3/
+	// must continue from four.
+	const current = new URLSearchParams( window.location.search );
+	const pathPage = window.location.pathname.match( /\/page\/(\d+)/ );
+	let page = pathPage ? parseInt( pathPage[ 1 ], 10 ) : parseInt( current.get( 'paged' ) || '1', 10 );
+	let busy = false;
+
+	holder.hidden = false;
+
+	button.addEventListener( 'click', async () => {
+		if ( busy || page >= totalPages ) {
+			return;
+		}
+
+		busy = true;
+		button.disabled = true;
+
+		const label = button.textContent;
+
+		button.textContent = strings.loading || label;
+
+		try {
+			const params = new URLSearchParams( current );
+
+			params.set( 'page', String( page + 1 ) );
+
+			const response = await fetch( `${ api }/catalog?${ params.toString() }`, {
+				headers: { Accept: 'application/json' },
+			} );
+
+			if ( ! response.ok ) {
+				throw new Error( String( response.status ) );
+			}
+
+			const payload = await response.json();
+
+			if ( ! payload.html ) {
+				page = totalPages;
+			} else {
+				grid.insertAdjacentHTML( 'beforeend', payload.html );
+				page += 1;
+			}
+
+			if ( status ) {
+				status.textContent = formatResultCount( grid.children.length );
+			}
+
+			if ( page >= totalPages ) {
+				holder.hidden = true;
+			}
+		} catch {
+			if ( status ) {
+				status.textContent = strings.loadMoreFailed || '';
+			}
+		} finally {
+			busy = false;
+			button.disabled = false;
+			button.textContent = label;
+		}
+	} );
 }
 
 /**
@@ -275,7 +335,10 @@ function initFilters() {
 			return;
 		}
 
-		grid.innerHTML = renderProducts( payload.products || [] );
+		// Markup comes from the server, rendered by the same template the
+		// archive uses. Building it here meant maintaining the card twice, and
+		// the copies had already drifted apart.
+		grid.innerHTML = payload.html || `<p class="bhc-empty__body">${ strings.noResults || '' }</p>`;
 
 		const summary = formatResultCount( payload.total );
 
@@ -383,6 +446,7 @@ function initFilterDrawer() {
 function boot() {
 	initWishlist();
 	initFilters();
+	initLoadMore();
 	initEstimator();
 	initFilterDrawer();
 }

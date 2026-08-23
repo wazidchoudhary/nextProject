@@ -135,20 +135,21 @@ final class Assets implements HookableInterface {
 				'ids'     => $this->wishlist->ids(),
 			],
 			'strings'   => [
-				'saved'       => __( 'Saved', 'bhc-commerce-core' ),
-				'save'        => __( 'Save', 'bhc-commerce-core' ),
-				'error'       => __( 'Something went wrong. Please try again.', 'bhc-commerce-core' ),
-				'loading'     => __( 'Loading…', 'bhc-commerce-core' ),
-				'noResults'   => __( 'No material matches those filters yet.', 'bhc-commerce-core' ),
-				'addedToCart' => __( 'Added to your cart', 'bhc-commerce-core' ),
+				'saved'          => __( 'Saved', 'bhc-commerce-core' ),
+				'save'           => __( 'Save', 'bhc-commerce-core' ),
+				'error'          => __( 'Something went wrong. Please try again.', 'bhc-commerce-core' ),
+				'loading'        => __( 'Loading…', 'bhc-commerce-core' ),
+				'noResults'      => __( 'No material matches those filters yet.', 'bhc-commerce-core' ),
+				'loadMoreFailed' => __( 'Could not load more. Check your connection and try again.', 'bhc-commerce-core' ),
+				'addedToCart'    => __( 'Added to your cart', 'bhc-commerce-core' ),
 
 				// Both forms cross to JavaScript rather than a pre-built
 				// string: the count is only known client side, and a language
 				// whose plural rules differ from English cannot be served by
 				// appending an "s" there.
-				'resultOne'   => __( '1 result', 'bhc-commerce-core' ),
+				'resultOne'      => __( '1 result', 'bhc-commerce-core' ),
 				/* translators: %s: number of results. */
-				'resultMany'  => __( '%s results', 'bhc-commerce-core' ),
+				'resultMany'     => __( '%s results', 'bhc-commerce-core' ),
 			],
 			'currency'  => [
 				'code'   => get_woocommerce_currency(),

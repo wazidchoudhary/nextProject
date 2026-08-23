@@ -21,6 +21,7 @@ use BoneHornCrafts\Core\Pricing\PriceFormatter;
 use BoneHornCrafts\Core\Product\Badges\BadgeResolver;
 use BoneHornCrafts\Core\Recommendations\RecommendationService;
 use BoneHornCrafts\Core\Search\SearchService;
+use BoneHornCrafts\Core\Support\Template;
 use BoneHornCrafts\Core\Security\RestGuard;
 use BoneHornCrafts\Core\Wishlist\WishlistService;
 
@@ -67,6 +68,7 @@ final class ApiServiceProvider extends AbstractServiceProvider {
 			static fn ( Container $c ): CatalogController => new CatalogController(
 				$c->get( SearchService::class ),
 				$c->get( ProductPresenter::class ),
+				$c->get( Template::class ),
 				$c->get( RestGuard::class )
 			)
 		);

@@ -98,7 +98,26 @@ $queried_term = is_tax() ? get_queried_object() : null;
 
 			woocommerce_product_loop_end();
 
+			// Pagination stays exactly as it was. Infinite scroll would replace
+			// it, and a crawler does not scroll — the numbered pages are how
+			// the catalogue gets indexed, and how a shopper gets back to where
+			// they were. The button below is an addition to them, not a
+			// replacement: it appends the next page in place while the real
+			// paged URLs keep working with JavaScript off.
 			do_action( 'woocommerce_after_shop_loop' );
+
+			$bhc_total_pages = (int) wc_get_loop_prop( 'total_pages' );
+
+			if ( $bhc_total_pages > 1 ) :
+				?>
+				<div class="bhc-load-more" data-bhc-load-more data-total-pages="<?php echo esc_attr( (string) $bhc_total_pages ); ?>" hidden>
+					<button type="button" class="bhc-button bhc-button--ghost" data-bhc-load-more-button>
+						<?php esc_html_e( 'Load more', 'bhc-theme' ); ?>
+					</button>
+					<p class="bhc-load-more__status" role="status" aria-live="polite" data-bhc-load-more-status></p>
+				</div>
+				<?php
+			endif;
 			?>
 		<?php else : ?>
 			<div class="bhc-empty">

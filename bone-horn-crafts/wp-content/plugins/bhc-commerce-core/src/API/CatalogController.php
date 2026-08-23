@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 
 use BoneHornCrafts\Core\Search\FilterRequest;
 use BoneHornCrafts\Core\Search\SearchService;
+use BoneHornCrafts\Core\Support\Template;
 use BoneHornCrafts\Core\Security\RestGuard;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -31,11 +32,13 @@ final class CatalogController extends AbstractController {
 	 *
 	 * @param SearchService    $search    Search service.
 	 * @param ProductPresenter $presenter Product presenter.
+	 * @param Template         $template  Card template renderer.
 	 * @param RestGuard        $guard     Permission callbacks.
 	 */
 	public function __construct(
 		private SearchService $search,
 		private ProductPresenter $presenter,
+		private Template $template,
 		RestGuard $guard
 	) {
 		parent::__construct( $guard );
@@ -114,6 +117,15 @@ final class CatalogController extends AbstractController {
 
 		$payload = [
 			'products' => $this->presenter->present_many( $results['products'] ),
+			// The rendered cards, from the same template the archive uses.
+			//
+			// The browser used to build this markup itself from the `products`
+			// array, which meant the card existed twice — once in
+			// templates/product/card.php and once in JavaScript. The two had
+			// already drifted: filtering the shop replaced cards that had a
+			// star rating, a review count and a wishlist button with cards that
+			// had none of them. One implementation, rendered where the data is.
+			'html'     => $this->render_cards( $results['products'] ),
 			'total'    => $results['total'],
 			'pages'    => $results['pages'],
 			'page'     => $filters->page,
@@ -128,6 +140,34 @@ final class CatalogController extends AbstractController {
 		// Filtered grids are identical for every visitor, so a short shared
 		// cache is safe and takes the repeat-filter load off PHP entirely.
 		return $this->respond( $payload, 200, 5 * MINUTE_IN_SECONDS );
+	}
+
+	/**
+	 * Renders a set of products as catalogue cards.
+	 *
+	 * @param \WC_Product[] $products Products to render.
+	 */
+	private function render_cards( array $products ): string {
+		if ( [] === $products ) {
+			return '';
+		}
+
+		ob_start();
+
+		foreach ( $products as $product ) {
+			$this->template->output(
+				'product/card.php',
+				[
+					'product' => $product,
+					// Everything the filter or a "load more" appends is below
+					// the fold by definition, so nothing here is the LCP
+					// candidate and nothing should load eagerly.
+					'eager'   => false,
+				]
+			);
+		}
+
+		return (string) ob_get_clean();
 	}
 
 	/**
