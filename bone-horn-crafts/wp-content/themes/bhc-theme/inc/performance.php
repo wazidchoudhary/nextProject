@@ -195,6 +195,17 @@ function bhc_resource_hints(): void {
 		esc_url( BHC_THEME_URI . '/assets/css/main.css?ver=' . bhc_asset_version( 'assets/css/main.css' ) )
 	);
 
+	// A banner bundled with the theme has no attachment id, so it is preloaded
+	// by URL. Same element, same priority — it just cannot be resolved through
+	// the attachment helpers.
+	if ( is_front_page() && function_exists( 'bhc_hero_banner_id' ) && 0 === bhc_hero_banner_id() ) {
+		$bundled = function_exists( 'bhc_hero_banner_fallback_url' ) ? bhc_hero_banner_fallback_url() : '';
+
+		if ( '' !== $bundled ) {
+			printf( "<link rel=\"preload\" as=\"image\" href=\"%s\" fetchpriority=\"high\" />\n", esc_url( $bundled ) );
+		}
+	}
+
 	$lcp_image_id = bhc_lcp_image_id();
 
 	if ( $lcp_image_id > 0 ) {

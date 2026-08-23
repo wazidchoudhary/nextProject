@@ -151,6 +151,48 @@ function bhc_hero_banner_id(): int {
 }
 
 /**
+ * URL of a banner bundled with the theme, if one has been committed.
+ *
+ * Three tiers, in order: the media-library attachment a shop owner chose, this
+ * file, then the CSS gradient the hero falls back to. The middle tier exists so
+ * a fresh install — or a rebuilt staging site with an empty uploads folder —
+ * still looks finished before anybody opens the settings screen.
+ *
+ * Drop a file at assets/images/hero-banner.webp (or .jpg/.png) and it is used
+ * automatically; nothing else needs changing. WebP is preferred because it is
+ * typically half the bytes of the JPEG at the same quality, and this is the
+ * page's LCP element.
+ *
+ * @return string Absolute URL, or an empty string when no file is present.
+ */
+function bhc_hero_banner_fallback_url(): string {
+	static $url = null;
+
+	if ( null !== $url ) {
+		return $url;
+	}
+
+	$url = '';
+
+	foreach ( [ 'webp', 'jpg', 'jpeg', 'png' ] as $extension ) {
+		$relative = 'assets/images/hero-banner.' . $extension;
+
+		if ( is_readable( BHC_THEME_DIR . '/' . $relative ) ) {
+			$url = BHC_THEME_URI . '/' . $relative;
+
+			break;
+		}
+	}
+
+	/**
+	 * Filters the bundled banner URL.
+	 *
+	 * @param string $url Absolute URL, or '' when none is bundled.
+	 */
+	return (string) apply_filters( 'bhc_hero_banner_fallback_url', $url );
+}
+
+/**
  * Returns the newest product that actually has a photograph.
  *
  * The hero used to take `bhc_products_for( 'new', 1 )` and render its image.

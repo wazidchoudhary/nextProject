@@ -21,30 +21,49 @@ defined( 'ABSPATH' ) || exit;
 
 $copy = isset( $args['copy'] ) && is_array( $args['copy'] ) ? $args['copy'] : [];
 
-$banner_id = bhc_hero_banner_id();
+// Three tiers: the banner a shop owner selected, a file bundled with the theme,
+// then the section's own gradient. The middle tier keeps a fresh install or a
+// rebuilt staging site looking finished before anybody opens the settings.
+$banner_id  = bhc_hero_banner_id();
+$banner_url = $banner_id > 0 ? '' : bhc_hero_banner_fallback_url();
+$has_banner = $banner_id > 0 || '' !== $banner_url;
 
-// Without a configured banner the hero still has to look deliberate, so it
-// falls back to its own dark ground rather than to an empty box.
 $hero_product = bhc_hero_product();
 ?>
-<section class="hero<?php echo $banner_id > 0 ? ' hero--banner' : ' hero--plain'; ?>" aria-labelledby="hero-title">
-	<?php if ( $banner_id > 0 ) : ?>
+<section class="hero<?php echo $has_banner ? ' hero--banner' : ' hero--plain'; ?>" aria-labelledby="hero-title">
+	<?php if ( $has_banner ) : ?>
 		<div class="hero__backdrop" aria-hidden="true">
-			<?php
-			echo wp_get_attachment_image(
-				$banner_id,
-				'full',
-				false,
-				[
-					'class'         => 'hero__backdrop-image',
-					'fetchpriority' => 'high',
-					'loading'       => 'eager',
-					'decoding'      => 'async',
-					'sizes'         => '100vw',
-					'alt'           => '',
-				]
-			);
-			?>
+			<?php if ( $banner_id > 0 ) : ?>
+				<?php
+				echo wp_get_attachment_image(
+					$banner_id,
+					'full',
+					false,
+					[
+						'class'         => 'hero__backdrop-image',
+						'fetchpriority' => 'high',
+						'loading'       => 'eager',
+						'decoding'      => 'async',
+						'sizes'         => '100vw',
+						'alt'           => '',
+					]
+				);
+				?>
+			<?php else : ?>
+				<?php
+				// A bundled file has no attachment record, so there is no
+				// srcset to build — it is emitted as a plain img with the same
+				// loading hints.
+				?>
+				<img
+					class="hero__backdrop-image"
+					src="<?php echo esc_url( $banner_url ); ?>"
+					alt=""
+					fetchpriority="high"
+					loading="eager"
+					decoding="async"
+				/>
+			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 
