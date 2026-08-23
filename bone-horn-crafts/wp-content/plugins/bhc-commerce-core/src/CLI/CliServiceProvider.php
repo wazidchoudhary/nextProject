@@ -15,6 +15,7 @@ use BoneHornCrafts\Core\AbstractServiceProvider;
 use BoneHornCrafts\Core\Admin\HealthReport;
 use BoneHornCrafts\Core\Analytics\MerchandisingIndexer;
 use BoneHornCrafts\Core\Cache\CacheManager;
+use BoneHornCrafts\Core\Import\FirebaseImporter;
 use BoneHornCrafts\Core\Container;
 use BoneHornCrafts\Core\Contracts\ContainerInterface;
 use BoneHornCrafts\Core\Demo\DemoSeeder;
@@ -61,6 +62,19 @@ final class CliServiceProvider extends AbstractServiceProvider {
 			CacheCommand::class,
 			static fn ( Container $c ): CacheCommand => new CacheCommand(
 				$c->get( CacheWarmJob::class ),
+				$c->get( CacheManager::class )
+			)
+		);
+
+		$container->singleton(
+			FirebaseImporter::class,
+			static fn (): FirebaseImporter => new FirebaseImporter()
+		);
+
+		$container->singleton(
+			ImportCommand::class,
+			static fn ( Container $c ): ImportCommand => new ImportCommand(
+				$c->get( FirebaseImporter::class ),
 				$c->get( CacheManager::class )
 			)
 		);

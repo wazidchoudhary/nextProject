@@ -45,6 +45,51 @@ final class CommandRegistrar {
 		$this->register_cache_commands();
 		$this->register_health_command();
 		$this->register_demo_commands();
+		$this->register_import_commands();
+	}
+
+	/**
+	 * `wp bhc import firebase`.
+	 */
+	private function register_import_commands(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc import firebase',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				$container->get( ImportCommand::class )->firebase( $args, $assoc_args );
+			},
+			[
+				'shortdesc' => 'Import a real product catalogue from a Firebase Realtime Database export.',
+				'longdesc'  => "Matches on SKU (the source productId), so re-running updates rather than duplicates. A record whose productPrice is a list of {price, type} rows becomes a variable product with one variation per row.\n\nOnly the `product` branch is read. Any `orders` or `messages` branch is ignored: it holds real customer data, which does not belong in a catalogue import.\n\n## EXAMPLES\n\n    wp bhc import firebase export.json --dry-run\n    wp bhc import firebase export.json --limit=5\n    wp bhc import firebase export.json",
+				'synopsis'  => [
+					[
+						'type'        => 'positional',
+						'name'        => 'file',
+						'description' => 'Path to the exported JSON.',
+						'optional'    => false,
+					],
+					[
+						'type'        => 'flag',
+						'name'        => 'dry-run',
+						'description' => 'Report what would be imported without writing anything.',
+						'optional'    => true,
+					],
+					[
+						'type'        => 'flag',
+						'name'        => 'skip-images',
+						'description' => 'Do not download imagery.',
+						'optional'    => true,
+					],
+					[
+						'type'        => 'assoc',
+						'name'        => 'limit',
+						'description' => 'Import at most this many products.',
+						'optional'    => true,
+					],
+				],
+			]
+		);
 	}
 
 	/**
