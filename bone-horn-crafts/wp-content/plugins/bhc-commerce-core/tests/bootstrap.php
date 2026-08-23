@@ -91,9 +91,21 @@ if ( ! function_exists( 'add_action' ) ) {
 	}
 }
 
+/**
+ * In-memory stand-in for the options table.
+ *
+ * Backing the stubs with real storage rather than always returning the default
+ * lets tests exercise code whose whole point is that a *stored* value wins over
+ * a corrected default — which is exactly how a placeholder telephone number
+ * survived into production.
+ *
+ * @var array<string, mixed>
+ */
+$GLOBALS['bhc_test_options'] = [];
+
 if ( ! function_exists( 'get_option' ) ) {
 	/**
-	 * Returns the default; the unit suite has no options table.
+	 * Reads from the in-memory store.
 	 *
 	 * @param string $name    Option name.
 	 * @param mixed  $default Default value.
@@ -101,9 +113,84 @@ if ( ! function_exists( 'get_option' ) ) {
 	 * @return mixed
 	 */
 	function get_option( string $name, $default = false ) {
-		unset( $name );
+		return array_key_exists( $name, $GLOBALS['bhc_test_options'] )
+			? $GLOBALS['bhc_test_options'][ $name ]
+			: $default;
+	}
+}
 
-		return $default;
+if ( ! function_exists( 'update_option' ) ) {
+	/**
+	 * Writes to the in-memory store.
+	 *
+	 * @param string $name     Option name.
+	 * @param mixed  $value    Value.
+	 * @param bool   $autoload Ignored.
+	 */
+	function update_option( string $name, $value, $autoload = null ): bool {
+		unset( $autoload );
+
+		$GLOBALS['bhc_test_options'][ $name ] = $value;
+
+		return true;
+	}
+}
+
+if ( ! function_exists( 'untrailingslashit' ) ) {
+	/**
+	 * Removes trailing slashes.
+	 *
+	 * @param string $value Value.
+	 */
+	function untrailingslashit( string $value ): string {
+		return rtrim( $value, '/\\' );
+	}
+}
+
+if ( ! function_exists( 'trailingslashit' ) ) {
+	/**
+	 * Ensures exactly one trailing slash.
+	 *
+	 * @param string $value Value.
+	 */
+	function trailingslashit( string $value ): string {
+		return untrailingslashit( $value ) . '/';
+	}
+}
+
+if ( ! function_exists( 'sanitize_email' ) ) {
+	/**
+	 * Validates an email address.
+	 *
+	 * @param string $email Candidate address.
+	 */
+	function sanitize_email( string $email ): string {
+		return (string) filter_var( trim( $email ), FILTER_VALIDATE_EMAIL );
+	}
+}
+
+if ( ! function_exists( 'esc_url_raw' ) ) {
+	/**
+	 * Returns a URL suitable for storage.
+	 *
+	 * @param string $url Candidate URL.
+	 */
+	function esc_url_raw( string $url ): string {
+		return (string) filter_var( trim( $url ), FILTER_VALIDATE_URL );
+	}
+}
+
+if ( ! function_exists( 'wp_parse_url' ) ) {
+	/**
+	 * Parses a URL.
+	 *
+	 * @param string $url       URL.
+	 * @param int    $component Component to return.
+	 *
+	 * @return mixed
+	 */
+	function wp_parse_url( string $url, int $component = -1 ) {
+		return parse_url( $url, $component ); // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url -- Test stub.
 	}
 }
 

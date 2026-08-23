@@ -19,6 +19,8 @@ use BoneHornCrafts\Core\Container;
 use BoneHornCrafts\Core\Contracts\ContainerInterface;
 use BoneHornCrafts\Core\Database\Installer;
 use BoneHornCrafts\Core\Jobs\Scheduler;
+use BoneHornCrafts\Core\Store\BusinessDetails;
+use BoneHornCrafts\Core\Store\PlaceholderContactRepair;
 use BoneHornCrafts\Core\Order\OrderRepository;
 use BoneHornCrafts\Core\Plugin;
 use BoneHornCrafts\Core\Product\ProductRepository;
@@ -71,7 +73,9 @@ final class AdminServiceProvider extends AbstractServiceProvider {
 				$c->get( ProductRepository::class ),
 				$c->get( WishlistRepository::class ),
 				$c->get( AffinityRepository::class ),
-				$c->get( ProductStatsRepository::class )
+				$c->get( ProductStatsRepository::class ),
+				$c->get( BusinessDetails::class ),
+				$c->get( PlaceholderContactRepair::class )
 			)
 		);
 

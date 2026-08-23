@@ -15,6 +15,7 @@ use BoneHornCrafts\Core\AbstractServiceProvider;
 use BoneHornCrafts\Core\Container;
 use BoneHornCrafts\Core\Contracts\ContainerInterface;
 use BoneHornCrafts\Core\Store\BusinessDetails;
+use BoneHornCrafts\Core\Store\PlaceholderContactRepair;
 use BoneHornCrafts\Core\Support\Options;
 
 /**
@@ -32,6 +33,11 @@ final class ContentServiceProvider extends AbstractServiceProvider {
 		$container->singleton(
 			BusinessDetails::class,
 			static fn ( Container $c ): BusinessDetails => new BusinessDetails( $c->get( Options::class ) )
+		);
+
+		$container->singleton(
+			PlaceholderContactRepair::class,
+			static fn ( Container $c ): PlaceholderContactRepair => new PlaceholderContactRepair( $c->get( Options::class ) )
 		);
 
 		$container->singleton(
@@ -58,6 +64,10 @@ final class ContentServiceProvider extends AbstractServiceProvider {
 		add_action(
 			'bhc_schema_installed',
 			static function () use ( $container ): void {
+				// Order matters: the policy pages embed the phone and email, so
+				// the placeholders have to be corrected before the pages that
+				// quote them are written.
+				$container->get( PlaceholderContactRepair::class )->apply();
 				$container->get( PolicyPageInstaller::class )->install_once();
 			}
 		);

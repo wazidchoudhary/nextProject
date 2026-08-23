@@ -17,6 +17,8 @@ use BoneHornCrafts\Core\Cache\RedisStatus;
 use BoneHornCrafts\Core\Database\Installer;
 use BoneHornCrafts\Core\Database\Schema;
 use BoneHornCrafts\Core\Jobs\Scheduler;
+use BoneHornCrafts\Core\Store\BusinessDetails;
+use BoneHornCrafts\Core\Store\PlaceholderContactRepair;
 use BoneHornCrafts\Core\Product\ProductRepository;
 use BoneHornCrafts\Core\Recommendations\AffinityRepository;
 use BoneHornCrafts\Core\Wishlist\WishlistRepository;
@@ -33,14 +35,16 @@ final class HealthReport {
 	/**
 	 * Constructor.
 	 *
-	 * @param CacheManager           $cache     Cache manager.
-	 * @param RedisStatus            $redis     Object cache detection.
-	 * @param Scheduler              $scheduler Job scheduler.
-	 * @param Installer              $installer Schema installer.
-	 * @param ProductRepository      $products  Product read model.
-	 * @param WishlistRepository     $wishlist  Wishlist repository.
-	 * @param AffinityRepository     $affinity  Affinity repository.
-	 * @param ProductStatsRepository $stats     Stats repository.
+	 * @param CacheManager             $cache     Cache manager.
+	 * @param RedisStatus              $redis     Object cache detection.
+	 * @param Scheduler                $scheduler Job scheduler.
+	 * @param Installer                $installer Schema installer.
+	 * @param ProductRepository        $products  Product read model.
+	 * @param WishlistRepository       $wishlist  Wishlist repository.
+	 * @param AffinityRepository       $affinity  Affinity repository.
+	 * @param ProductStatsRepository   $stats     Stats repository.
+	 * @param BusinessDetails          $business  Business details.
+	 * @param PlaceholderContactRepair $contact_repair Placeholder detection.
 	 */
 	public function __construct(
 		private CacheManager $cache,
@@ -50,7 +54,9 @@ final class HealthReport {
 		private ProductRepository $products,
 		private WishlistRepository $wishlist,
 		private AffinityRepository $affinity,
-		private ProductStatsRepository $stats
+		private ProductStatsRepository $stats,
+		private BusinessDetails $business,
+		private PlaceholderContactRepair $contact_repair
 	) {}
 
 	/**
@@ -88,6 +94,9 @@ final class HealthReport {
 				],
 				$this->redis->summary()
 			),
+			'store'       => [
+				'placeholder_contact' => $this->contact_repair->drift(),
+			],
 			'jobs'        => [
 				'action_scheduler' => function_exists( 'as_schedule_recurring_action' ),
 				'wp_cron_disabled' => defined( 'DISABLE_WP_CRON' ) && DISABLE_WP_CRON,
@@ -189,6 +198,29 @@ final class HealthReport {
 						'bhc-commerce-core'
 					),
 					$failed
+				),
+		];
+
+		// Placeholder contact details are published as the business telephone
+		// number in the Organization JSON-LD and printed on the contact page,
+		// so a leftover sample value is a customer-facing error rather than an
+		// untidy setting.
+		$placeholders = (array) ( $report['store']['placeholder_contact'] ?? [] );
+
+		$checks[] = [
+			'label'  => __( 'Contact details', 'bhc-commerce-core' ),
+			'status' => [] === $placeholders ? 'pass' : 'fail',
+			'detail' => [] === $placeholders
+				? sprintf(
+					/* translators: 1: telephone number, 2: email address. */
+					__( 'Publishing %1$s and %2$s.', 'bhc-commerce-core' ),
+					$this->business->phone(),
+					$this->business->email()
+				)
+				: sprintf(
+					/* translators: %s: comma separated setting names. */
+					__( 'Still set to sample values: %s. Fix with: wp bhc setup contact', 'bhc-commerce-core' ),
+					implode( ', ', array_keys( $placeholders ) )
 				),
 		];
 

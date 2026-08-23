@@ -26,7 +26,7 @@ final class Installer implements HookableInterface {
 
 	public const DB_VERSION_OPTION = 'bhc_db_version';
 	public const PENDING_OPTION    = 'bhc_install_pending';
-	public const DB_VERSION        = 3;
+	public const DB_VERSION        = 4;
 
 	/**
 	 * {@inheritDoc}

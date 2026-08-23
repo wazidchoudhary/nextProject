@@ -9,9 +9,12 @@ declare( strict_types = 1 );
 
 defined( 'ABSPATH' ) || exit;
 
-$options = bhc_service( \BoneHornCrafts\Core\Support\Options::class );
-$email   = null !== $options ? $options->string( 'organization_email' ) : 'hello@bonehorncrafts.com';
-$phone   = null !== $options ? $options->string( 'organization_phone' ) : '';
+// Read through bhc_contact() so this block, the footer, the policy pages and
+// the Organization JSON-LD all quote the same details. Reaching into Options
+// directly is what let a placeholder address survive here after the defaults
+// were corrected.
+$email = bhc_contact( 'email' );
+$phone = bhc_contact( 'phone' );
 ?>
 <section class="section section--tight" aria-labelledby="contact-details">
 	<h2 id="contact-details"><?php esc_html_e( 'Reach the workshop', 'bhc-theme' ); ?></h2>

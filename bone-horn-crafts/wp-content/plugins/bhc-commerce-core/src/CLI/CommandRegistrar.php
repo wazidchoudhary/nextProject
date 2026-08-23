@@ -57,6 +57,7 @@ final class CommandRegistrar {
 		$container = $this->container;
 
 		$this->register_pages_command();
+		$this->register_contact_command();
 
 		WP_CLI::add_command(
 			'bhc setup accounts',
@@ -92,6 +93,51 @@ final class CommandRegistrar {
 			[
 				'shortdesc' => 'Turn on customer registration on My Account and at checkout.',
 				'longdesc'  => "Three independent switches control whether people can create an account: WordPress's own users_can_register, WooCommerce's My Account registration setting, and its checkout signup setting. Setting one and testing that page makes the other two look fine, which is why a store can appear to offer accounts and not actually do so.\n\nApplied automatically when the plugin's schema installs. Run this to apply it to a store that predates that, or after deliberately changing one of the settings back.\n\n## EXAMPLES\n\n    wp bhc setup accounts",
+			]
+		);
+	}
+
+	/**
+	 * `wp bhc setup contact`.
+	 */
+	private function register_contact_command(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc setup contact',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				unset( $args, $assoc_args );
+
+				$repair = $container->get( \BoneHornCrafts\Core\Store\PlaceholderContactRepair::class );
+				$drift  = $repair->drift();
+
+				if ( [] === $drift ) {
+					$business = $container->get( \BoneHornCrafts\Core\Store\BusinessDetails::class );
+
+					WP_CLI::log( sprintf( '  phone   %s', $business->phone() ) );
+					WP_CLI::log( sprintf( '  email   %s', $business->email() ) );
+					WP_CLI::log( sprintf( '  address %s', $business->address_inline() ) );
+					WP_CLI::success( 'Contact details are already set. Nothing to change.' );
+
+					return;
+				}
+
+				foreach ( $drift as $key => $values ) {
+					WP_CLI::log( sprintf( '  %-20s %s -> %s', $key, $values['current'], $values['replacement'] ) );
+				}
+
+				$repair->apply();
+
+				WP_CLI::success(
+					sprintf(
+						'%d placeholder(s) replaced. Re-run `wp bhc setup pages --refresh` if the policy pages already quoted the old value.',
+						count( $drift )
+					)
+				);
+			},
+			[
+				'shortdesc' => 'Replace sample contact details left in the settings row.',
+				'longdesc'  => "Options::all() merges the stored settings row over the defaults, so once a value has been written, correcting the default does nothing to an existing site. A store seeded while the defaults were still sample data kept a placeholder telephone number and email — which are now published in the Organization JSON-LD and printed on the contact and policy pages.\n\nOnly a value that still matches a known placeholder exactly is replaced; anything you have typed yourself is left alone. Runs automatically when the schema upgrades.\n\n## EXAMPLES\n\n    wp bhc setup contact",
 			]
 		);
 	}
