@@ -131,7 +131,11 @@ final class CheckoutFieldCustomizer implements HookableInterface {
 		foreach ( CountryProfile::all() as $country => $profile ) {
 			$locales[ $country ]['postcode']['label']       = $profile['label'];
 			$locales[ $country ]['postcode']['placeholder'] = $profile['example'];
-			$locales[ $country ]['postcode']['required']    = true;
+
+			// "Do not add unnecessary fields" cuts both ways: a required field
+			// a country does not issue is worse than an absent one, because the
+			// customer cannot proceed and cannot tell why.
+			$locales[ $country ]['postcode']['required'] = empty( $profile['optional'] );
 		}
 
 		return $locales;

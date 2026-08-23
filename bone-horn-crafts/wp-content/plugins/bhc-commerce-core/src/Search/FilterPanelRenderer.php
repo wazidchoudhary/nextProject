@@ -30,7 +30,11 @@ final class FilterPanelRenderer implements HookableInterface {
 	 * @param SearchService $search   Search service.
 	 * @param Template      $template Template renderer.
 	 */
-	public function __construct( private SearchService $search, private Template $template ) {}
+	public function __construct(
+		private SearchService $search,
+		private Template $template,
+		private RequestParser $request_parser
+	) {}
 
 	/**
 	 * {@inheritDoc}
@@ -46,7 +50,7 @@ final class FilterPanelRenderer implements HookableInterface {
 	 */
 	public function render( ?FilterRequest $request = null ): string {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filter state.
-		$request = $request ?? FilterRequest::from_array( wp_unslash( $_GET ) );
+		$request = $request ?? $this->request_parser->current();
 
 		return $this->template->render(
 			'search/filter-panel.php',

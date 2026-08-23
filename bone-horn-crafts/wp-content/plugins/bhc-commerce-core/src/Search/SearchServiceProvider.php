@@ -49,6 +49,8 @@ final class SearchServiceProvider extends AbstractServiceProvider {
 	 */
 	public function register( ContainerInterface $container ): void {
 		/** @var Container $container */
+		$container->singleton( RequestParser::class, static fn (): RequestParser => new RequestParser() );
+
 		$container->singleton(
 			FacetRepository::class,
 			static fn ( Container $c ): FacetRepository => new FacetRepository( $c->get( CacheManager::class ) )
@@ -59,7 +61,8 @@ final class SearchServiceProvider extends AbstractServiceProvider {
 			static fn ( Container $c ): SearchService => new SearchService(
 				$c->get( ProductRepository::class ),
 				$c->get( FacetRepository::class ),
-				$c->get( CacheManager::class )
+				$c->get( CacheManager::class ),
+				$c->get( RequestParser::class )
 			)
 		);
 
@@ -67,7 +70,8 @@ final class SearchServiceProvider extends AbstractServiceProvider {
 			FilterPanelRenderer::class,
 			static fn ( Container $c ): FilterPanelRenderer => new FilterPanelRenderer(
 				$c->get( SearchService::class ),
-				$c->get( Template::class )
+				$c->get( Template::class ),
+				$c->get( RequestParser::class )
 			)
 		);
 	}

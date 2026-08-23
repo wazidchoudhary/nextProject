@@ -42,7 +42,8 @@ final class SearchService implements HookableInterface {
 	public function __construct(
 		private ProductRepository $products,
 		private FacetRepository $facets,
-		private CacheManager $cache
+		private CacheManager $cache,
+		private RequestParser $request_parser
 	) {}
 
 	/**
@@ -175,8 +176,7 @@ final class SearchService implements HookableInterface {
 			return;
 		}
 
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only filtering of a public archive.
-		$request = FilterRequest::from_array( wp_unslash( $_GET ) );
+		$request = $this->request_parser->current();
 
 		$tax_query = $request->tax_query();
 
@@ -247,8 +247,7 @@ final class SearchService implements HookableInterface {
 	 * @return array<string, mixed>
 	 */
 	public function catalog_ordering_args( array $args ): array {
-		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only ordering of a public archive.
-		$orderby = isset( $_GET['orderby'] ) ? sanitize_key( wp_unslash( (string) $_GET['orderby'] ) ) : '';
+		$orderby = $this->request_parser->orderby();
 
 		if ( 'newest' === $orderby ) {
 			$args['orderby'] = 'date ID';

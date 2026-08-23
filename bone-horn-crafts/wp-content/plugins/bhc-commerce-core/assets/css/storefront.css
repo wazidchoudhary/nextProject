@@ -161,13 +161,28 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	min-height: 32px;
+	/* 44px, not 32px. On mobile the filter panel is a full-screen drawer and
+	   this is the densest tap surface in the store; a 32px row with a 13px
+	   checkbox is a mis-tap waiting to happen. */
+	min-height: 44px;
+}
+
+.bhc-filters__option input[type='checkbox'] {
+	inline-size: 1.15rem;
+	block-size: 1.15rem;
+	flex: none;
+}
+
+.bhc-filters__option label {
+	/* The whole row is the target, not just the words. */
+	flex: 1;
+	padding-block: 0.5rem;
 }
 
 .bhc-filters__option label {
 	display: flex;
 	gap: 0.35rem;
-	align-items: baseline;
+	align-items: center;
 	cursor: pointer;
 }
 
