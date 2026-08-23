@@ -163,14 +163,53 @@ final class Options {
 
 			$value = $input[ $key ];
 
+			// Type comes from the default, except where the *meaning* of the
+			// field needs a stricter sanitiser than its PHP type implies.
+			// A canonical host sanitised as free text will happily store
+			// "not a url", and the first place anyone finds out is a broken
+			// canonical tag on every page.
+			$current = $this->all()[ $key ] ?? $default;
+
+			// Type comes from the default, except where the *meaning* of the
+			// field needs a stricter rule than its PHP type implies. A
+			// canonical host sanitised as free text will happily store
+			// "not a url", and the first anyone hears of it is a broken
+			// canonical tag on every page. Invalid input keeps the previous
+			// value rather than blanking the field: a typo in the contact
+			// address should not silently remove it from the site.
 			$clean[ $key ] = match ( true ) {
-				is_bool( $default )   => (bool) $value,
-				is_int( $default )    => max( 0, (int) $value ),
-				is_float( $default )  => (float) $value,
-				default               => sanitize_text_field( (string) $value ),
+				'canonical_host' === $key     => self::valid_host( (string) $value, (string) $current ),
+				'organization_email' === $key => sanitize_email( (string) $value ) ?: (string) $current,
+				is_bool( $default )           => (bool) $value,
+				is_int( $default )            => max( 0, (int) $value ),
+				is_float( $default )          => (float) $value,
+				default                       => sanitize_text_field( (string) $value ),
 			};
 		}
 
 		return $clean;
+	}
+
+	/**
+	 * Accepts a URL only if it is one, with a scheme and a host.
+	 *
+	 * @param string $value    Submitted value.
+	 * @param string $fallback Value to keep when the input is not a URL.
+	 */
+	private static function valid_host( string $value, string $fallback ): string {
+		$value = untrailingslashit( trim( $value ) );
+
+		if ( '' === $value ) {
+			return '';
+		}
+
+		$url   = esc_url_raw( $value, [ 'http', 'https' ] );
+		$parts = '' === $url ? [] : (array) wp_parse_url( $url );
+
+		if ( empty( $parts['scheme'] ) || empty( $parts['host'] ) || ! str_contains( (string) $parts['host'], '.' ) ) {
+			return $fallback;
+		}
+
+		return $url;
 	}
 }

@@ -21,7 +21,8 @@
 		"test:vitals": "node tests/e2e/web-vitals.mjs",
 		"test:a11y": "node tests/e2e/accessibility.mjs",
 		"lint:css:fix": "stylelint \"wp-content/themes/bhc-theme/assets/scss/**/*.scss\" --fix",
-		"lint:js:fix": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js tests tools --fix"
+		"lint:js:fix": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js tests tools --fix",
+		"i18n": "wp i18n make-pot wp-content/plugins/bhc-commerce-core wp-content/plugins/bhc-commerce-core/languages/bhc-commerce-core.pot --domain=bhc-commerce-core --exclude=vendor,tests,node_modules --package-name=\"Bone Horn Crafts Commerce\" && wp i18n make-pot wp-content/themes/bhc-theme wp-content/themes/bhc-theme/languages/bhc-theme.pot --domain=bhc-theme --exclude=node_modules --package-name=\"Bone Horn Crafts\""
 	},
 	"devDependencies": {
 		"@stylistic/eslint-plugin": "^2.13.0",

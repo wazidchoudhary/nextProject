@@ -154,7 +154,7 @@ final class ContentLibrary {
 			],
 			'privacy-policy'       => [
 				'title'    => 'Privacy Policy',
-				'excerpt'  => 'What this demo store collects, why, and how long it keeps it.',
+				'excerpt'  => 'What we collect when you order, why we need it, and how long we keep it.',
 				'template' => 'page-narrow',
 				'menu'     => 'footer',
 				'content'  => '<p><em>This is demonstration copy for a reference build. A live store should have this reviewed against the regulations that apply to it.</em></p>'
@@ -170,7 +170,7 @@ final class ContentLibrary {
 			],
 			'terms-conditions'     => [
 				'title'    => 'Terms &amp; Conditions',
-				'excerpt'  => 'The terms this demo store sells under.',
+				'excerpt'  => 'The terms we sell under, and what to expect from an order.',
 				'template' => 'page-narrow',
 				'menu'     => 'footer',
 				'content'  => '<p><em>This is demonstration copy for a reference build and is not legal advice.</em></p>'

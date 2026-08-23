@@ -12,6 +12,7 @@ namespace BoneHornCrafts\Core\Demo;
 defined( 'ABSPATH' ) || exit;
 
 use BoneHornCrafts\Core\Contracts\LoggerInterface;
+use BoneHornCrafts\Core\Support\Options;
 use BoneHornCrafts\Core\Product\Attributes\AttributeCatalog;
 use BoneHornCrafts\Core\Product\Attributes\AttributeRegistrar;
 use BoneHornCrafts\Core\Product\ProductMeta;
@@ -55,12 +56,14 @@ final class DemoSeeder {
 	 * @param ImageFactory       $images     Image renderer.
 	 * @param AttributeRegistrar $attributes Attribute installer.
 	 * @param LoggerInterface    $logger     Logger.
+	 * @param Options            $options    Plugin settings.
 	 */
 	public function __construct(
 		private DemoState $state,
 		private ImageFactory $images,
 		private AttributeRegistrar $attributes,
-		private LoggerInterface $logger
+		private LoggerInterface $logger,
+		private Options $options
 	) {
 		$this->progress = static function ( string $message ): void {};
 	}
@@ -128,6 +131,7 @@ final class DemoSeeder {
 		$this->report( 'Configuring shipping zones' );
 		$counts['shipping_zones']   = $this->seed_shipping();
 		$counts['payment_gateways'] = $this->seed_payment_gateways();
+		$this->seed_social_image();
 
 		$this->report( 'Creating demo customers' );
 		$counts['customers'] = $this->seed_customers();
@@ -875,6 +879,39 @@ final class DemoSeeder {
 	 */
 	private function report( string $message ): void {
 		( $this->progress )( $message );
+	}
+
+	/**
+	 * Points the social share image at a real photograph from the catalogue.
+	 *
+	 * Without one, the home page, the shop and every archive fall back to a
+	 * text-only Twitter card and an Open Graph object with no image — the two
+	 * highest-value share targets on the site being the worst-looking links.
+	 * Only singular pages have a featured image to borrow.
+	 *
+	 * Set once and then left alone, so a store that has chosen its own share
+	 * image keeps it.
+	 */
+	private function seed_social_image(): void {
+		$options = $this->options->all();
+
+		if ( ! empty( $options['social_image_id'] ) ) {
+			return;
+		}
+
+		$products = $this->state->get( 'products' );
+
+		foreach ( $products as $product_id ) {
+			$image_id = (int) get_post_thumbnail_id( $product_id );
+
+			if ( $image_id > 0 ) {
+				$options['social_image_id'] = $image_id;
+
+				$this->options->save( $options );
+
+				return;
+			}
+		}
 	}
 
 	/**

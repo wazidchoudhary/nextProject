@@ -1,0 +1,1350 @@
+# Copyright (C) 2026 Bone Horn Crafts
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Bone Horn Crafts Commerce 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bhc-commerce-core\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-23T08:03:46+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: bhc-commerce-core\n"
+
+#. Plugin Name of the plugin
+#: bhc-commerce-core.php
+msgid "Bone Horn Crafts Commerce Core"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+#: bhc-commerce-core.php
+msgid "https://www.bonehorncrafts.com/"
+msgstr ""
+
+#. Description of the plugin
+#: bhc-commerce-core.php
+msgid "Business logic for the Bone Horn Crafts store: merchandising badges, craft attributes, tiered pricing, wishlist, recommendations, faceted search, export-ready order metadata, REST API, caching, background jobs and WP-CLI tooling."
+msgstr ""
+
+#. Author of the plugin
+#: bhc-commerce-core.php
+#: src/Admin/AdminMenu.php:59
+#: src/Product/Admin/ProductDataPanel.php:55
+msgid "Bone Horn Crafts"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:58
+msgid "Bone Horn Crafts Commerce"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:69
+msgid "Operations dashboard"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:70
+msgid "Dashboard"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:78
+#: src/Admin/HealthPage.php:40
+msgid "System health"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:79
+msgid "Health check"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:87
+#: src/Admin/SettingsPage.php:100
+msgid "Commerce settings"
+msgstr ""
+
+#: src/Admin/AdminMenu.php:88
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:49
+#: src/Admin/HealthPage.php:33
+#: src/Admin/SettingsPage.php:94
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: src/Admin/DashboardPage.php:59
+msgid "Bone Horn Crafts — operations"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:62
+msgid "Catalogue, fulfilment and background job status for the storefront."
+msgstr ""
+
+#: src/Admin/DashboardPage.php:68
+msgid "Published products"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:74
+msgid "Orders awaiting fulfilment"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:80
+msgid "Revenue (30 days)"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:86
+msgid "Saved to wishlists"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:92
+msgid "Object cache"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:94
+msgid "Redis"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:94
+msgid "Persistent"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:95
+msgid "Transients"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:100
+#: src/Admin/HealthReport.php:199
+msgid "Plugin version"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:109
+msgid "Low stock"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:112
+msgid "Nothing is running low. "
+msgstr ""
+
+#: src/Admin/DashboardPage.php:114
+msgid "Product"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:114
+msgid "SKU"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:114
+msgid "Stock"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:143
+msgid "Recent orders"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:146
+msgid "No orders yet."
+msgstr ""
+
+#: src/Admin/DashboardPage.php:148
+msgid "Order"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:148
+msgid "Destination"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:148
+msgid "Total"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:148
+msgid "Status"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:170
+msgid "Background jobs"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:171
+msgid "Job"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:171
+msgid "Next run"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:171
+msgid "Pending"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:171
+msgid "Last completed"
+msgstr ""
+
+#: src/Admin/DashboardPage.php:186
+msgid "Run any job immediately with: wp bhc products sync --job=index"
+msgstr ""
+
+#: src/Admin/HealthPage.php:43
+msgid "Environment and background processing status. No credentials are shown, so this page is safe to share with support."
+msgstr ""
+
+#: src/Admin/HealthPage.php:62
+msgid "Details"
+msgstr ""
+
+#: src/Admin/HealthPage.php:72
+msgid "yes"
+msgstr ""
+
+#: src/Admin/HealthPage.php:72
+msgid "no"
+msgstr ""
+
+#: src/Admin/HealthPage.php:87
+msgid "The same report is available from the command line:"
+msgstr ""
+
+#: src/Admin/HealthPage.php:100
+msgid "OK"
+msgstr ""
+
+#: src/Admin/HealthPage.php:101
+msgid "Attention"
+msgstr ""
+
+#: src/Admin/HealthPage.php:102
+msgid "Failing"
+msgstr ""
+
+#: src/Admin/HealthReport.php:72
+msgid "not active"
+msgstr ""
+
+#: src/Admin/HealthReport.php:117
+msgid "Database schema"
+msgstr ""
+
+#. translators: 1: installed schema version, 2: expected schema version.
+#: src/Admin/HealthReport.php:121
+#, php-format
+msgid "Installed version %1$d, expected %2$d."
+msgstr ""
+
+#. translators: %s: cache implementation class.
+#: src/Admin/HealthReport.php:135
+#, php-format
+msgid "Active — Redis (%s)."
+msgstr ""
+
+#. translators: %s: cache implementation class.
+#: src/Admin/HealthReport.php:140
+#, php-format
+msgid "Active (%s). Not Redis."
+msgstr ""
+
+#: src/Admin/HealthReport.php:144
+msgid "Not active. The PHP redis extension is loaded, so installing an object-cache.php drop-in would enable it."
+msgstr ""
+
+#: src/Admin/HealthReport.php:146
+msgid "Not detected. The plugin is falling back to transients, which works but is slower."
+msgstr ""
+
+#: src/Admin/HealthReport.php:150
+msgid "Persistent object cache"
+msgstr ""
+
+#: src/Admin/HealthReport.php:156
+msgid "Action Scheduler"
+msgstr ""
+
+#: src/Admin/HealthReport.php:159
+msgid "Available. Background indexing is scheduled."
+msgstr ""
+
+#: src/Admin/HealthReport.php:160
+msgid "Unavailable — WooCommerce provides it, so check that WooCommerce is active."
+msgstr ""
+
+#: src/Admin/HealthReport.php:164
+msgid "Merchandising index"
+msgstr ""
+
+#. translators: 1: stat rows, 2: affinity rows.
+#: src/Admin/HealthReport.php:168
+#, php-format
+msgid "%1$d product stat rows, %2$d affinity rows."
+msgstr ""
+
+#: src/Admin/HealthReport.php:175
+msgid "WordPress"
+msgstr ""
+
+#. translators: %s: WordPress version.
+#: src/Admin/HealthReport.php:179
+#, php-format
+msgid "Running WordPress %s."
+msgstr ""
+
+#: src/Admin/HealthReport.php:187
+msgid "WooCommerce"
+msgstr ""
+
+#. translators: %s: WooCommerce version.
+#: src/Admin/HealthReport.php:192
+#, php-format
+msgid "Running WooCommerce %s."
+msgstr ""
+
+#: src/Admin/HealthReport.php:195
+msgid "Not active. This plugin requires WooCommerce."
+msgstr ""
+
+#. translators: 1: plugin version, 2: environment type.
+#: src/Admin/HealthReport.php:203
+#, php-format
+msgid "Bone Horn Crafts Commerce %1$s, environment \"%2$s\"."
+msgstr ""
+
+#: src/Admin/HealthReport.php:210
+msgid "PHP version"
+msgstr ""
+
+#. translators: %s: PHP version.
+#: src/Admin/HealthReport.php:214
+#, php-format
+msgid "Running PHP %s."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:48
+msgid "You do not have permission to change these settings."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:54
+msgid "Your session expired. Please try again."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:106
+msgid "Settings saved."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:116
+#: src/Product/Admin/ProductDataPanel.php:84
+msgid "Merchandising badges"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:116
+msgid "Show badges on product cards and product pages."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:117
+msgid "New arrival window (days)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:118
+msgid "Bestseller ranking size"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:119
+msgid "Recommendations per rail"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:120
+msgid "Recommendation cache TTL (seconds)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:121
+#: src/Customer/AccountEndpoints.php:88
+msgid "Wishlist"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:121
+msgid "Enable the wishlist across the storefront."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:122
+msgid "Guest wishlist"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:122
+msgid "Let signed-out visitors save products to a signed cookie."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:123
+msgid "Wishlist item limit"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:124
+msgid "Recently viewed items"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:125
+#: templates/pricing/tier-table.php:20
+msgid "Quantity pricing"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:125
+msgid "Apply wholesale price breaks in the cart."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:126
+msgid "Delivery estimator"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:126
+msgid "Show the destination delivery estimate on product pages."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:127
+msgid "Structured data"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:127
+msgid "Output the JSON-LD schema graph."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:128
+msgid "Canonical host"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:128
+msgid "Used to normalise absolute URLs in metadata when the site is served from a staging domain."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:129
+msgid "Social handle"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:130
+msgid "Public contact email"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:131
+msgid "Public contact phone"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:132
+msgid "Manufacturing entity"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:132
+msgid "Shown in the footer credit and as the manufacturer in structured data."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:133
+msgid "Index batch size"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:134
+msgid "Delete data on uninstall"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:134
+msgid "Drop the wishlist, affinity and stats tables when the plugin is deleted. Deactivating never deletes anything."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:140
+msgid "Also flush the plugin caches when saving."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:143
+msgid "Save settings"
+msgstr ""
+
+#: src/API/RecommendationsController.php:88
+msgid "Product not found."
+msgstr ""
+
+#: src/API/WishlistController.php:126
+msgid "The wishlist is not available. Please sign in to save products."
+msgstr ""
+
+#: src/Checkout/AddressValidator.php:91
+msgid "We cannot ship to that destination from the online store. Please contact the workshop for a freight quote."
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:60
+#: src/Checkout/CheckoutFieldCustomizer.php:150
+msgid "Phone (with country code)"
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:68
+msgid "Order updates and the tracking number are sent here."
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:72
+msgid "Notes for the workshop"
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:73
+msgid "Matching preferences, delivery instructions, or a build deadline we should know about."
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:88
+msgid "Apartment, unit, workshop (optional)"
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:90
+msgid "Unit 4, Makers Yard"
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:106
+msgid "Town / City"
+msgstr ""
+
+#: src/Checkout/CheckoutFieldCustomizer.php:110
+msgid "State / Province / Region"
+msgstr ""
+
+#: src/Checkout/CountryProfile.php:256
+msgid "Postal code"
+msgstr ""
+
+#: src/Checkout/DeliveryEstimator.php:88
+msgid "We do not ship to this destination yet — contact the workshop for a freight quote."
+msgstr ""
+
+#. translators: 1: earliest delivery date, 2: latest delivery date, 3: dispatch days.
+#: src/Checkout/DeliveryEstimator.php:93
+#, php-format
+msgid "Estimated delivery %1$s – %2$s. Dispatched from the workshop within %3$d working day(s)."
+msgstr ""
+
+#: src/Checkout/PhoneValidator.php:105
+msgid "Please enter a phone number the courier can reach you on, including the country code."
+msgstr ""
+
+#. translators: 1: postcode field label, 2: example postcode.
+#: src/Checkout/PostcodeValidator.php:92
+#, php-format
+msgid "Please check the %1$s — it does not look right for this country (example: %2$s)."
+msgstr ""
+
+#. translators: %s: postcode field label.
+#: src/Checkout/PostcodeValidator.php:100
+#, php-format
+msgid "Please enter a valid %s."
+msgstr ""
+
+#. translators: %d: number of checks needing attention.
+#: src/CLI/HealthCommand.php:97
+#, php-format
+msgid "%d check needs attention."
+msgid_plural "%d checks need attention."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/CLI/HealthCommand.php:102
+msgid "(strict mode)"
+msgstr ""
+
+#: src/Customer/Roles.php:39
+msgid "Wholesale Customer"
+msgstr ""
+
+#: src/Demo/DemoSeeder.php:936
+msgid "Pay on invoice (demo)"
+msgstr ""
+
+#: src/Demo/DemoSeeder.php:937
+msgid "Demo gateway. No payment is taken and no payment details are stored in this build."
+msgstr ""
+
+#: src/Demo/DemoSeeder.php:941
+msgid "Bank transfer (demo)"
+msgstr ""
+
+#: src/Demo/DemoSeeder.php:942
+msgid "Demo gateway. No payment is taken and no bank details are stored in this build."
+msgstr ""
+
+#: src/Demo/DemoSeeder.php:1676
+#: src/SEO/BreadcrumbService.php:61
+msgid "Shop"
+msgstr ""
+
+#: src/Frontend/Assets.php:138
+msgid "Saved"
+msgstr ""
+
+#: src/Frontend/Assets.php:139
+msgid "Save"
+msgstr ""
+
+#: src/Frontend/Assets.php:140
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: src/Frontend/Assets.php:141
+msgid "Loading…"
+msgstr ""
+
+#: src/Frontend/Assets.php:142
+msgid "No material matches those filters yet."
+msgstr ""
+
+#: src/Frontend/Assets.php:143
+msgid "Added to your cart"
+msgstr ""
+
+#: src/Jobs/Scheduler.php:153
+msgid "not scheduled"
+msgstr ""
+
+#: src/Jobs/Scheduler.php:155
+msgid "never"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:54
+msgid "Bone Horn Crafts — workshop &amp; export"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:80
+msgid "Invoice treatment"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:97
+msgid "Wholesale order"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:102
+msgid "Packing notes"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:103
+msgid "Pair matching, padding, customs paperwork."
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:108
+msgid "Material lots"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:112
+msgid "HSN summary"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:119
+msgid "units"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:129
+msgid "Reference data captured when the order was placed. It does not calculate tax."
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:191
+#: src/Order/Admin/OrderOperationsMetaBox.php:196
+msgid "Shipment"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:222
+msgid "Domestic"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:223
+msgid "Export"
+msgstr ""
+
+#: src/Order/Admin/OrderOperationsMetaBox.php:226
+msgid "Wholesale"
+msgstr ""
+
+#: src/Order/OrderMeta.php:118
+msgid "Domestic sale (GST applicable)"
+msgstr ""
+
+#: src/Order/OrderMeta.php:119
+msgid "Export shipment (zero rated)"
+msgstr ""
+
+#: src/Pricing/PriceFormatter.php:100
+msgid "Original price:"
+msgstr ""
+
+#. translators: %d: percentage saved.
+#: src/Pricing/PriceFormatter.php:121
+#, php-format
+msgid "Save %d%%"
+msgstr ""
+
+#: src/Pricing/TieredPricingService.php:142
+msgid "Pricing"
+msgstr ""
+
+#. translators: %s: formatted unit price.
+#: src/Pricing/TieredPricingService.php:145
+#, php-format
+msgid "Quantity price applied — %s per unit"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:84
+msgid "Automatic badges (sale, new arrival, bestseller, bulk, low stock) are applied by the merchandising rules and are not listed here."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:108
+msgid "Supplied as a matched pair"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:109
+msgid "Scales are cut from one block and matched for colour and grain."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:118
+#: src/SEO/Schema/ProductSchema.php:279
+msgid "Unit of sale"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:119
+msgid "per matched pair"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:121
+msgid "Shown next to the price, e.g. \"per matched pair\" or \"set of 6\"."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:129
+msgid "Workshop lead time (days)"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:137
+msgid "Days needed to cut and finish before dispatch. 0 ships from stock."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:145
+msgid "Care &amp; finishing notes"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:148
+msgid "Shown in the \"Care &amp; finishing\" tab on the product page."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:155
+msgid "Wholesale price breaks"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:161
+msgid "Enable quantity pricing"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:162
+msgid "Applies the tiers below once the cart quantity reaches each threshold."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:182
+msgid "Minimum quantity / unit price"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:186
+msgid "Tier unit price"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:191
+msgid "Add price break"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:195
+msgid "Export &amp; tax reference data"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:195
+msgid "Reference fields for packing lists and invoices. They do not calculate tax on their own."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:201
+msgid "HSN code"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:204
+msgid "Harmonised System code used on export documents and GST invoices."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:212
+msgid "Domestic GST rate"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:214
+msgid "0% (zero rated / export)"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:226
+msgid "Batch / lot reference"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:229
+msgid "Internal reference for the material lot this listing was cut from."
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:237
+msgid "Country of manufacture"
+msgstr ""
+
+#: src/Product/Admin/ProductDataPanel.php:240
+msgid "ISO 3166-1 alpha-2 code printed on the customs declaration."
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:38
+msgid "Material"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:43
+msgid "Camel Bone"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:44
+msgid "Cattle Bone"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:45
+msgid "Water Buffalo Horn"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:46
+msgid "Rams Horn"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:47
+msgid "Stabilized Wood"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:48
+msgid "Hardwood"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:49
+msgid "Acrylic"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:50
+msgid "Brass Pin Stock"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:54
+msgid "Finish"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:59
+msgid "Smooth"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:60
+msgid "Jigged"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:61
+msgid "Dyed &amp; Stabilized"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:62
+msgid "Bark / Natural Edge"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:63
+msgid "Natural"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:64
+msgid "Hand Polished"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:65
+msgid "Sanded to 400 Grit"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:69
+msgid "Application"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:74
+msgid "Knife Making"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:75
+msgid "Guitar &amp; Luthier"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:76
+msgid "Pen Turning"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:77
+msgid "Leather Work"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:78
+msgid "Home &amp; Table"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:79
+msgid "Jewellery &amp; Beading"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:83
+msgid "Colour"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:88
+msgid "Natural White"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:89
+msgid "Cream"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:90
+msgid "Amber"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:91
+msgid "Honey"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:92
+msgid "Black"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:93
+msgid "Charcoal"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:94
+msgid "Two Tone"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:95
+msgid "Marbled"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:96
+msgid "Forest Green"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:97
+msgid "Indigo"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:101
+msgid "Size"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:106
+msgid "4.5 x 1.25 x 0.25 in"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:107
+msgid "5 x 1.5 x 0.30 in"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:108
+msgid "5 x 1.5 x 0.375 in"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:109
+msgid "6 x 2 x 0.375 in"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:110
+msgid "Blank 6 x 1 x 1 in"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:111
+msgid "Blank 5 x 0.75 x 0.75 in"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:112
+msgid "Nut Blank 45 x 6 x 9 mm"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:113
+msgid "Saddle Blank 80 x 3 x 10 mm"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:114
+msgid "One Size"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:118
+msgid "Product Type"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:123
+msgid "Knife Scales"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:124
+msgid "Nut &amp; Saddle Blank"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:125
+msgid "Bridge Pin Blank"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:126
+msgid "Pick Blank"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:127
+msgid "Pen Blank"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:128
+msgid "Comb"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:129
+msgid "Bead"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:130
+msgid "Drinking Horn"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:131
+msgid "Horn Mug"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:132
+msgid "Bone Folder"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:133
+msgid "Shoe Horn"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:134
+msgid "Cutlery"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:135
+msgid "Plate &amp; Spacer"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:136
+msgid "Button"
+msgstr ""
+
+#: src/Product/Attributes/AttributeCatalog.php:137
+msgid "Dice"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:52
+msgid "Sale"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:56
+msgid "Shown automatically while a sale price is active."
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:60
+msgid "New Arrival"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:64
+msgid "Shown automatically for recently published products."
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:68
+msgid "Bestseller"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:72
+msgid "Shown automatically for products in the current bestseller ranking."
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:76
+msgid "Limited Batch"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:80
+msgid "Use for one-off lots where the material cannot be matched again."
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:84
+msgid "Bulk / Wholesale"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:88
+msgid "Shown automatically when quantity price breaks are configured."
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:92
+msgid "Workshop Pick"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:96
+msgid "Hand-picked by the workshop team for the homepage rail."
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:100
+msgid "Low Stock"
+msgstr ""
+
+#: src/Product/Badges/BadgeRegistry.php:104
+msgid "Shown automatically when remaining stock hits the WooCommerce low-stock threshold."
+msgstr ""
+
+#: src/Product/Badges/BadgeRenderer.php:111
+msgid "Product highlights"
+msgstr ""
+
+#. translators: %d: discount percentage.
+#: src/Product/Badges/BadgeResolver.php:136
+#, php-format
+msgid "%d%% Off"
+msgstr ""
+
+#: src/Recommendations/RecommendationRenderer.php:71
+msgid "Complete your build"
+msgstr ""
+
+#: src/Recommendations/RecommendationRenderer.php:72
+msgid "Pins, spacers and finishing stock that pair with this material."
+msgstr ""
+
+#: src/Recommendations/RecommendationRenderer.php:117
+msgid "Recently viewed"
+msgstr ""
+
+#: src/Recommendations/RecommendationRenderer.php:134
+msgid "You may also need"
+msgstr ""
+
+#: src/Search/FacetRepository.php:211
+msgid "Category"
+msgstr ""
+
+#: src/Security/RestGuard.php:63
+msgid "Your session expired. Please refresh the page and try again."
+msgstr ""
+
+#: src/Security/RestGuard.php:86
+msgid "You must be signed in to do that."
+msgstr ""
+
+#: src/Security/RestGuard.php:105
+msgid "You do not have permission to access this resource."
+msgstr ""
+
+#: src/Security/RestGuard.php:114
+msgid "Invalid or expired security token."
+msgstr ""
+
+#: src/Security/RestGuard.php:155
+msgid "Too many requests. Please slow down and try again shortly."
+msgstr ""
+
+#: src/SEO/BreadcrumbService.php:52
+msgid "Home"
+msgstr ""
+
+#. translators: %s: search term.
+#: src/SEO/BreadcrumbService.php:147
+#, php-format
+msgid "Search results for “%s”"
+msgstr ""
+
+#: src/SEO/BreadcrumbService.php:244
+msgid "Breadcrumb"
+msgstr ""
+
+#: src/SEO/MetaTagService.php:93
+msgid "Shop Bone, Horn &amp; Wood Craft Supplies"
+msgstr ""
+
+#: src/SEO/MetaTagService.php:282
+msgid "Hand-selected bone, horn and wood craft materials cut, sanded and matched in pairs for knife makers, luthiers, pen turners and leather workers. Worldwide export from our workshop."
+msgstr ""
+
+#: src/SEO/MetaTagService.php:303
+msgid "Browse knife handle scales, guitar parts, pen blanks, drinking horns and finishing stock in camel bone, cattle bone, water buffalo horn, rams horn and stabilized wood."
+msgstr ""
+
+#: src/SEO/MetaTagService.php:315
+msgid "Notes from the workshop on choosing, cutting and finishing bone, horn and wood."
+msgstr ""
+
+#. translators: %d: page number.
+#: src/SEO/MetaTagService.php:329
+#, php-format
+msgid " — page %d."
+msgstr ""
+
+#: src/SEO/Schema/OrganizationSchema.php:61
+msgid "Workshop-finished bone, horn and wood materials for knife makers, luthiers, pen turners and leather workers, shipped worldwide."
+msgstr ""
+
+#. translators: 1: required PHP version, 2: current PHP version.
+#: src/Support/Requirements.php:56
+#, php-format
+msgid "PHP %1$s or newer is required. This server runs PHP %2$s."
+msgstr ""
+
+#. translators: %s: required WordPress version.
+#: src/Support/Requirements.php:65
+#, php-format
+msgid "WordPress %s or newer is required."
+msgstr ""
+
+#: src/Support/Requirements.php:71
+msgid "WooCommerce must be installed and activated."
+msgstr ""
+
+#. translators: %s: required WooCommerce version.
+#: src/Support/Requirements.php:75
+#, php-format
+msgid "WooCommerce %s or newer is required."
+msgstr ""
+
+#: src/Support/Requirements.php:93
+msgid "Bone Horn Crafts Commerce Core could not start."
+msgstr ""
+
+#: src/Wishlist/WishlistRenderer.php:136
+msgid "Save to wishlist"
+msgstr ""
+
+#: src/Wishlist/WishlistRenderer.php:137
+msgid "Saved to wishlist"
+msgstr ""
+
+#: src/Wishlist/WishlistService.php:105
+msgid "That product is no longer available."
+msgstr ""
+
+#: src/Wishlist/WishlistService.php:111
+msgid "Your wishlist is full. Remove an item and try again."
+msgstr ""
+
+#: src/Wishlist/WishlistService.php:122
+msgid "Saved to your wishlist."
+msgstr ""
+
+#: src/Wishlist/WishlistService.php:137
+msgid "Removed from your wishlist."
+msgstr ""
+
+#: templates/checkout/delivery-estimator.php:24
+msgid "Delivery estimate"
+msgstr ""
+
+#: templates/checkout/delivery-estimator.php:28
+msgid "Ship to"
+msgstr ""
+
+#: templates/checkout/delivery-estimator.php:45
+msgid "Estimates exclude customs clearance. Duties and import taxes are payable on arrival."
+msgstr ""
+
+#: templates/checkout/export-notice.php:15
+msgid "Shipping and customs information"
+msgstr ""
+
+#: templates/checkout/export-notice.php:17
+msgid "Domestic order: GST is shown on your invoice at the rate applicable to each item."
+msgstr ""
+
+#: templates/checkout/export-notice.php:19
+msgid "Export order: your parcel ships with an accurate commercial invoice and HS codes for customs."
+msgstr ""
+
+#: templates/checkout/export-notice.php:20
+msgid "Import duties and taxes charged on arrival are payable by the recipient and are not collected here."
+msgstr ""
+
+#: templates/pricing/tier-table.php:23
+msgid "Unit price by quantity ordered"
+msgstr ""
+
+#: templates/pricing/tier-table.php:26
+msgid "Quantity"
+msgstr ""
+
+#: templates/pricing/tier-table.php:27
+msgid "Unit price"
+msgstr ""
+
+#: templates/pricing/tier-table.php:28
+msgid "You save"
+msgstr ""
+
+#. translators: %d: minimum quantity.
+#: templates/pricing/tier-table.php:38
+#, php-format
+msgid "%d or more"
+msgstr ""
+
+#: templates/pricing/tier-table.php:50
+msgid "Quantity pricing is applied automatically in the cart — no code needed."
+msgstr ""
+
+#. translators: 1: average rating, 2: review count.
+#: templates/product/card.php:78
+#, php-format
+msgid "Rated %1$s out of 5 from %2$d reviews"
+msgstr ""
+
+#: templates/product/card.php:93
+msgid "View material"
+msgstr ""
+
+#: templates/recommendations/frequently-bought.php:26
+msgid "Makers usually add"
+msgstr ""
+
+#. translators: %s: formatted total price.
+#: templates/recommendations/frequently-bought.php:54
+#, php-format
+msgid "Together with this listing: %s"
+msgstr ""
+
+#: templates/search/filter-panel.php:26
+msgid "Filter material"
+msgstr ""
+
+#: templates/search/filter-panel.php:65
+msgid "Price"
+msgstr ""
+
+#: templates/search/filter-panel.php:68
+msgid "Minimum price"
+msgstr ""
+
+#: templates/search/filter-panel.php:83
+msgid "Maximum price"
+msgstr ""
+
+#: templates/search/filter-panel.php:100
+msgid "Availability"
+msgstr ""
+
+#: templates/search/filter-panel.php:105
+msgid "In stock now"
+msgstr ""
+
+#: templates/search/filter-panel.php:109
+msgid "On sale"
+msgstr ""
+
+#: templates/search/filter-panel.php:115
+msgid "Apply filters"
+msgstr ""
+
+#: templates/search/filter-panel.php:116
+msgid "Clear all"
+msgstr ""
+
+#: templates/wishlist/page.php:20
+msgid "The wishlist is currently unavailable."
+msgstr ""
+
+#: templates/wishlist/page.php:28
+msgid "Nothing saved yet"
+msgstr ""
+
+#: templates/wishlist/page.php:29
+msgid "Save material while you plan a build and it will wait for you here. One-off pairs move quickly, so a saved list is the fastest way back to them."
+msgstr ""
+
+#: templates/wishlist/page.php:30
+msgid "Browse the catalogue"
+msgstr ""

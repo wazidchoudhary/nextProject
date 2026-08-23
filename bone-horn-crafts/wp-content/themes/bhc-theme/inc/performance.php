@@ -339,3 +339,32 @@ add_filter( 'wp_calculate_image_srcset', 'bhc_limit_srcset' );
  * -scaled duplicate only adds storage and confuses srcset generation.
  */
 add_filter( 'big_image_size_threshold', '__return_false' );
+
+/**
+ * Writes WebP derivatives for uploaded JPEGs.
+ *
+ * Target: LCP and total page weight. WebP is 25–35% smaller than JPEG at
+ * equivalent quality and is supported by every browser this store targets, so
+ * the sub-sizes that actually get served — cards, gallery, hero — are better off
+ * as WebP.
+ *
+ * Only the *derivatives* change format. WordPress keeps the original upload in
+ * its own format, so nothing is lost and an editor downloading the full-size
+ * file still gets the JPEG they put in. PNG is left alone: it is used for
+ * artwork with flat colour and transparency, where WebP's gains are smaller and
+ * its lossy default is a real risk.
+ *
+ * If the server's image editor cannot write WebP, WordPress ignores this and
+ * carries on producing JPEGs — there is nothing to feature-detect.
+ *
+ * @param array<string, string> $formats Source mime => output mime.
+ *
+ * @return array<string, string>
+ */
+function bhc_webp_subsizes( array $formats ): array {
+	$formats['image/jpeg'] = 'image/webp';
+
+	return $formats;
+}
+
+add_filter( 'image_editor_output_format', 'bhc_webp_subsizes' );

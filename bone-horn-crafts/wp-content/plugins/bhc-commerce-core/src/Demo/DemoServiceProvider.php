@@ -15,6 +15,7 @@ use BoneHornCrafts\Core\AbstractServiceProvider;
 use BoneHornCrafts\Core\Container;
 use BoneHornCrafts\Core\Contracts\ContainerInterface;
 use BoneHornCrafts\Core\Contracts\LoggerInterface;
+use BoneHornCrafts\Core\Support\Options;
 use BoneHornCrafts\Core\Product\Attributes\AttributeRegistrar;
 use BoneHornCrafts\Core\Support\Context;
 
@@ -56,7 +57,8 @@ final class DemoServiceProvider extends AbstractServiceProvider {
 				$c->get( DemoState::class ),
 				$c->get( ImageFactory::class ),
 				$c->get( AttributeRegistrar::class ),
-				$c->get( LoggerInterface::class )
+				$c->get( LoggerInterface::class ),
+				$c->get( Options::class )
 			)
 		);
 	}

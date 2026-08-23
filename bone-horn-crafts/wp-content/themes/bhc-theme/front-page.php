@@ -26,6 +26,7 @@ bhc_prime_product_rails(
 		[ 'new', 8 ],
 		[ 'bestsellers', 8 ],
 		[ 'category', 4, 'workshop-essentials' ],
+		[ 'tag', 4, 'workshop-essential' ],
 	]
 );
 ?>
@@ -48,8 +49,6 @@ bhc_prime_product_rails(
 		</div>
 	</section>
 
-	<?php get_template_part( 'template-parts/home/categories' ); ?>
-
 	<section class="section" aria-labelledby="home-bestsellers">
 		<div class="container">
 			<?php
@@ -65,10 +64,9 @@ bhc_prime_product_rails(
 		</div>
 	</section>
 
-	<?php
-	get_template_part( 'template-parts/home/collection', null, [ 'copy' => $bhc_home_copy['collection'] ?? [] ] );
-	get_template_part( 'template-parts/home/value-props', null, [ 'copy' => $bhc_home_copy['why'] ?? [] ] );
-	?>
+	<?php get_template_part( 'template-parts/home/categories' ); ?>
+
+	<?php get_template_part( 'template-parts/home/collection', null, [ 'copy' => $bhc_home_copy['collection'] ?? [] ] ); ?>
 
 	<section class="section section--paper" aria-labelledby="home-essentials">
 		<div class="container">
@@ -83,7 +81,10 @@ bhc_prime_product_rails(
 		</div>
 	</section>
 
+	<?php get_template_part( 'template-parts/home/complete-build' ); ?>
+
 	<?php
+	get_template_part( 'template-parts/home/value-props', null, [ 'copy' => $bhc_home_copy['why'] ?? [] ] );
 	get_template_part( 'template-parts/home/reviews' );
 	get_template_part( 'template-parts/home/gallery', null, [ 'copy' => $bhc_home_copy['gallery'] ?? [] ] );
 	get_template_part( 'template-parts/home/journal' );

@@ -1,0 +1,672 @@
+# Copyright (C) 2026 Bone Horn Crafts
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Bone Horn Crafts 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/bhc-theme\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-08-23T08:03:46+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: bhc-theme\n"
+
+#. Theme Name of the theme
+#. Author of the theme
+#: style.css
+msgid "Bone Horn Crafts"
+msgstr ""
+
+#. Theme URI of the theme
+#. Author URI of the theme
+#: style.css
+msgid "https://www.bonehorncrafts.com/"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "Editorial WooCommerce theme for the Bone Horn Crafts materials workshop. Mobile-first, no page builder, no jQuery dependency, system fonts only, with a hand-curated critical CSS path."
+msgstr ""
+
+#: 404.php:18
+msgid "That page has moved on"
+msgstr ""
+
+#: 404.php:20
+msgid "One-off pairs sell out and their listings retire. The catalogue is the best place to pick up the trail."
+msgstr ""
+
+#: 404.php:24
+#: search.php:73
+msgid "Browse the catalogue"
+msgstr ""
+
+#: 404.php:27
+msgid "Search from this page"
+msgstr ""
+
+#: 404.php:37
+msgid "Popular right now"
+msgstr ""
+
+#. translators: %d: comment count.
+#: comments.php:22
+#, php-format
+msgid "%d comment"
+msgid_plural "%d comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: comments.php:46
+msgid "Leave a note"
+msgstr ""
+
+#: comments.php:47
+msgid "Post comment"
+msgstr ""
+
+#: comments.php:49
+msgid "Your email address is not published."
+msgstr ""
+
+#: footer.php:17
+msgid "Bone, horn and wood handle stock cut, graded and finished in our own workshop, then shipped to makers worldwide."
+msgstr ""
+
+#: footer.php:26
+msgid "Shop"
+msgstr ""
+
+#: footer.php:54
+msgid "Help"
+msgstr ""
+
+#: footer.php:69
+msgid "New material first"
+msgstr ""
+
+#: footer.php:71
+msgid "One email when a batch is cut. Bark-edge horn and rams horn usually sell out before the second email."
+msgstr ""
+
+#: footer.php:75
+#: template-parts/home/newsletter.php:23
+msgid "Email address"
+msgstr ""
+
+#: footer.php:76
+#: template-parts/content/contact-details.php:48
+#: template-parts/home/newsletter.php:24
+msgid "you@workshop.com"
+msgstr ""
+
+#: footer.php:77
+msgid "Join"
+msgstr ""
+
+#. translators: 1: year, 2: site name.
+#: footer.php:87
+#, php-format
+msgid "© %1$s %2$s. All rights reserved."
+msgstr ""
+
+#. translators: %s: manufacturing company name.
+#: footer.php:106
+#, php-format
+msgid "A brand by %s"
+msgstr ""
+
+#: front-page.php:41
+msgid "New arrivals"
+msgstr ""
+
+#: front-page.php:42
+msgid "Listed the week it is cut. One-off pairs do not come back."
+msgstr ""
+
+#: front-page.php:44
+msgid "See everything new"
+msgstr ""
+
+#: front-page.php:56
+msgid "Bestsellers"
+msgstr ""
+
+#: front-page.php:57
+msgid "Ranked from real order volume over the last thirty days."
+msgstr ""
+
+#: front-page.php:59
+msgid "See the full ranking"
+msgstr ""
+
+#: front-page.php:75
+msgid "Workshop essentials"
+msgstr ""
+
+#: front-page.php:76
+msgid "Pin stock, spacer sheet and bolster blocks — the parts that finish a build."
+msgstr ""
+
+#: header.php:22
+msgid "Skip to content"
+msgstr ""
+
+#: header.php:26
+msgid "Worldwide export from the workshop · Free shipping on orders over $150"
+msgstr ""
+
+#: header.php:41
+msgid "Primary"
+msgstr ""
+
+#: header.php:57
+#: header.php:110
+msgid "Search the catalogue"
+msgstr ""
+
+#: header.php:75
+#: searchform.php:40
+msgid "Search"
+msgstr ""
+
+#: header.php:80
+#: header.php:145
+msgid "Your account"
+msgstr ""
+
+#: header.php:85
+#: header.php:151
+msgid "Wishlist"
+msgstr ""
+
+#: header.php:91
+msgid "Cart"
+msgstr ""
+
+#: header.php:103
+msgid "Menu"
+msgstr ""
+
+#: header.php:116
+msgid "Site menu"
+msgstr ""
+
+#: header.php:121
+#: header.php:159
+msgid "Close menu"
+msgstr ""
+
+#: header.php:125
+msgid "Search the catalogue (menu)"
+msgstr ""
+
+#: header.php:127
+msgid "Mobile"
+msgstr ""
+
+#: inc/security.php:46
+msgid "Those details did not match an account."
+msgstr ""
+
+#: inc/setup.php:62
+msgid "Primary navigation"
+msgstr ""
+
+#: inc/setup.php:63
+msgid "Footer navigation"
+msgstr ""
+
+#: inc/setup.php:64
+msgid "Utility navigation"
+msgstr ""
+
+#: inc/setup.php:99
+msgid "Footer — workshop"
+msgstr ""
+
+#: inc/setup.php:101
+msgid "Short workshop note shown in the first footer column."
+msgstr ""
+
+#. translators: %d: minutes.
+#: inc/template-tags.php:307
+#, php-format
+msgid "%d minute read"
+msgid_plural "%d minute read"
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/woocommerce.php:125
+msgid "Buy now"
+msgstr ""
+
+#: inc/woocommerce.php:160
+msgid "Material detail"
+msgstr ""
+
+#: inc/woocommerce.php:166
+msgid "Specification"
+msgstr ""
+
+#: inc/woocommerce.php:173
+msgid "Care &amp; finishing"
+msgstr ""
+
+#: inc/woocommerce.php:180
+msgid "Shipping &amp; returns"
+msgstr ""
+
+#: inc/woocommerce.php:215
+msgid "Care and finishing"
+msgstr ""
+
+#: inc/woocommerce.php:222
+msgid "Read the full care and finishing guide"
+msgstr ""
+
+#: inc/woocommerce.php:273
+msgid "Featured"
+msgstr ""
+
+#: inc/woocommerce.php:274
+msgid "Newest first"
+msgstr ""
+
+#: inc/woocommerce.php:275
+msgid "Best selling"
+msgstr ""
+
+#: inc/woocommerce.php:276
+msgid "Highest rated"
+msgstr ""
+
+#: inc/woocommerce.php:277
+msgid "Price: low to high"
+msgstr ""
+
+#: inc/woocommerce.php:278
+msgid "Price: high to low"
+msgstr ""
+
+#: inc/woocommerce.php:337
+msgid "Out of stock — next lot in preparation"
+msgstr ""
+
+#. translators: %d: remaining stock.
+#: inc/woocommerce.php:344
+#, php-format
+msgid "Only %d left from this lot"
+msgstr ""
+
+#: inc/woocommerce.php:347
+msgid "In stock, ready to dispatch"
+msgstr ""
+
+#: index.php:24
+msgid "Workshop journal"
+msgstr ""
+
+#: index.php:34
+msgid "Journal articles"
+msgstr ""
+
+#: index.php:50
+msgid "Newer"
+msgstr ""
+
+#: index.php:51
+msgid "Older"
+msgstr ""
+
+#: index.php:57
+msgid "Nothing here yet"
+msgstr ""
+
+#: index.php:58
+msgid "The journal is written between batches, so it fills up slowly."
+msgstr ""
+
+#. translators: %s: search term.
+#: search.php:26
+#: woocommerce/archive-product.php:34
+#, php-format
+msgid "Search: %s"
+msgstr ""
+
+#. translators: %d: result count.
+#: search.php:36
+#, php-format
+msgid "%d result"
+msgid_plural "%d results"
+msgstr[0] ""
+msgstr[1] ""
+
+#: search.php:42
+msgid "Refine this search"
+msgstr ""
+
+#: search.php:46
+msgid "Search results"
+msgstr ""
+
+#: search.php:69
+msgid "No matches"
+msgstr ""
+
+#: search.php:71
+msgid "Try a material name (buffalo horn, camel bone, stabilized burl), a SKU, or the build you are working on."
+msgstr ""
+
+#: searchform.php:20
+#: searchform.php:24
+msgid "Search materials"
+msgstr ""
+
+#: searchform.php:32
+msgid "Search material or SKU"
+msgstr ""
+
+#: single.php:68
+msgid "Material from this batch"
+msgstr ""
+
+#: template-parts/content/contact-details.php:17
+msgid "Reach the workshop"
+msgstr ""
+
+#: template-parts/content/contact-details.php:21
+msgid "Email"
+msgstr ""
+
+#: template-parts/content/contact-details.php:27
+msgid "Phone"
+msgstr ""
+
+#: template-parts/content/contact-details.php:33
+msgid "Hours"
+msgstr ""
+
+#: template-parts/content/contact-details.php:34
+msgid "Monday to Saturday, 09:00–18:00 IST"
+msgstr ""
+
+#: template-parts/content/contact-details.php:38
+msgid "Wholesale"
+msgstr ""
+
+#: template-parts/content/contact-details.php:39
+msgid "Send the item, annual quantity and destination country for a landed price."
+msgstr ""
+
+#: template-parts/content/contact-details.php:47
+msgid "Your email"
+msgstr ""
+
+#: template-parts/content/contact-details.php:50
+msgid "Ask the workshop"
+msgstr ""
+
+#: template-parts/content/contact-details.php:54
+msgid "This demo build does not send mail. On a live site this form posts to a validated, nonce-protected handler."
+msgstr ""
+
+#: template-parts/home/categories.php:41
+msgid "Shop by category"
+msgstr ""
+
+#: template-parts/home/categories.php:42
+msgid "Handle scales, guitar parts, pen blanks, drinking horns and the finishing stock that goes with them."
+msgstr ""
+
+#. translators: %d: product count.
+#: template-parts/home/categories.php:81
+#, php-format
+msgid "%d listing"
+msgid_plural "%d listings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: template-parts/home/collection.php:25
+msgid "Collection"
+msgstr ""
+
+#: template-parts/home/collection.php:28
+msgid "Viking & Medieval Collection"
+msgstr ""
+
+#: template-parts/home/collection.php:32
+msgid "Drinking horns, bark-edge scales and horn beads for reenactment kit and Norse-styled builds."
+msgstr ""
+
+#: template-parts/home/collection.php:36
+msgid "View the collection"
+msgstr ""
+
+#: template-parts/home/collection.php:51
+msgid "Drinking horn and bark-edge horn material"
+msgstr ""
+
+#: template-parts/home/complete-build.php:44
+msgid "Complete your build"
+msgstr ""
+
+#: template-parts/home/complete-build.php:45
+msgid "Pins, bolsters and spacer stock that makers add alongside their scales."
+msgstr ""
+
+#: template-parts/home/complete-build.php:47
+#: woocommerce/cart/cart-empty.php:25
+msgid "Browse everything"
+msgstr ""
+
+#: template-parts/home/gallery.php:27
+msgid "From the bench"
+msgstr ""
+
+#: template-parts/home/gallery.php:28
+msgid "Work in progress, batches drying and finished pieces before they are packed."
+msgstr ""
+
+#: template-parts/home/hero.php:29
+msgid "Cut and finished in our own workshop"
+msgstr ""
+
+#: template-parts/home/hero.php:32
+msgid "Materials Made for Makers"
+msgstr ""
+
+#: template-parts/home/hero.php:36
+msgid "Bone, horn and wood handle stock, matched in pairs and finished so your build starts right."
+msgstr ""
+
+#: template-parts/home/hero.php:41
+msgid "Shop New Arrivals"
+msgstr ""
+
+#: template-parts/home/hero.php:45
+msgid "Browse the full catalogue"
+msgstr ""
+
+#: template-parts/home/hero.php:51
+msgid "60+"
+msgstr ""
+
+#: template-parts/home/hero.php:52
+msgid "Materials in stock"
+msgstr ""
+
+#: template-parts/home/hero.php:55
+msgid "8 weeks"
+msgstr ""
+
+#: template-parts/home/hero.php:56
+msgid "Degreasing before cutting"
+msgstr ""
+
+#: template-parts/home/hero.php:59
+msgid "24 countries"
+msgstr ""
+
+#: template-parts/home/hero.php:60
+msgid "Shipped from the bench"
+msgstr ""
+
+#: template-parts/home/hero.php:77
+msgid "Hand-finished bone handle material on a workshop bench"
+msgstr ""
+
+#: template-parts/home/journal.php:32
+msgid "From the workshop journal"
+msgstr ""
+
+#: template-parts/home/journal.php:33
+msgid "How the material behaves, and what we have learned cutting it."
+msgstr ""
+
+#: template-parts/home/journal.php:35
+msgid "Read the journal"
+msgstr ""
+
+#: template-parts/home/newsletter.php:18
+msgid "New material, first"
+msgstr ""
+
+#: template-parts/home/newsletter.php:19
+msgid "One email when a batch is cut. No campaigns, no resends."
+msgstr ""
+
+#: template-parts/home/newsletter.php:25
+msgid "Notify me"
+msgstr ""
+
+#: template-parts/home/reviews.php:43
+msgid "What makers say"
+msgstr ""
+
+#: template-parts/home/reviews.php:44
+msgid "Reviews left on the listings themselves, newest first."
+msgstr ""
+
+#. translators: %d: star rating.
+#: template-parts/home/reviews.php:61
+#, php-format
+msgid "Rated %d out of 5"
+msgstr ""
+
+#: template-parts/home/value-props.php:25
+msgid "Why Bone Horn Crafts"
+msgstr ""
+
+#: template-parts/home/value-props.php:26
+msgid "Four things decide whether material is worth buying twice."
+msgstr ""
+
+#: template-parts/product/shipping.php:12
+msgid "Dispatch and delivery"
+msgstr ""
+
+#: template-parts/product/shipping.php:13
+msgid "In-stock listings leave the workshop within one working day. Listings with a stated lead time are cut and finished first — that time is shown on this page, not discovered at checkout."
+msgstr ""
+
+#: template-parts/product/shipping.php:15
+msgid "Customs"
+msgstr ""
+
+#: template-parts/product/shipping.php:16
+msgid "Every export parcel ships with an accurate commercial invoice and HS codes. Import duties and taxes charged on arrival are payable by the recipient."
+msgstr ""
+
+#: template-parts/product/shipping.php:18
+msgid "Returns"
+msgstr ""
+
+#: template-parts/product/shipping.php:19
+msgid "Unworked material can be returned within thirty days of delivery. Once material has been cut, drilled or sanded it cannot come back — which is why every listing states its grading band."
+msgstr ""
+
+#: template-parts/product/shipping.php:22
+msgid "Full shipping information"
+msgstr ""
+
+#: template-parts/product/shipping.php:24
+msgid "Returns and refunds"
+msgstr ""
+
+#: template-parts/product/specification.php:34
+msgid "Nominal dimensions"
+msgstr ""
+
+#: template-parts/product/specification.php:44
+msgid "Weight"
+msgstr ""
+
+#: template-parts/product/specification.php:50
+msgid "Sold as"
+msgstr ""
+
+#: template-parts/product/specification.php:54
+msgid "SKU"
+msgstr ""
+
+#: template-parts/product/specification.php:60
+msgid "Material lot"
+msgstr ""
+
+#: template-parts/product/specification.php:63
+msgid "Country of manufacture"
+msgstr ""
+
+#: template-parts/product/specification.php:70
+msgid "Product specification"
+msgstr ""
+
+#: template-parts/product/sticky-cart.php:34
+msgid "Add to cart"
+msgstr ""
+
+#: template-parts/product/sticky-cart.php:34
+msgid "Out of stock"
+msgstr ""
+
+#: woocommerce/archive-product.php:66
+msgid "Filter"
+msgstr ""
+
+#: woocommerce/archive-product.php:105
+msgid "Nothing matches those filters"
+msgstr ""
+
+#: woocommerce/archive-product.php:106
+msgid "Natural material comes in batches, so a combination that existed last month may be sold out. Try widening the material or finish filter."
+msgstr ""
+
+#: woocommerce/archive-product.php:107
+msgid "Clear all filters"
+msgstr ""
+
+#: woocommerce/cart/cart-empty.php:18
+msgid "Your cart is empty"
+msgstr ""
+
+#: woocommerce/cart/cart-empty.php:20
+msgid "Material is listed as it is cut, and the one-off pairs move fastest. Start with what is new this week."
+msgstr ""
+
+#: woocommerce/cart/cart-empty.php:24
+msgid "See new arrivals"
+msgstr ""
+
+#: woocommerce/cart/cart-empty.php:36
+msgid "Makers are buying"
+msgstr ""
+
+#. translators: 1: product name, 2: image number.
+#: woocommerce/single-product/product-image.php:87
+#, php-format
+msgid "%1$s — view %2$d"
+msgstr ""

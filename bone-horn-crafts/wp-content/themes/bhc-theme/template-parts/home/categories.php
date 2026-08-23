@@ -14,7 +14,10 @@ $categories = get_terms(
 		'taxonomy'   => 'product_cat',
 		'hide_empty' => true,
 		'parent'     => 0,
-		'number'     => 5,
+		// Every top-level shelf, not a top-five. Capping at five silently
+		// dropped Drinking Horns & Mugs — a whole category, and one the
+		// section's own copy named — because it has the fewest listings.
+		'exclude'    => array_filter( [ (int) get_option( 'default_product_cat' ) ] ),
 		'orderby'    => 'count',
 		'order'      => 'DESC',
 	]
@@ -36,7 +39,7 @@ $covers     = null === $repository
 		<?php
 		bhc_section_header(
 			__( 'Shop by category', 'bhc-theme' ),
-			__( 'Five shelves: handle scales, guitar parts, pen blanks, drinking horns and finished pieces.', 'bhc-theme' )
+			__( 'Handle scales, guitar parts, pen blanks, drinking horns and the finishing stock that goes with them.', 'bhc-theme' )
 		);
 		?>
 

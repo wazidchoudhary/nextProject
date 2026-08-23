@@ -169,6 +169,38 @@ final class AffinityRepository extends AbstractRepository {
 	}
 
 	/**
+	 * The products most often bought alongside something else, store-wide.
+	 *
+	 * Per-product recommendations answer "what goes with this?". This answers
+	 * the shop-window version — "what do makers add to finish a build?" — by
+	 * ranking every product by how strongly and how often it appears as a
+	 * companion across the whole index. Same data as the product-page rail,
+	 * aggregated one level up.
+	 *
+	 * @param int $limit Maximum ids.
+	 *
+	 * @return int[]
+	 */
+	public function most_paired_ids( int $limit = 8 ): array {
+		$limit = max( 1, min( 24, $limit ) );
+		$table = $this->table();
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name comes from Schema; caching is the caller's job.
+		$ids = $this->db->get_col(
+			$this->db->prepare(
+				"SELECT related_id
+				 FROM {$table}
+				 GROUP BY related_id
+				 ORDER BY SUM(score) DESC, COUNT(*) DESC
+				 LIMIT %d",
+				$limit
+			)
+		);
+
+		return array_values( array_filter( array_map( 'absint', (array) $ids ) ) );
+	}
+
+	/**
 	 * Number of indexed rows, for the admin dashboard.
 	 */
 	public function total(): int {

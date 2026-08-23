@@ -211,11 +211,14 @@ final class MetaTagService implements HookableInterface {
 		$pages = isset( $wp_query->max_num_pages ) ? (int) $wp_query->max_num_pages : 1;
 
 		if ( $paged > 1 ) {
-			printf( "<link rel=\"prev\" href=\"%s\" />\n", esc_url( (string) get_pagenum_link( $paged - 1 ) ) );
+			// Canonicalised like every other absolute URL in the head. Leaving
+			// these on the request host while the canonical points elsewhere
+			// tells a crawler two different things about the same page.
+			printf( "<link rel=\"prev\" href=\"%s\" />\n", esc_url( $this->brand->canonicalise( (string) get_pagenum_link( $paged - 1 ) ) ) );
 		}
 
 		if ( $paged < $pages ) {
-			printf( "<link rel=\"next\" href=\"%s\" />\n", esc_url( (string) get_pagenum_link( $paged + 1 ) ) );
+			printf( "<link rel=\"next\" href=\"%s\" />\n", esc_url( $this->brand->canonicalise( (string) get_pagenum_link( $paged + 1 ) ) ) );
 		}
 	}
 
@@ -298,9 +301,35 @@ final class MetaTagService implements HookableInterface {
 			}
 		} elseif ( function_exists( 'is_shop' ) && is_shop() ) {
 			$description = __( 'Browse knife handle scales, guitar parts, pen blanks, drinking horns and finishing stock in camel bone, cattle bone, water buffalo horn, rams horn and stabilized wood.', 'bhc-commerce-core' );
+		} elseif ( is_home() ) {
+			// The posts page is neither singular nor an archive object, so it
+			// fell through every branch above and shipped with no description
+			// at all.
+			$posts_page = (int) get_option( 'page_for_posts' );
+
+			$description = $posts_page > 0
+				? (string) get_post_field( 'post_excerpt', $posts_page )
+				: '';
+
+			if ( '' === $description ) {
+				$description = __( 'Notes from the workshop on choosing, cutting and finishing bone, horn and wood.', 'bhc-commerce-core' );
+			}
 		}
 
 		$description = wp_strip_all_tags( strip_shortcodes( (string) $description ) );
+
+		// Page 2 of an archive is a different page and needs a different
+		// description; repeating page one's verbatim is a duplicate-content
+		// signal on every paginated view in the store.
+		$paged = max( 1, (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) );
+
+		if ( $paged > 1 && '' !== $description ) {
+			$description = trim( Str::truncate( $description, 130, '' ) ) . sprintf(
+				/* translators: %d: page number. */
+				__( ' — page %d.', 'bhc-commerce-core' ),
+				$paged
+			);
+		}
 
 		/**
 		 * Filters the meta description.
