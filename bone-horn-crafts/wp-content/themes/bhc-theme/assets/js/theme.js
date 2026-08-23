@@ -370,6 +370,49 @@ function initHeaderState() {
 	);
 }
 
+/* -------------------------------------------------------------------------
+ * Catalogue ordering
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Submits the sort form when the dropdown changes.
+ *
+ * WooCommerce's own orderby template ships a bare <select> with no submit
+ * control: the only thing that sends the form is one jQuery handler inside
+ * WooCommerce's `woocommerce` frontend script. This theme dequeues that script
+ * everywhere except cart, checkout and account, which is a deliberate and
+ * worthwhile saving — and it silently broke sorting on the shop, on every
+ * category archive and on search results. The dropdown changed, and nothing
+ * happened.
+ *
+ * Rebinding it here keeps the saving and restores the behaviour. The template
+ * override also renders a real submit button, hidden unless scripting is off,
+ * so sorting still works when this never runs.
+ */
+function initCatalogOrdering() {
+	const forms = document.querySelectorAll( 'form.woocommerce-ordering' );
+
+	forms.forEach( ( form ) => {
+		const select = form.querySelector( 'select.orderby' );
+
+		if ( ! select ) {
+			return;
+		}
+
+		select.addEventListener( 'change', () => {
+			// requestSubmit() runs validation and fires the submit event, which
+			// form.submit() skips. The fallback covers older Safari.
+			if ( typeof form.requestSubmit === 'function' ) {
+				form.requestSubmit();
+
+				return;
+			}
+
+			form.submit();
+		} );
+	} );
+}
+
 function boot() {
 	initDrawer();
 	initMobileSearch();
@@ -378,6 +421,7 @@ function boot() {
 	initTabs();
 	initQuantity();
 	initHeaderState();
+	initCatalogOrdering();
 }
 
 if ( document.readyState === 'loading' ) {

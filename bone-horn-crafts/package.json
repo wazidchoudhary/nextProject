@@ -13,6 +13,7 @@
 		"lint:js": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js tests tools",
 		"test:e2e": "node tests/e2e/purchase-flow.mjs",
 		"test:admin": "node tests/e2e/admin-screens.mjs",
+		"test:sorting": "node tests/e2e/catalogue-sorting.mjs",
 		"screenshots": "node tools/screenshots.mjs",
 		"lint:php": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpcs --standard=phpcs.xml.dist",
 		"lint:php:fix": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpcbf --standard=phpcs.xml.dist",
