@@ -307,7 +307,7 @@ function bhc_cart_count_fragment( array $fragments ): array {
 	printf(
 		'<span class="bhc-icon-button__count%s" data-bhc-cart-count>%d</span>',
 		bhc_cart_count() > 0 ? '' : ' is-empty',
-		bhc_cart_count()
+		absint( bhc_cart_count() )
 	);
 
 	$fragments['[data-bhc-cart-count]'] = (string) ob_get_clean();

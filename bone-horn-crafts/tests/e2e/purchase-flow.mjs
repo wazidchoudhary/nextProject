@@ -83,6 +83,15 @@ check( 'invalid postcode is rejected server-side', errorText.toLowerCase().inclu
 // 5. Checkout with a valid postcode
 await page.fill( '#billing_postcode', '97205' );
 await page.waitForTimeout( 1500 );
+
+// The store links a terms page, so WooCommerce renders a required consent
+// checkbox. A real customer has to tick it before the order will go through.
+const terms = page.locator( '#terms' );
+
+if ( await terms.count() ) {
+	await terms.check();
+}
+
 await page.locator( '#place_order' ).click();
 await page.waitForURL( /order-received/, { timeout: 30000 } ).catch( () => {} );
 check( 'order completes', page.url().includes( 'order-received' ), page.url() );

@@ -5,8 +5,8 @@ Three layers, each answering a question the others cannot.
 | Layer | Count | Runtime | Question it answers |
 |---|---:|---:|---|
 | **Unit** (PHPUnit) | 73 tests, 136 assertions | ~0.02 s | Is the logic correct in isolation? |
-| **Integration** (`wp eval-file`) | 62 assertions | ~2 s | Does it behave correctly *inside a real WooCommerce store*? |
-| **End-to-end** (Playwright) | 4 suites, 50 checks | minutes | Can a person actually buy something, and can everyone? |
+| **Integration** (`wp eval-file`) | 73 assertions | ~2 s | Does it behave correctly *inside a real WooCommerce store*? |
+| **End-to-end** (Playwright) | 4 suites, 91 checks | minutes | Can a person actually buy something, and can everyone? |
 
 Plus **standards**: `npm run lint` runs stylelint, eslint and phpcs, in that
 order, all three clean.
@@ -20,7 +20,7 @@ order, all three clean.
 
 They run in **16 milliseconds with no WordPress loaded**. `tests/bootstrap.php`
 stubs the handful of WordPress functions the units under test touch
-(`sanitize_text_field`, `absint`, `wp_kses_post`, `wp_json_encode`, …). That
+(`sanitize_text_field`, `absint`, `wp_strip_all_tags`, `wp_json_encode`, …). That
 constraint is the point: anything that cannot be tested without WordPress is
 either genuinely integration code, or badly factored.
 
@@ -86,7 +86,7 @@ Groups:
 |---|---|
 | Environment | Plugin booted, schema installed, container resolves, WooCommerce active |
 | Catalogue read model | Bounded queries, ordering, id-list caching, hydration |
-| **Query efficiency** | Batch priming removes most per-card queries; a primed card costs under three |
+| **Query efficiency** | Batch priming removes most per-card queries; a repeat render behind warm caches adds none |
 | Pricing | Tier breakpoints, wholesale gating, cart recalculation |
 | Badges | Resolution order, manual overrides, automatic rules |
 | Recommendations | Strategy fallback order, dedupe, exclusion of the seed product |
@@ -97,11 +97,24 @@ Groups:
 | Checkout services | Postcode validation per country, delivery window, workshop lead time |
 | Merchandising index | Stats rows exist, bestseller ranking populated |
 | **SEO output** | JSON-LD emitted, `Product` node present, `BreadcrumbList` present, exactly one canonical, OG price tags, **exactly one JSON-LD block on the page**, `@id` uses the canonical host, wishlist page carries `noindex` |
+| **Store pages** | Shop, cart, checkout and my-account ids resolve to real pages, none of them is owned by the demo dataset, the shop title is non-empty, both policy-page options point at published pages |
 
 The query-efficiency assertions are written as **relationships, not fixed
-numbers** — "primed must cost materially less than unprimed, and under three
-queries per card" — so they stay meaningful as the catalogue grows instead of
-becoming a number nobody dares change.
+numbers** — "primed must cost materially less than unprimed" (under 60% of it),
+and "a repeat render behind warm caches must add no queries at all" — so they
+stay meaningful as the catalogue grows instead of becoming a number nobody dares
+change. An absolute per-card budget was deliberately not used: `wp_cache_flush()`
+costs far more to recover from under a persistent object cache than under the
+non-persistent default, so the same number would mean different things in
+different environments.
+
+The **Store pages** group is a regression guard. `write_store_pages()` used to
+mark WooCommerce's Shop page as demo content and track it, so `wp bhc demo
+reset` deleted a core store page outright — and re-seeding could not repair it,
+because `wc_get_page_id()` still returned the dangling id and `wp_update_post()`
+silently no-opped against it. The archive then rendered an empty `<h1>`. The
+group asserts both halves: the pages resolve, and the demo dataset does not own
+them.
 
 `declare(strict_types=1)` is deliberately absent from this file: `wp eval-file`
 evaluates it inside an existing scope where the declaration is illegal.
@@ -138,17 +151,34 @@ The invalid-ZIP check matters: it submits a postcode the client would accept and
 asserts the *server* refuses it, which is the difference between validation and
 decoration.
 
-### `admin-screens.mjs`
+### `admin-screens.mjs` — 48 checks
 
-Logs in and loads the dashboard, health screen, settings and Action Scheduler,
-printing the HTTP status and whether the body contains a PHP fatal, warning or
-notice, then opens the product editor and reports whether the plugin's data
-panel is present. JS errors are collected across all of it, and screenshots are
-written to `/tmp/shots/`.
+Signs in as an administrator, then walks every screen the store is actually
+managed through:
 
-Unlike the other three, this suite **reports rather than gates**: it prints its
-findings and always exits `0`, so a regression here shows in the output but does
-not fail a run. Read it, do not just check its exit code.
+* **The plugin's own screens** — operations dashboard, health check, settings,
+  Action Scheduler.
+* **WooCommerce's screens** — the product list, the *add new product* editor,
+  the order list, settings, Analytics and Coupons. These are asserted because a
+  plugin hook that fatals here means the merchant cannot add a product or
+  process an order at all.
+* **The product editor panel** — that the *Bone Horn Crafts* tab registers, and
+  that it exposes each of its six fields by name.
+* **The order editor panel** — that a real order opens and the workshop &
+  export meta box renders on it.
+
+Each screen is checked for a 200, for its own heading, and for the absence of
+PHP fatals, warnings and notices. Screenshots land in `/tmp/shots/`.
+
+Credentials default to the pair `bin/setup-demo.sh` installs (`admin` / `admin`)
+and are overridable with `BHC_ADMIN_USER` and `BHC_ADMIN_PASS`.
+
+**This suite used to pass while signed out.** It logged in with a username the
+setup script never creates, printed `logged in: false`, and carried on — every
+subsequent request was redirected to the login form, which returns `200` and
+contains no PHP notices, so four admin screens reported green without ever being
+rendered. It now asserts the session first and exits non-zero if it is missing,
+and it gates like the other suites rather than only reporting.
 
 ### `web-vitals.mjs` — 6 checks
 
@@ -264,12 +294,24 @@ Every exclusion in the ruleset states why it exists. The substantive ones:
   type assertions, which are for static analysis, not prose.
 * Commenting sniffs are off **for `tests/` and `bin/` only** — a PHPUnit method
   name is the documentation.
+* `EscapeOutput` is off **for `bin/` only** — those are command-line scripts
+  whose output goes to a terminal, and HTML-escaping a progress line corrupts
+  it. Everything that can reach a browser stays covered.
+
+`EscapeOutput` was previously excluded **repo-wide**, directly under a comment
+claiming escaping was enforced. It was not: `echo $unescaped;` raised nothing
+anywhere in the codebase. Re-enabling it surfaced eleven real reports, all of
+which were fixable — two integer outputs made explicit with `absint()`, one
+`array_map()` false positive annotated, and the CLI scripts scoped out as above.
+A blanket exclusion of a security sniff is worth far more scrutiny than the
+handful of annotations it saves.
 
 Where a specific line needs an exception, it carries a `phpcs:ignore` naming the
-sniff and the reason, rather than a blanket disable. There are 94 of those and
+sniff and the reason, rather than a blanket disable. There are 95 of those and
 no `phpcs:disable` anywhere; most are custom-table queries stating why the table
-name is safe to interpolate. The largest single cluster is nine, in two admin
-save handlers where the sanitiser is a static call WPCS cannot follow.
+name is safe to interpolate. The largest single cluster is thirteen, in
+`ProductStatsRepository`; the next is nine, in the product data panel's save
+handler, where the sanitiser is a static call WPCS cannot follow.
 
 ---
 
@@ -278,8 +320,6 @@ save handlers where the sanitiser is a static call WPCS cannot follow.
 * **Visual regression.** No baseline screenshots. The CLS measurement and the
   admin-screen output catch the failures that matter most here; pixel diffing a
   demo store would mostly generate churn.
-* **Admin regressions, automatically.** `admin-screens.mjs` prints its findings
-  and exits `0`. Somebody has to read the output.
 * **Manual accessibility.** axe-core covers what a machine can check. Keyboard
   traps, focus order, screen-reader announcements and the actual usability of
   the filter drawer have not been tested by a person.

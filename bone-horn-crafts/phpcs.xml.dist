@@ -28,11 +28,6 @@
 		<!-- Short array syntax is used throughout, which WPCS still flags. -->
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
 
-		<!-- Escaping is enforced; the "late escaping" sniff produces false
-		     positives on renderers that escape inside a builder method and are
-		     annotated at the call site. -->
-		<exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped"/>
-
 		<!-- WordPress hook callbacks have a fixed arity: `add_filter( $h, $cb, 10, 4 )`
 		     passes four arguments whether or not the callback reads them all, and
 		     dropping a trailing parameter changes the signature WordPress calls. -->
@@ -53,6 +48,15 @@
 		     docs/performance.md for the measured query counts. -->
 		<exclude name="WordPress.DB.SlowDBQuery"/>
 	</rule>
+
+	<!-- bin/ holds command-line scripts whose output goes to a terminal, not to a
+	     browser. HTML-escaping a progress line would corrupt it, so the output
+	     escaping sniff is switched off for those files only. Everything that can
+	     reach a browser stays covered. -->
+	<rule ref="WordPress.Security.EscapeOutput">
+		<exclude-pattern>bin/*</exclude-pattern>
+	</rule>
+
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>

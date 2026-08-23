@@ -102,6 +102,7 @@ final class ImageFactory {
 	 * @param string $title    Human readable image title.
 	 * @param string $alt      Alt text.
 	 * @param int    $view     View index (0 = hero, 1..n = gallery angles).
+	 * @param string $colour   Colour slug from the catalogue, when it states one.
 	 *
 	 * @return int Attachment id, or 0 on failure.
 	 */
@@ -198,6 +199,7 @@ final class ImageFactory {
 	 * @param string $material Material slug.
 	 * @param string $shape    Shape family.
 	 * @param int    $view     View index.
+	 * @param string $colour   Colour slug from the catalogue, when it states one.
 	 */
 	private function render( string $sku, string $material, string $shape, int $view, string $colour = '' ): string {
 		$seed = crc32( $sku . '|' . $view );
@@ -275,6 +277,7 @@ final class ImageFactory {
 	 * @param string $material Material slug.
 	 * @param string $shape    Shape family.
 	 * @param int    $seed     Random seed.
+	 * @param string $colour   Colour slug from the catalogue, when it states one.
 	 *
 	 * @return \GdImage|false
 	 */

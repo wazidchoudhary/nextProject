@@ -30,6 +30,14 @@ notice rather than a fatal. Those two floors are the plugin header's
 **Verified here:** WordPress 7.0.4, WooCommerce 10.9.0, PHP 8.4.19, MariaDB
 10.11.14, Redis 7.0.15. The full suite is green on that stack.
 
+What that covers, and what it does not: the store itself, the CLI commands and
+the numbers in [Measured](#measured) below were run on that stack, built by
+`bin/setup-demo.sh`. The provisioning walkthroughs — managed host, VPS, Docker,
+and the demo migration — were written from this build's code and the documented
+behaviour of the tools they call. They were not executed here; no Ubuntu host
+and no Docker daemon existed in the authoring environment. Read them as a
+reviewed plan, and check each step as you run it.
+
 ### One thing to check in the PHP build: WebP
 
 The theme maps JPEG sub-sizes to WebP with an `image_editor_output_format`
@@ -88,14 +96,31 @@ docker compose -f deploy/docker-compose.yml exec wordpress \
   bash /opt/bhc/bin/setup-demo.sh /var/www/html
 ```
 
-The repository root is mounted read-only at `/opt/bhc` inside the `wordpress`
+The compose file's parent directory — `bone-horn-crafts/`, which holds `bin/`,
+`deploy/` and `wp-content/` — is mounted at `/opt/bhc` inside the `wordpress`
 container, which is why `bin/setup-demo.sh` is reachable at that path.
 
 > **Not verified.** The compose file and nginx config were written against the
 > documented behaviour of those images but could not be executed in the
-> authoring environment, which has no Docker daemon. Everything else in this
-> document was run. Treat `deploy/` as a reviewed starting point, not a tested
-> artefact.
+> authoring environment, which has no Docker daemon. Treat `deploy/` as a
+> reviewed starting point, not a tested artefact. Three things to expect on the
+> first run, from reading the files rather than from running them:
+>
+> - `deploy/nginx.conf` rate-limits `/wp-login.php` with
+>   `limit_req zone=bhc_login`, but nothing defines that zone inside the
+>   container — the compose file mounts the vhost as `conf.d/default.conf` only.
+>   Add the `limit_req_zone` line from [step 7 below](#7-nginx-and-tls) to the
+>   image's `nginx.conf`, or comment the `limit_req` line out; otherwise nginx
+>   refuses to start.
+> - `/opt/bhc` is mounted read-only, and `bin/setup-demo.sh` writes into the
+>   checkout: it runs `composer install` in the plugin and `npm install &&
+>   npm run build` at the project root. Build those on the host first, or drop
+>   the `:ro`.
+> - `setup-demo.sh` picks its database from `DB_HOST`; with none set it installs
+>   the SQLite integration instead of talking to the `db` service, so pass
+>   `DB_HOST`, `DB_NAME`, `DB_USER` and `DB_PASSWORD` into the `exec`. The
+>   script also needs `wp`, `composer` and `node` on `PATH`, which the stock
+>   `wordpress:php8.3-fpm-alpine` image does not carry.
 
 ### Shared cPanel hosting — workable, with caveats
 
@@ -118,7 +143,11 @@ below than to the Redis one.
    stylesheets are committed, so this only matters if you changed the SCSS.
 5. **Activate** the theme, then the plugin.
 6. **Turn on Redis** in the host's control panel.
-7. **Verify**: `wp bhc health-check --strict` should exit 0.
+7. **Verify**: `wp bhc health-check`. Every row should pass except
+   **Merchandising index**, which warns until the catalogue has been indexed —
+   there is nothing to index yet. Save `--strict` (any warning exits non-zero,
+   which is what you want in a deploy pipeline) for after step 8 or after a
+   `wp bhc products sync` on a real catalogue.
 8. **Seed** if you want the demo catalogue: `wp bhc demo seed`. That also
    enables two offline payment gateways so checkout is demonstrable — see
    [Going live](#going-live) before this is public. Skip the seed entirely for a
@@ -222,10 +251,10 @@ cd /var/www/bonehorncrafts
 wp plugin install woocommerce --activate
 
 git clone <your-fork> /opt/bhc
-ln -s /opt/bhc/wp-content/themes/bhc-theme  wp-content/themes/bhc-theme
-ln -s /opt/bhc/wp-content/plugins/bhc-commerce-core wp-content/plugins/bhc-commerce-core
+ln -s /opt/bhc/bone-horn-crafts/wp-content/themes/bhc-theme  wp-content/themes/bhc-theme
+ln -s /opt/bhc/bone-horn-crafts/wp-content/plugins/bhc-commerce-core wp-content/plugins/bhc-commerce-core
 
-cd /opt/bhc/wp-content/plugins/bhc-commerce-core
+cd /opt/bhc/bone-horn-crafts/wp-content/plugins/bhc-commerce-core
 composer install --no-dev --optimize-autoloader
 
 cd /var/www/bonehorncrafts
@@ -248,9 +277,10 @@ wp redis enable
 wp bhc health-check          # should say: Active — Redis
 ```
 
-The health report names Redis specifically when Redis is what is serving, and
-says `Active. Not Redis.` for another persistent backend, so this line is a real
-check rather than a guess.
+The health report names Redis specifically when Redis is what is serving —
+`Active — Redis (<implementation class>).` — and says
+`Active (<implementation class>). Not Redis.` for another persistent backend, so
+this line is a real check rather than a guess.
 
 In `/etc/redis/redis.conf`:
 
@@ -270,7 +300,7 @@ without distinct salts will read each other's entries.
 ### 7. nginx and TLS
 
 ```bash
-cp /opt/bhc/deploy/nginx.conf /etc/nginx/sites-available/bonehorncrafts
+cp /opt/bhc/bone-horn-crafts/deploy/nginx.conf /etc/nginx/sites-available/bonehorncrafts
 ```
 
 Change both `fastcgi_pass wordpress:9000` lines to
@@ -317,7 +347,7 @@ mkdir -p "$DEST"
 cd /var/www/bonehorncrafts
 /usr/local/bin/wp db export "$DEST/db.sql" --allow-root
 tar czf "$DEST/uploads.tgz" wp-content/uploads
-find /var/backups/bhc -maxdepth 1 -type d -mtime +30 -exec rm -rf {} +
+find /var/backups/bhc -mindepth 1 -maxdepth 1 -type d -mtime +30 -exec rm -rf {} +
 ```
 
 Copy them off the box — a backup on the same disk is not a backup. And restore

@@ -93,6 +93,7 @@ final class Requirements {
 			esc_html__( 'Bone Horn Crafts Commerce Core could not start.', 'bhc-commerce-core' ),
 			implode(
 				'',
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each item is escaped inside the closure below; the sniff cannot follow it through array_map().
 				array_map(
 					static fn ( string $failure ): string => '<li>' . esc_html( $failure ) . '</li>',
 					$this->failures

@@ -72,6 +72,12 @@ $main_id = (int) $image_ids[0];
 						data-bhc-gallery-thumb
 						data-full="<?php echo esc_url( (string) wp_get_attachment_image_url( $image_id, 'woocommerce_single' ) ); ?>"
 						data-srcset="<?php echo esc_attr( (string) wp_get_attachment_image_srcset( $image_id, 'woocommerce_single' ) ); ?>"
+						<?php
+						// Carried so the main image's alt text changes with it.
+						// Swapping src while leaving alt behind means a screen
+						// reader describes the first photograph for all three.
+						?>
+						data-alt="<?php echo esc_attr( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) ); ?>"
 						aria-current="<?php echo 0 === $index ? 'true' : 'false'; ?>"
 					>
 						<?php

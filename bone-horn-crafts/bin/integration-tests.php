@@ -528,4 +528,45 @@ if ( null !== $product_for_schema ) {
 	}
 }
 
+// ---------------------------------------------------------------------------
+$t->group( 'Store pages' );
+
+// Regression: `write_store_pages()` used to mark WooCommerce's Shop page as
+// demo content and track it, so `wp bhc demo reset` deleted a core store page
+// outright. Re-seeding could not repair it either — `wc_get_page_id()` still
+// returned the dangling id, so `wp_update_post()` silently no-opped and the
+// archive rendered an empty <h1>: no title, no breadcrumb root, nothing for a
+// screen reader or a crawler to read.
+foreach ( [ 'shop', 'cart', 'checkout', 'myaccount' ] as $store_page ) {
+	$store_page_id = (int) wc_get_page_id( $store_page );
+
+	$t->assert(
+		sprintf( '%s page id resolves to a real page', $store_page ),
+		$store_page_id > 0 && get_post( $store_page_id ) instanceof WP_Post,
+		'id ' . $store_page_id
+	);
+
+	$t->assert(
+		sprintf( '%s page is not owned by the demo dataset', $store_page ),
+		'yes' !== (string) get_post_meta( $store_page_id, '_bhc_demo', true ),
+		'a reset would delete it'
+	);
+}
+
+$t->assert(
+	'shop page has a non-empty title',
+	'' !== trim( (string) woocommerce_page_title( false ) ),
+	'the archive <h1> renders this'
+);
+
+foreach ( [ 'woocommerce_terms_page_id', 'woocommerce_refund_returns_page_id' ] as $policy_option ) {
+	$policy_id = (int) get_option( $policy_option );
+
+	$t->assert(
+		$policy_option . ' points at a published page',
+		$policy_id > 0 && 'publish' === get_post_status( $policy_id ),
+		'id ' . $policy_id
+	);
+}
+
 $t->finish();

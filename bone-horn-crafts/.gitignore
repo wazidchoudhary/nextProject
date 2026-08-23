@@ -9,3 +9,6 @@
 
 # Local environment
 /.env
+
+# Redis snapshot, written if redis-server is started from this directory.
+dump.rdb

@@ -59,7 +59,7 @@ if ( ! is_array( $reviews ) || [] === $reviews ) {
 							printf(
 								/* translators: %d: star rating. */
 								esc_html__( 'Rated %d out of 5', 'bhc-theme' ),
-								$rating
+								absint( $rating )
 							);
 							?>
 						</span>

@@ -162,6 +162,14 @@ function initGallery() {
 		image.src = button.dataset.full;
 		image.srcset = button.dataset.srcset || '';
 
+		// The alt text has to travel with the picture. Without this a screen
+		// reader announces the first photograph's description for all three,
+		// which is worse than no description at all because it is confidently
+		// wrong.
+		if ( button.dataset.alt !== undefined ) {
+			image.alt = button.dataset.alt;
+		}
+
 		thumbs.forEach( ( node ) => node.setAttribute( 'aria-current', node === button ? 'true' : 'false' ) );
 	}
 

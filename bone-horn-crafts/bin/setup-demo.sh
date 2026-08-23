@@ -182,6 +182,22 @@ fi
 $WP plugin activate woocommerce
 
 # ---------------------------------------------------------------------------
+say "High-Performance Order Storage"
+
+# HPOS is WooCommerce's order store: orders live in `wc_orders` rather than in
+# `posts`/`postmeta`. It is enabled here, before any order is seeded, so the
+# demo exercises the same storage a current WooCommerce install uses and the
+# order screens the plugin hooks into are the HPOS ones. Left off, the store
+# silently runs the legacy path and the HPOS branch of
+# `Order\Admin\OrderOperationsMetaBox` is never executed.
+#
+# `wc hpos enable` refuses while unsynced legacy orders exist, so sync first.
+# On a fresh install there is nothing to sync and it is a no-op; on a re-run
+# over an existing store it migrates what is there. Both are safe.
+$WP wc hpos sync || true
+$WP wc hpos enable || echo "WARNING: could not enable HPOS; the store will use legacy order storage."
+
+# ---------------------------------------------------------------------------
 say "Linking the theme and plugin from ${REPO_DIR}"
 
 link() {

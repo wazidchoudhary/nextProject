@@ -1516,7 +1516,7 @@ final class DemoSeeder {
 	/**
 	 * Configures the WooCommerce store pages.
 	 *
-	 * Two decisions are made here.
+	 * Three decisions are made here.
 	 *
 	 * 1. The shop page gets real copy. WooCommerce's stock text ("This is where
 	 *    you can browse products in this store") is the clearest tell that a
@@ -1527,9 +1527,14 @@ final class DemoSeeder {
 	 *    budget and with server-rendered checkout validation. The trade-off is
 	 *    explicit: a store that wants the block checkout swaps the page content
 	 *    back and loses the server-rendered address validation UX.
+	 * 3. These pages stay WooCommerce's. The seeder rewrites their copy but
+	 *    never claims their lifecycle, so `reset()` cannot delete them. See
+	 *    `store_page_id()` for what went wrong when it did.
 	 */
 	private function write_store_pages(): void {
-		$shop_id = function_exists( 'wc_get_page_id' ) ? (int) wc_get_page_id( 'shop' ) : 0;
+		$shop_id = $this->store_page_id( 'shop', 'Shop All Materials' );
+
+		$this->release_store_page( $shop_id );
 
 		if ( $shop_id > 0 ) {
 			wp_update_post(
@@ -1540,24 +1545,22 @@ final class DemoSeeder {
 					'post_content' => '',
 				]
 			);
-
-			update_post_meta( $shop_id, '_bhc_demo', 'yes' );
-
-			$this->state->track( 'pages', $shop_id );
 		}
 
 		$shortcodes = [
-			'cart'      => '[woocommerce_cart]',
-			'checkout'  => '[woocommerce_checkout]',
-			'myaccount' => '[woocommerce_my_account]',
+			'cart'      => [ 'Cart', '[woocommerce_cart]' ],
+			'checkout'  => [ 'Checkout', '[woocommerce_checkout]' ],
+			'myaccount' => [ 'My account', '[woocommerce_my_account]' ],
 		];
 
-		foreach ( $shortcodes as $page => $shortcode ) {
-			$page_id = function_exists( 'wc_get_page_id' ) ? (int) wc_get_page_id( $page ) : 0;
+		foreach ( $shortcodes as $page => list( $title, $shortcode ) ) {
+			$page_id = $this->store_page_id( $page, $title, $shortcode );
 
 			if ( $page_id <= 0 ) {
 				continue;
 			}
+
+			$this->release_store_page( $page_id );
 
 			$content = (string) get_post_field( 'post_content', $page_id );
 
@@ -1571,8 +1574,101 @@ final class DemoSeeder {
 					'post_content' => $shortcode,
 				]
 			);
+		}
 
-			$this->state->track( 'pages', $page_id );
+		$this->adopt_policy_pages();
+	}
+
+	/**
+	 * Resolves a WooCommerce store page, recreating it if the option dangles.
+	 *
+	 * `wc_get_page_id()` reads an option and does not check that the post still
+	 * exists. A store whose Shop page was deleted therefore keeps returning a
+	 * live-looking id, `wp_update_post()` silently no-ops against it, and the
+	 * archive renders with an empty `<h1>` — no page title, no breadcrumb root
+	 * and nothing for a screen reader or a search engine to read.
+	 *
+	 * These pages belong to WooCommerce, not to the demo dataset. The seeder
+	 * rewrites their copy but deliberately does not mark them `_bhc_demo` or
+	 * track them, so `reset()` leaves them alone: destroying a core store page
+	 * is not something un-seeding demo content should ever do.
+	 *
+	 * @param string $key     WooCommerce page key (shop, cart, checkout, myaccount).
+	 * @param string $title   Title used only when the page has to be recreated.
+	 * @param string $content Content used only when the page has to be recreated.
+	 *
+	 * @return int Page id, or 0 when WooCommerce is unavailable.
+	 */
+	private function store_page_id( string $key, string $title, string $content = '' ): int {
+		if ( ! function_exists( 'wc_get_page_id' ) ) {
+			return 0;
+		}
+
+		$page_id = (int) wc_get_page_id( $key );
+
+		if ( $page_id > 0 && get_post( $page_id ) instanceof \WP_Post ) {
+			return $page_id;
+		}
+
+		// wc_create_page() lives in the admin bundle, which is not loaded on a
+		// WP-CLI or front-end request.
+		if ( ! function_exists( 'wc_create_page' ) ) {
+			$admin_functions = WC_ABSPATH . 'includes/admin/wc-admin-functions.php';
+
+			if ( ! is_readable( $admin_functions ) ) {
+				return 0;
+			}
+
+			require_once $admin_functions;
+		}
+
+		// Re-points the option as a side effect, which is the repair we want.
+		return (int) wc_create_page( $key, 'woocommerce_' . $key . '_page_id', $title, $content );
+	}
+
+	/**
+	 * Drops the demo marker an earlier build wrote onto a core store page.
+	 *
+	 * Without this the fix only protects fresh installs: a store seeded by the
+	 * previous build still has `_bhc_demo` on its Shop page and still has that
+	 * id in the tracked-pages bucket, so the next `reset()` would delete it
+	 * exactly as before. Clearing the marker is enough — `reset()` checks it
+	 * before deleting, so a stale entry in the bucket becomes inert.
+	 *
+	 * @param int $page_id Store page id.
+	 */
+	private function release_store_page( int $page_id ): void {
+		if ( $page_id <= 0 ) {
+			return;
+		}
+
+		delete_post_meta( $page_id, '_bhc_demo' );
+	}
+
+	/**
+	 * Points WooCommerce's policy-page options at the store's own pages.
+	 *
+	 * WooCommerce ships a draft "Refund and Returns Policy" page which
+	 * `purge_default_content()` removes, leaving the option pointing at a post
+	 * that no longer exists; the terms option ships empty. Both surface in
+	 * checkout copy and in the emailed order confirmation, so a store that
+	 * reads as a real business has to wire them to the policies it actually
+	 * publishes.
+	 */
+	private function adopt_policy_pages(): void {
+		$policies = [
+			'woocommerce_terms_page_id'          => 'terms-conditions',
+			'woocommerce_refund_returns_page_id' => 'returns-refunds',
+		];
+
+		foreach ( $policies as $option => $slug ) {
+			$page = get_page_by_path( $slug, OBJECT, 'page' );
+
+			if ( ! $page instanceof \WP_Post ) {
+				continue;
+			}
+
+			update_option( $option, $page->ID );
 		}
 	}
 

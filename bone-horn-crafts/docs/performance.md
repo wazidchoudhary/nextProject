@@ -10,7 +10,7 @@ server. Two stacks are measured, because they behave very differently:
 
 * **MySQL + Redis.** The primary demo, built by `bin/setup-demo.sh`: MariaDB
   10.11, Redis 7, PHP 8.4, WordPress 7.0.4, WooCommerce 10.9.0. See
-  (hosting.md).
+  [hosting.md](hosting.md).
 * **SQLite, no persistent object cache.** The no-database-server option, kept
   because it is the fastest way to get the store running. It is the worst case
   rather than the best, and the query-count table below shows by how much.
@@ -178,9 +178,9 @@ template ran WooCommerce's `get_image()` output back through `wp_kses_post()`,
 which silently strips `srcset`, `sizes`, `loading`, `decoding` and
 `fetchpriority` — none of them are in the allowed attribute list. Every card in
 the store was a single 600×600 file at every breakpoint and DPR, with the loading
-hints removed too. `templates/product/card.php` now prints the core-generated
-markup directly, and cards carry a four-candidate `srcset` plus an explicit
-`sizes` for the 4-up / 2-up / 1-up grid.
+hints removed too. The plugin's `templates/product/card.php` now prints the
+core-generated markup directly, and cards carry a four-candidate `srcset` plus
+an explicit `sizes` for the 4-up / 2-up / 1-up grid.
 
 **Archive grids loaded every image eagerly.** WooCommerce tracks the loop index
 inside `wc_get_loop_class()`, which runs from `wc_product_post_class()`. This
@@ -344,9 +344,10 @@ store events onto them:
 | `woocommerce_order_status_completed` | `stats` |
 | `bhc_flush_all_caches` | all six |
 
-Each group is flushed at most once per request. `Security\RateLimiter` also uses
-a `ratelimit` group; it is deliberately outside this set, because rate-limit
-counters must survive a content flush.
+Each group is flushed at most once per request. `Security\RateLimiter` is
+deliberately outside this set: its `rl_*` counters go through the manager's
+default `general` group, which no content event flushes, because rate-limit
+counters must survive a product or category change.
 
 ### A TTL of 0 means no expiry
 
@@ -382,7 +383,7 @@ price starting, an order landing mid-window).
 | Bestseller lookup for badge resolution | `stats` | 6 h |
 | Low-stock ids | `products` | 15 min |
 | Published product count | `products` | 1 h |
-| Facet counts and price range | `facets` | 1 h (the manager default) |
+| Facet counts and price range | `facets` | 2 h |
 | Search results | `search` | 10 min |
 | Recommendations | `recommendations` | 6 h, configurable, floored at 1 min |
 | Order counts | `stats` | 5 min |
