@@ -280,24 +280,6 @@ function bhc_skip_lazy_for_first_image( $value, $image = '', $context = '' ) {
 
 add_filter( 'wp_lazy_loading_enabled', 'bhc_skip_lazy_for_first_image', 10, 3 );
 
-/**
- * Removes the query string from static asset URLs on production.
- *
- * Some CDNs refuse to cache URLs with a query string; the version is carried in
- * the path-less `ver` parameter only in development.
- *
- * @param string $src Asset URL.
- */
-function bhc_clean_asset_urls( string $src ): string {
-	if ( 'production' !== wp_get_environment_type() || is_admin() ) {
-		return $src;
-	}
-
-	return $src;
-}
-
-add_filter( 'style_loader_src', 'bhc_clean_asset_urls', 20 );
-add_filter( 'script_loader_src', 'bhc_clean_asset_urls', 20 );
 
 /**
  * Caps WordPress's srcset generation.

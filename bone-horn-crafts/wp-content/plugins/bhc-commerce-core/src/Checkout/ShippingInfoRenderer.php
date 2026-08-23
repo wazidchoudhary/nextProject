@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) || exit;
 use BoneHornCrafts\Core\Contracts\HookableInterface;
 use BoneHornCrafts\Core\Support\Options;
 use BoneHornCrafts\Core\Support\Template;
+use BoneHornCrafts\Core\Product\ProductMeta;
 use WC_Product;
 
 /**
@@ -105,8 +106,49 @@ final class ShippingInfoRenderer implements HookableInterface {
 			[
 				'country'  => $country,
 				'domestic' => 'IN' === strtoupper( $country ),
+				// The brief asks for delivery *and* export information here, and
+				// only the export half was rendering. A shopper at the payment
+				// step wants to know when it arrives, not only what customs will
+				// do with it.
+				'estimate' => $this->cart_estimate( $country ),
 			]
 		);
+	}
+
+	/**
+	 * Delivery estimate for the cart as a whole.
+	 *
+	 * A cart ships as one parcel, so its window is set by the slowest item in
+	 * it: quoting the fastest would be a promise the order cannot keep.
+	 *
+	 * @param string $country Destination country code.
+	 *
+	 * @return array<string, mixed> Estimate payload, or an empty array.
+	 */
+	private function cart_estimate( string $country ): array {
+		if ( '' === $country || ! function_exists( 'WC' ) || null === WC()->cart ) {
+			return [];
+		}
+
+		$slowest   = null;
+		$lead_time = -1;
+
+		foreach ( WC()->cart->get_cart() as $item ) {
+			$product = $item['data'] ?? null;
+
+			if ( ! $product instanceof WC_Product ) {
+				continue;
+			}
+
+			$days = ProductMeta::lead_time_days( $product );
+
+			if ( $days > $lead_time ) {
+				$lead_time = $days;
+				$slowest   = $product;
+			}
+		}
+
+		return $this->estimator->estimate( $slowest, $country );
 	}
 
 	/**

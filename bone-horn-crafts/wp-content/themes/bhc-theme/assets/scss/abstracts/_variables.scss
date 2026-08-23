@@ -29,6 +29,16 @@ $color-line-strong: #cfc2aa;
 $color-accent: #7a5c3e;
 $color-accent-dark: #5b4229;
 $color-brass: #a9832f;
+
+// Low-stock messaging is the copy a shopper most needs to read, so it cannot
+// borrow the decorative brass: #a9832f measures 2.92-3.46:1 against the three
+// paper tones and fails WCAG AA for body text. Same hue, taken to 4.95-5.87:1.
+$color-stock: #7d5f14;
+
+// Input borders are UI component boundaries, which WCAG 1.4.11 holds to 3:1.
+// $color-line-strong measures 1.73:1 on the surface tone — fine for a
+// decorative rule, not for the only thing marking where a field begins.
+$color-field-border: #9e8f73;
 $color-horn: #2b2724;
 $color-sale: #8a3f2c;
 $color-success: #4c6640;
