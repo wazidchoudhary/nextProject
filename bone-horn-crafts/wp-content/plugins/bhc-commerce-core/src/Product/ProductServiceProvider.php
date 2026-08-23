@@ -18,6 +18,7 @@ use BoneHornCrafts\Core\Container;
 use BoneHornCrafts\Core\Contracts\ContainerInterface;
 use BoneHornCrafts\Core\Contracts\LoggerInterface;
 use BoneHornCrafts\Core\Product\Admin\ProductDataPanel;
+use BoneHornCrafts\Core\Product\Admin\QuickImageColumn;
 use BoneHornCrafts\Core\Product\Attributes\AttributeRegistrar;
 use BoneHornCrafts\Core\Product\Badges\BadgeRegistry;
 use BoneHornCrafts\Core\Product\Badges\BadgeRenderer;
@@ -107,6 +108,14 @@ final class ProductServiceProvider extends AbstractServiceProvider {
 			ProductDataPanel::class,
 			static fn ( Container $c ): ProductDataPanel => new ProductDataPanel( $c->get( BadgeRegistry::class ) )
 		);
+
+		$container->singleton(
+			QuickImageColumn::class,
+			static fn ( Container $c ): QuickImageColumn => new QuickImageColumn(
+				$c->get( CacheManager::class ),
+				$c->get( LoggerInterface::class )
+			)
+		);
 	}
 
 	/**
@@ -126,7 +135,7 @@ final class ProductServiceProvider extends AbstractServiceProvider {
 		);
 
 		if ( $context->is_admin() ) {
-			$this->hook( $container, ProductDataPanel::class );
+			$this->hook( $container, ProductDataPanel::class, QuickImageColumn::class );
 
 			return;
 		}

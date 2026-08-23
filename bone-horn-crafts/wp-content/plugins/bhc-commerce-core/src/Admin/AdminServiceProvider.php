@@ -19,6 +19,7 @@ use BoneHornCrafts\Core\Container;
 use BoneHornCrafts\Core\Contracts\ContainerInterface;
 use BoneHornCrafts\Core\Database\Installer;
 use BoneHornCrafts\Core\Jobs\Scheduler;
+use BoneHornCrafts\Core\Product\Admin\QuickImageColumn;
 use BoneHornCrafts\Core\Store\BusinessDetails;
 use BoneHornCrafts\Core\Store\PlaceholderContactRepair;
 use BoneHornCrafts\Core\Order\OrderRepository;
@@ -113,7 +114,10 @@ final class AdminServiceProvider extends AbstractServiceProvider {
 
 		$container->singleton(
 			AdminAssets::class,
-			static fn ( Container $c ): AdminAssets => new AdminAssets( $c->get( Plugin::class ) )
+			static fn ( Container $c ): AdminAssets => new AdminAssets(
+				$c->get( Plugin::class ),
+				$c->get( QuickImageColumn::class )
+			)
 		);
 	}
 
