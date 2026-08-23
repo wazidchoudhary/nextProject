@@ -42,6 +42,12 @@ final class PolicyPageInstaller {
 	private const MARKER_META = '_bhc_policy_page';
 
 	/**
+	 * Cached slug => id map, so a caller that only needs the ids does not pay
+	 * for a lookup per page.
+	 */
+	private const IDS_OPTION = 'bhc_policy_page_ids';
+
+	/**
 	 * WooCommerce options that must point at these pages, as slug => option.
 	 */
 	private const WC_OPTIONS = [
@@ -96,6 +102,7 @@ final class PolicyPageInstaller {
 		}
 
 		$this->wire_options();
+		$this->refresh_ids();
 
 		return $created;
 	}
@@ -129,6 +136,43 @@ final class PolicyPageInstaller {
 		}
 
 		return $updated;
+	}
+
+	/**
+	 * The page ids, read from a cached map.
+	 *
+	 * `status()` resolves each page properly and costs a query apiece. That is
+	 * the right behaviour for a status report and the wrong behaviour for
+	 * anything on a request path — feeding these ids to the page primer through
+	 * `status()` added five queries per page load to save twenty, which is not
+	 * the trade it looks like.
+	 *
+	 * The map is written whenever pages are installed and refreshed lazily if
+	 * it is missing.
+	 *
+	 * @return int[]
+	 */
+	public function page_ids(): array {
+		$cached = get_option( self::IDS_OPTION, null );
+
+		if ( ! is_array( $cached ) ) {
+			$cached = $this->refresh_ids();
+		}
+
+		return array_values( array_filter( array_map( 'intval', $cached ) ) );
+	}
+
+	/**
+	 * Rebuilds and stores the slug => id map.
+	 *
+	 * @return array<string, int>
+	 */
+	private function refresh_ids(): array {
+		$map = $this->status();
+
+		update_option( self::IDS_OPTION, $map, true );
+
+		return $map;
 	}
 
 	/**

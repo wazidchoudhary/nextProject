@@ -61,6 +61,15 @@ final class ContentServiceProvider extends AbstractServiceProvider {
 		// that moved customer registration out of the demo seeder. A store that
 		// imported a real catalogue and never seeded had no privacy policy and
 		// an empty footer legal menu.
+		// The footer's legal menu resolves each of these on every request; the
+		// page primer fetches them with WooCommerce's own pages in one query.
+		add_filter(
+			'bhc_primed_page_ids',
+			static function ( array $ids ) use ( $container ): array {
+				return array_merge( $ids, $container->get( PolicyPageInstaller::class )->page_ids() );
+			}
+		);
+
 		add_action(
 			'bhc_schema_installed',
 			static function () use ( $container ): void {

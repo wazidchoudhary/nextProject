@@ -79,6 +79,17 @@ final class WishlistServiceProvider extends AbstractServiceProvider {
 	 * @param ContainerInterface $container Container instance.
 	 */
 	public function boot( ContainerInterface $container ): void {
+		// Resolved by the header, the footer and the robots policy on every
+		// request; primed with the store's other pages in one query.
+		add_filter(
+			'bhc_primed_page_ids',
+			static function ( array $ids ): array {
+				$ids[] = WishlistRenderer::page_id();
+
+				return $ids;
+			}
+		);
+
 		$this->hook( $container, WishlistService::class );
 
 		$context = $this->context ?? new Context();

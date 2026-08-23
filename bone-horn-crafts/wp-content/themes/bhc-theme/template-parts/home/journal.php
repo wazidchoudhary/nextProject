@@ -11,11 +11,10 @@ defined( 'ABSPATH' ) || exit;
 
 $journal = new WP_Query(
 	[
-		'post_type'              => 'post',
-		'posts_per_page'         => 3,
-		'ignore_sticky_posts'    => true,
-		'no_found_rows'          => true,
-		'update_post_meta_cache' => false,
+		'post_type'           => 'post',
+		'posts_per_page'      => 3,
+		'ignore_sticky_posts' => true,
+		'no_found_rows'       => true,
 	]
 );
 
@@ -23,6 +22,24 @@ if ( ! $journal->have_posts() ) {
 	wp_reset_postdata();
 
 	return;
+}
+
+// Meta priming stays on — it used to be switched off here, which looked like a
+// saving and was not: every card calls get_the_post_thumbnail(), so turning it
+// off traded one batched meta query for a meta lookup *and* an attachment row
+// per post. Priming the thumbnails in the same pass costs one more query and
+// removes three.
+$journal_thumbnails = array_values(
+	array_filter(
+		array_map(
+			static fn ( $journal_post ): int => (int) get_post_thumbnail_id( $journal_post ),
+			$journal->posts
+		)
+	)
+);
+
+if ( [] !== $journal_thumbnails ) {
+	_prime_post_caches( $journal_thumbnails, false, true );
 }
 ?>
 <section class="section section--surface" aria-labelledby="home-journal">

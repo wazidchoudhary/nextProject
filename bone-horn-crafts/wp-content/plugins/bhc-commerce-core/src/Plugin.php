@@ -112,6 +112,7 @@ final class Plugin {
 			CoreServiceProvider::class,
 			Database\DatabaseServiceProvider::class,
 			Cache\CacheServiceProvider::class,
+			Performance\PerformanceServiceProvider::class,
 			Security\SecurityServiceProvider::class,
 			Product\ProductServiceProvider::class,
 			Pricing\PricingServiceProvider::class,

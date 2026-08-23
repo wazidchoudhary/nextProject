@@ -59,6 +59,7 @@ final class CommandRegistrar {
 		$this->register_pages_command();
 		$this->register_contact_command();
 		$this->register_hero_command();
+		$this->register_autoload_command();
 
 		WP_CLI::add_command(
 			'bhc setup accounts',
@@ -94,6 +95,52 @@ final class CommandRegistrar {
 			[
 				'shortdesc' => 'Turn on customer registration on My Account and at checkout.',
 				'longdesc'  => "Three independent switches control whether people can create an account: WordPress's own users_can_register, WooCommerce's My Account registration setting, and its checkout signup setting. Setting one and testing that page makes the other two look fine, which is why a store can appear to offer accounts and not actually do so.\n\nApplied automatically when the plugin's schema installs. Run this to apply it to a store that predates that, or after deliberately changing one of the settings back.\n\n## EXAMPLES\n\n    wp bhc setup accounts",
+			]
+		);
+	}
+
+	/**
+	 * `wp bhc setup autoload`.
+	 */
+	private function register_autoload_command(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc setup autoload',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				unset( $args, $assoc_args );
+
+				$autoloader = $container->get( \BoneHornCrafts\Core\Performance\OptionAutoloader::class );
+
+				foreach ( $autoloader->seed_defaults() as $created ) {
+					WP_CLI::log( sprintf( '  created  %s', $created ) );
+				}
+
+				$pending = $autoloader->pending();
+
+				if ( [] === $pending ) {
+					WP_CLI::success( 'Every hot option is already autoloaded. Nothing to change.' );
+
+					return;
+				}
+
+				foreach ( $pending as $option ) {
+					WP_CLI::log( sprintf( '  %s', $option ) );
+				}
+
+				$autoloader->apply();
+
+				WP_CLI::success(
+					sprintf(
+						'%d option(s) moved into the autoload set — %d fewer queries on every front-end request.',
+						count( $pending ),
+						count( $pending )
+					)
+				);
+			},
+			[
+				'shortdesc' => 'Autoload the options every front-end request reads.',
+				'longdesc'  => "WordPress fetches all autoloaded options in one query at bootstrap. An option outside that set costs its own SELECT the first time it is read, and a cold home-page render was measured issuing 21 of them — HPOS sync flags, WooCommerce feature switches, the cart and checkout page ids, the site logo.\n\nOnly small, frequently read options are moved: every autoloaded option is loaded on every request including admin and cron, so the point is to move the hot ones in, not to grow the payload.\n\nRuns automatically when the schema upgrades. Safe to re-run.\n\n## EXAMPLES\n\n    wp bhc setup autoload",
 			]
 		);
 	}

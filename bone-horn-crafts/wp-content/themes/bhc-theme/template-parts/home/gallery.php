@@ -46,6 +46,14 @@ if ( count( $gallery_items ) < 6 ) {
 if ( [] === $gallery_items ) {
 	return;
 }
+
+// Gallery shots are secondary attachments, so ProductRepository::prime() has
+// not seen them — it primes the featured image only. Left unprimed, each of
+// the six costs a post row and a meta row when wp_get_attachment_image()
+// resolves it.
+if ( [] !== $gallery_items ) {
+	_prime_post_caches( array_map( 'intval', array_keys( $gallery_items ) ), false, true );
+}
 ?>
 <section class="section section--paper" aria-labelledby="home-gallery">
 	<div class="container">
