@@ -29,14 +29,15 @@ foreach ( $products as $suggested ) {
 		<?php foreach ( $products as $suggested ) : ?>
 			<li class="bhc-fbt__item">
 				<a class="bhc-fbt__link" href="<?php echo esc_url( (string) $suggested->get_permalink() ); ?>">
-					<?php echo wp_kses_post(
-						$suggested->get_image(
-							'woocommerce_gallery_thumbnail',
-							[
-								'loading'  => 'lazy',
-								'decoding' => 'async',
-							]
-						)
+					<?php
+					// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core-generated attachment markup; wp_kses_post() would strip srcset/sizes/loading. See templates/product/card.php.
+					echo $suggested->get_image(
+						'woocommerce_gallery_thumbnail',
+						[
+							'loading'  => 'lazy',
+							'decoding' => 'async',
+							'sizes'    => '100px',
+						]
 					);
 					?>
 					<span class="bhc-fbt__name"><?php echo esc_html( $suggested->get_name() ); ?></span>

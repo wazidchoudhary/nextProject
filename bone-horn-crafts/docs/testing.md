@@ -221,6 +221,16 @@ npm run test:vitals
 npm run test:a11y
 ```
 
-The e2e suites need the store running (`php -S localhost:8088 -t ~/wp-demo
-~/wp-demo/router.php`) and create a real order each time, which is expected — the
+The e2e suites need the store running — start it with a worker pool:
+
+```bash
+PHP_CLI_SERVER_WORKERS=6 php -S localhost:8088 -t ~/wp-demo ~/wp-demo/router.php
+```
+
+PHP's built-in server runs a single process by default, so a browser suite that
+opens several pages at once queues behind itself and times out in ways that look
+like real failures. `PHP_CLI_SERVER_WORKERS` gives it a small pool. Without it, running the four browser suites
+back to back produces failures that are the server queueing, not the site.
+
+The suites and create a real order each time, which is expected — the
 seeder is idempotent and `wp bhc demo reset --yes` clears everything.

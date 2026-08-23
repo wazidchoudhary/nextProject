@@ -105,7 +105,7 @@ final class FacetRepository extends AbstractRepository {
 	 * @return array<int, array{slug:string, label:string, options:array<int, array{slug:string,label:string,count:int}>}>
 	 */
 	public function facets(): array {
-		$facets = [];
+		$facets = $this->category_facet();
 
 		foreach ( AttributeCatalog::all() as $slug => $definition ) {
 			if ( empty( $definition['facet'] ) ) {
@@ -142,6 +142,76 @@ final class FacetRepository extends AbstractRepository {
 		}
 
 		return $facets;
+	}
+
+	/**
+	 * Builds the product-category facet.
+	 *
+	 * Categories are the shelf a customer thinks in — "show me horn scales" is a
+	 * more natural first filter than any attribute — so this facet leads the
+	 * panel. It is not part of AttributeCatalog because `product_cat` is a
+	 * WooCommerce taxonomy rather than a product attribute; only the counting is
+	 * shared.
+	 *
+	 * Only top-level categories are offered. Nesting the full tree into a
+	 * checkbox list turns a filter into a sitemap, and the child terms are
+	 * reachable from the category pages themselves.
+	 *
+	 * @return array<int, array{slug:string, label:string, options:array<int, array{slug:string,label:string,count:int}>}>
+	 */
+	private function category_facet(): array {
+		if ( ! taxonomy_exists( 'product_cat' ) ) {
+			return [];
+		}
+
+		$counts = $this->counts_for_taxonomy( 'product_cat' );
+
+		if ( [] === $counts ) {
+			return [];
+		}
+
+		$terms = get_terms(
+			[
+				'taxonomy'   => 'product_cat',
+				'parent'     => 0,
+				'hide_empty' => true,
+				'orderby'    => 'name',
+			]
+		);
+
+		if ( is_wp_error( $terms ) || [] === $terms ) {
+			return [];
+		}
+
+		$options = [];
+
+		foreach ( $terms as $term ) {
+			$count = $counts[ $term->slug ] ?? 0;
+
+			// "Uncategorized" is a WordPress default, not a shelf. It has no
+			// products in a seeded store and would only ever confuse.
+			if ( 0 === $count || 'uncategorized' === $term->slug ) {
+				continue;
+			}
+
+			$options[] = [
+				'slug'  => (string) $term->slug,
+				'label' => wp_specialchars_decode( (string) $term->name ),
+				'count' => $count,
+			];
+		}
+
+		if ( [] === $options ) {
+			return [];
+		}
+
+		return [
+			[
+				'slug'    => 'category',
+				'label'   => __( 'Category', 'bhc-commerce-core' ),
+				'options' => $options,
+			],
+		];
 	}
 
 	/**

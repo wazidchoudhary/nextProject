@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const pages = process.argv.slice(2);
+const pages = process.argv.slice( 2 );
 const browser = await chromium.launch( { executablePath: '/opt/pw-browsers/chromium', args: [ '--no-sandbox' ] } );
 
 for ( const spec of pages ) {

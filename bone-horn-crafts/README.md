@@ -56,7 +56,7 @@ theme and plugin, the built assets and the demo catalogue:
 
 ```bash
 bin/setup-demo.sh ~/wp-demo
-php -S localhost:8088 -t ~/wp-demo ~/wp-demo/router.php
+PHP_CLI_SERVER_WORKERS=6 php -S localhost:8088 -t ~/wp-demo ~/wp-demo/router.php
 ```
 
 Then open <http://localhost:8088> (admin / admin at `/wp-admin`).

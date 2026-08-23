@@ -94,19 +94,12 @@ function bhc_enqueue_assets(): void {
 		]
 	);
 
-	wp_localize_script(
-		'bhc-theme',
-		'bhcTheme',
-		[
-			'ajaxUrl' => esc_url_raw( admin_url( 'admin-ajax.php' ) ),
-			'strings' => [
-				'menuOpen'   => __( 'Open menu', 'bhc-theme' ),
-				'menuClose'  => __( 'Close menu', 'bhc-theme' ),
-				/* translators: %d: position of the image within the product gallery. */
-				'galleryAlt' => __( 'Product image %d', 'bhc-theme' ),
-			],
-		]
-	);
+	// No wp_localize_script for the theme bundle. It used to publish an
+	// `ajaxUrl` and three UI strings that nothing ever read: the header renders
+	// its own labels server-side, so they are translated and present without
+	// JavaScript, and the storefront talks to the REST API rather than
+	// admin-ajax. Shipping the object anyway is an inline <script> on every
+	// page for nobody's benefit.
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );

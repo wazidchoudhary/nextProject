@@ -135,6 +135,24 @@ final class FilterRequest {
 	public function tax_query(): array {
 		$tax_query = [];
 
+		// Categories belong here, not only in to_query_args(). The shop archive
+		// applies filters by merging this into the main WooCommerce query,
+		// while the AJAX grid goes through ProductQuery — so a filter that
+		// exists only in the args array silently does nothing on the archive.
+		// That is exactly what happened to the category facet: the panel
+		// offered it, the URL carried it, and /shop/?category=horn-scales
+		// returned the whole catalogue.
+		if ( [] !== $this->categories ) {
+			$tax_query[] = [
+				'taxonomy'         => 'product_cat',
+				'field'            => 'slug',
+				'terms'            => $this->categories,
+				'operator'         => 'IN',
+				// A parent category should show what is on its child shelves.
+				'include_children' => true,
+			];
+		}
+
 		foreach ( $this->attributes as $slug => $terms ) {
 			$tax_query[] = [
 				'taxonomy'         => AttributeCatalog::taxonomy( $slug ),
@@ -163,7 +181,8 @@ final class FilterRequest {
 			'page'          => $this->page,
 			'orderby'       => 'relevance' === $this->orderby && '' === $this->search ? 'date' : $this->orderby,
 			'order'         => 'price' === $this->orderby || 'title' === $this->orderby ? 'ASC' : 'DESC',
-			'category'      => $this->categories,
+			// Categories are expressed in tax_query() so both the archive and
+			// the AJAX path go through one implementation.
 			'tax_query'     => $this->tax_query(),
 			'search'        => $this->search,
 			'min_price'     => $this->min_price,

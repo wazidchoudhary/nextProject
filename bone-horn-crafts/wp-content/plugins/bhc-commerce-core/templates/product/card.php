@@ -30,18 +30,28 @@ $wishlist = Plugin::resolve( WishlistRenderer::class )->button( $product, 'compa
 	<div class="bhc-card__media">
 		<a class="bhc-card__link" href="<?php echo esc_url( (string) $product->get_permalink() ); ?>" tabindex="-1" aria-hidden="true">
 			<?php
-			echo wp_kses_post(
-				$product->get_image(
-					'woocommerce_thumbnail',
-					[
-						'loading'       => $eager ? 'eager' : 'lazy',
-						'decoding'      => 'async',
-						'class'         => 'bhc-card__image',
-						// fetchpriority on the first card helps the LCP candidate
-						// start downloading before the rest of the grid.
-						'fetchpriority' => $eager ? 'high' : 'auto',
-					]
-				)
+			// Printed unescaped on purpose. `get_image()` returns markup
+			// WordPress built and already escaped, and running it back through
+			// wp_kses_post() silently strips `srcset`, `sizes`, `loading`,
+			// `decoding` and `fetchpriority` — none of which are in the allowed
+			// attribute list. That turned every card in the store into a single
+			// fixed 600x600 file served to every viewport and DPR, with the
+			// loading hints removed too.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Core-generated attachment markup.
+			echo $product->get_image(
+				'woocommerce_thumbnail',
+				[
+					'loading'       => $eager ? 'eager' : 'lazy',
+					'decoding'      => 'async',
+					'class'         => 'bhc-card__image',
+					// fetchpriority on the first card helps the LCP candidate
+					// start downloading before the rest of the grid.
+					'fetchpriority' => $eager ? 'high' : 'auto',
+					// The grid is 4-up on desktop, 2-up on tablet, 1-up on
+					// phones. Without this the browser assumes 600px wide at
+					// every breakpoint and over-downloads on mobile.
+					'sizes'         => '(min-width: 64em) 22vw, (min-width: 40em) 45vw, 92vw',
+				]
 			);
 			?>
 		</a>

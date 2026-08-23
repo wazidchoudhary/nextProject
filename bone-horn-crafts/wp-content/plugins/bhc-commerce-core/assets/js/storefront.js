@@ -12,7 +12,7 @@
  */
 
 const config = window.bhcCommerce || {};
-const api = (config.restUrl || '').replace(/\/$/, '');
+const api = ( config.restUrl || '' ).replace( /\/$/, '' );
 const strings = config.strings || {};
 
 /**
@@ -44,7 +44,9 @@ async function request( path, init = {} ) {
 		}
 
 		return await response.json();
-	} catch ( error ) {
+	} catch {
+		// A failed enrichment must never break the page: every caller
+		// treats null as "leave the server-rendered markup alone".
 		return null;
 	}
 }
@@ -271,7 +273,7 @@ function initEstimator() {
 		result.textContent = strings.loading || '';
 
 		const payload = await request(
-			`delivery-estimate?country=${ encodeURIComponent( select.value ) }&product_id=${ encodeURIComponent( root.dataset.productId || '0' ) }`
+			`delivery-estimate?country=${ encodeURIComponent( select.value ) }&product_id=${ encodeURIComponent( root.dataset.productId || '0' ) }`,
 		);
 
 		if ( ! payload || ! payload.estimate ) {

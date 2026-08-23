@@ -12,57 +12,54 @@
 // Colour ---------------------------------------------------------------------
 // A natural-materials palette: bone paper, walnut ink, horn black, brass accent.
 
-$color-ink:          #221d18;
-$color-ink-soft:     #5f564b;
+$color-ink: #221d18;
+$color-ink-soft: #5f564b;
 // Muted text is the one token that has to be argued for rather than picked.
 // #857a6c read well but measured 3.49-4.14:1 against the three paper tones,
 // which fails WCAG AA for body-size text everywhere it was used. #706557 keeps
 // the same warm grey character at 4.72-5.60:1. The inverse token exists because
 // the same muted role on the dark banner needs to move the other way.
-$color-ink-muted:    #706557;
+$color-ink-muted: #706557;
 $color-ink-muted-inv: #b5a996;
-$color-paper:        #f7f2e8;
-$color-paper-warm:   #f1e9db;
-$color-surface:      #fffdf9;
-$color-line:         #e3d8c6;
-$color-line-strong:  #cfc2aa;
-$color-accent:       #7a5c3e;
-$color-accent-dark:  #5b4229;
-$color-brass:        #a9832f;
-$color-horn:         #2b2724;
-$color-sale:         #8a3f2c;
-$color-success:      #4c6640;
-$color-focus:        #1f6feb;
-$color-disabled:     #6f6a62;
+$color-paper: #f7f2e8;
+$color-paper-warm: #f1e9db;
+$color-surface: #fffdf9;
+$color-line: #e3d8c6;
+$color-line-strong: #cfc2aa;
+$color-accent: #7a5c3e;
+$color-accent-dark: #5b4229;
+$color-brass: #a9832f;
+$color-horn: #2b2724;
+$color-sale: #8a3f2c;
+$color-success: #4c6640;
+$color-focus: #1f6feb;
+$color-disabled: #6f6a62;
 
 // Typography -----------------------------------------------------------------
 // System stacks only. No webfont means no third-party connection, no FOIT and
 // no render-blocking font CSS — worth more to LCP than any typeface choice.
 
-$font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, 'Times New Roman', serif;
-$font-body: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-$font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-
+$font-display: 'Iowan Old Style', 'Palatino Linotype', palatino, 'Book Antiqua', georgia, 'Times New Roman', serif;
+$font-body: system-ui, -apple-system, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
+$font-mono: ui-monospace, sfmono-regular, 'SF Mono', menlo, consolas, monospace;
 $weight-regular: 400;
 $weight-medium: 500;
 $weight-semibold: 600;
 
 // Fluid type scale. `clamp()` keeps headings proportionate from 360px to 1440px
 // without a single media query, which also keeps CLS at zero on resize.
-$size-xs:   clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
-$size-sm:   clamp(0.8125rem, 0.79rem + 0.15vw, 0.875rem);
+$size-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+$size-sm: clamp(0.8125rem, 0.79rem + 0.15vw, 0.875rem);
 $size-base: clamp(0.9375rem, 0.91rem + 0.2vw, 1rem);
-$size-md:   clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
-$size-lg:   clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
-$size-xl:   clamp(1.5rem, 1.3rem + 1vw, 2rem);
-$size-2xl:  clamp(1.875rem, 1.5rem + 1.8vw, 2.75rem);
-$size-3xl:  clamp(2.25rem, 1.7rem + 2.6vw, 3.75rem);
-
+$size-md: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+$size-lg: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+$size-xl: clamp(1.5rem, 1.3rem + 1vw, 2rem);
+$size-2xl: clamp(1.875rem, 1.5rem + 1.8vw, 2.75rem);
+$size-3xl: clamp(2.25rem, 1.7rem + 2.6vw, 3.75rem);
 $leading-tight: 1.15;
 $leading-snug: 1.3;
 $leading-normal: 1.6;
 $leading-relaxed: 1.75;
-
 $tracking-wide: 0.08em;
 $tracking-wider: 0.14em;
 
@@ -87,7 +84,6 @@ $container-max: 78rem;
 $container-narrow: 44rem;
 $container-wide: 90rem;
 $gutter: clamp(1rem, 4vw, 2.5rem);
-
 $radius-sm: 2px;
 $radius-md: 3px;
 $radius-pill: 999px;
@@ -114,7 +110,6 @@ $breakpoints: (
 	'lg': 64em,   // 1024px
 	'xl': 80em,   // 1280px
 );
-
 $z: (
 	'base': 1,
 	'sticky': 40,

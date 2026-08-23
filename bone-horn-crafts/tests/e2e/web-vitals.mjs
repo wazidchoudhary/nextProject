@@ -89,7 +89,7 @@ for ( const [ label, width, height ] of VIEWPORTS ) {
 		console.log(
 			`${ ok ? 'PASS' : 'FAIL' }  ${ label }/${ name } — CLS ${ vitals.cls.toFixed( 4 ) } ` +
 			`(budget ${ BUDGETS.cls }), LCP ${ Math.round( vitals.lcp ) }ms (budget ${ BUDGETS.lcp }ms)` +
-			( errors.length ? `, JS errors: ${ errors.join( ' ; ' ) }` : '' )
+			( errors.length ? `, JS errors: ${ errors.join( ' ; ' ) }` : '' ),
 		);
 
 		await page.close();

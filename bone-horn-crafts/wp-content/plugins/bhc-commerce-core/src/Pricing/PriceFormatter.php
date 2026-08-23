@@ -25,9 +25,15 @@ use WC_Product;
  *    to the exact price once a size is chosen.
  * 2. A unit suffix ("per matched pair", "set of 6") so a price is never
  *    ambiguous.
- * 3. A discount chip that states the saving in both percent and currency.
+ * 3. A discount chip on sale prices, shown only where the saving is large
+ *    enough to be worth a customer's attention.
  */
 final class PriceFormatter implements HookableInterface {
+
+	/**
+	 * Smallest saving worth putting a chip on, as a percentage.
+	 */
+	private const MIN_DISCOUNT_SHOWN = 5;
 
 	/**
 	 * Constructor.
@@ -68,23 +74,72 @@ final class PriceFormatter implements HookableInterface {
 	}
 
 	/**
-	 * Renders sale prices with an accessible "was / now" structure.
+	 * Renders sale prices with an accessible "was / now" structure and the saving.
 	 *
-	 * @param string $price   Existing markup.
-	 * @param string $regular Regular price string.
-	 * @param string $sale    Sale price string.
+	 * `woocommerce_format_sale_price` passes the regular and sale values as
+	 * WooCommerce received them, which for a product price is a bare number
+	 * like `28.99` — WooCommerce runs each through `wc_price()` itself while
+	 * building the markup this filter then replaces. Re-rendering the raw
+	 * values, as this method used to, silently dropped the currency symbol,
+	 * the thousands separator and the decimal precision from every sale price
+	 * in the store. Numeric values are formatted here the same way; anything
+	 * already formatted (a variable product's price range, for instance)
+	 * passes through untouched.
+	 *
+	 * @param string $price   Existing markup, discarded in favour of ours.
+	 * @param mixed  $regular Regular price: a number, or pre-formatted markup.
+	 * @param mixed  $sale    Sale price: a number, or pre-formatted markup.
 	 */
-	public function format_sale_price( string $price, string $regular, string $sale ): string {
-		return sprintf(
+	public function format_sale_price( string $price, mixed $regular, mixed $sale ): string {
+		$regular_html = $this->as_price_html( $regular );
+		$sale_html    = $this->as_price_html( $sale );
+
+		$markup = sprintf(
 			'<span class="bhc-price"><del aria-hidden="true">%1$s</del><span class="screen-reader-text">%2$s</span> <ins>%3$s</ins></span>',
-			wp_kses_post( (string) $regular ),
+			wp_kses_post( $regular_html ),
 			esc_html__( 'Original price:', 'bhc-commerce-core' ),
-			wp_kses_post( (string) $sale )
+			wp_kses_post( $sale_html )
+		);
+
+		// The brief asks for the discount to be shown "where appropriate".
+		// Appropriate is: a genuine saving, on the storefront, big enough to be
+		// worth a customer's attention. A 1% chip is noise.
+		if ( is_admin() || ! is_numeric( $regular ) || ! is_numeric( $sale ) ) {
+			return $markup;
+		}
+
+		$percentage = $this->calculator->percentage_off( (float) $regular, (float) $sale );
+
+		if ( $percentage < self::MIN_DISCOUNT_SHOWN ) {
+			return $markup;
+		}
+
+		return $markup . sprintf(
+			' <span class="bhc-price__savings">%s</span>',
+			sprintf(
+				/* translators: %d: percentage saved. */
+				esc_html__( 'Save %d%%', 'bhc-commerce-core' ),
+				$percentage
+			)
 		);
 	}
 
 	/**
-	 * Percentage saved for a product.
+	 * Formats a price value for display, leaving existing markup alone.
+	 *
+	 * @param mixed $value Number, or already-formatted price markup.
+	 */
+	private function as_price_html( mixed $value ): string {
+		if ( is_numeric( $value ) ) {
+			return (string) wc_price( (float) $value );
+		}
+
+		return (string) $value;
+	}
+
+	/**
+	 * Percentage saved on a product, for callers that need the number rather
+	 * than the storefront chip — the REST presenter, chiefly.
 	 *
 	 * @param WC_Product $product Product.
 	 */
@@ -95,28 +150,24 @@ final class PriceFormatter implements HookableInterface {
 	}
 
 	/**
-	 * Amount saved for a product, formatted for display.
+	 * Resolves the regular/active price pair for a product.
+	 *
+	 * A variable product's headline price is its cheapest variation, so that is
+	 * the pair a discount should be computed against.
 	 *
 	 * @param WC_Product $product Product.
+	 *
+	 * @return array{0:float,1:float}
 	 */
-	public function savings_html( WC_Product $product ): string {
-		[ $regular, $active ] = $this->prices( $product );
-
-		$savings = $this->calculator->savings( $regular, $active );
-
-		if ( $savings <= 0.0 ) {
-			return '';
+	private function prices( WC_Product $product ): array {
+		if ( $product->is_type( 'variable' ) ) {
+			return [
+				(float) $product->get_variation_regular_price( 'min' ),
+				(float) $product->get_variation_price( 'min' ),
+			];
 		}
 
-		return sprintf(
-			'<span class="bhc-price__savings">%s</span>',
-			sprintf(
-				/* translators: 1: percentage saved, 2: amount saved. */
-				esc_html__( 'Save %1$d%% (%2$s)', 'bhc-commerce-core' ),
-				$this->calculator->percentage_off( $regular, $active ),
-				wp_kses_post( wc_price( $savings ) )
-			)
-		);
+		return [ (float) $product->get_regular_price(), (float) $product->get_price() ];
 	}
 
 	/**
@@ -152,23 +203,5 @@ final class PriceFormatter implements HookableInterface {
 		return $product->is_type( 'variable' )
 			? (float) $product->get_variation_price( 'max' )
 			: (float) $product->get_price();
-	}
-
-	/**
-	 * Resolves the regular/active price pair for a product.
-	 *
-	 * @param WC_Product $product Product.
-	 *
-	 * @return array{0:float,1:float}
-	 */
-	private function prices( WC_Product $product ): array {
-		if ( $product->is_type( 'variable' ) ) {
-			return [
-				(float) $product->get_variation_regular_price( 'min' ),
-				(float) $product->get_variation_price( 'min' ),
-			];
-		}
-
-		return [ (float) $product->get_regular_price(), (float) $product->get_price() ];
 	}
 }

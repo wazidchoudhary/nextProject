@@ -67,7 +67,7 @@
 		inset-block-end: 0.35rem;
 		inset-inline: 0;
 		height: 1px;
-		background-color: currentColor;
+		background-color: currentcolor;
 		transform: scaleX(0);
 		transform-origin: left;
 		transition: transform v.$duration-base v.$ease;
@@ -210,4 +210,65 @@
 
 	flex: 0 1 15rem;
 	min-inline-size: 11rem;
+}
+
+// Mobile bar: Logo | Search | Cart | Menu. Account and wishlist move into the
+// drawer rather than crowding a 390px header.
+.mobile-search-toggle {
+	@include m.touch-target;
+
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	@include m.from('lg') {
+		display: none;
+	}
+}
+
+.bhc-icon-button--desktop {
+	@include m.until('lg') {
+		display: none;
+	}
+}
+
+.mobile-search {
+	border-block-start: 1px solid v.$color-line;
+	background-color: v.$color-surface;
+	padding-block: f.space('xs');
+
+	&[hidden] {
+		display: none;
+	}
+
+	@include m.from('lg') {
+		display: none;
+	}
+
+	.bhc-search {
+		inline-size: 100%;
+	}
+}
+
+.mobile-drawer__account {
+	list-style: none;
+	margin: f.space('lg') 0 0;
+	padding: f.space('md') 0 0;
+	border-block-start: 1px solid v.$color-line;
+
+	a {
+		@include m.touch-target;
+
+		display: flex;
+		align-items: center;
+		gap: f.space('xs');
+		text-decoration: none;
+		color: v.$color-ink;
+	}
+}
+
+.mobile-drawer__count {
+	margin-inline-start: auto;
+	font-size: v.$size-xs;
+	color: v.$color-ink-muted;
 }

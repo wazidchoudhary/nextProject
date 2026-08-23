@@ -98,6 +98,28 @@ function bhc_buy_now_button(): void {
 		return;
 	}
 
+	// Only the types whose add-to-cart form posts a single product id.
+	// External products link off-site; grouped products post quantity[<id>]
+	// per child and have no single id to send.
+	if ( ! $product->is_type( 'simple' ) && ! $product->is_type( 'variable' ) ) {
+		return;
+	}
+
+	// WooCommerce's simple.php carries `add-to-cart` on the Add to cart button
+	// itself, and a browser submits only the name/value of the button that was
+	// clicked. Buy now is a second submit button, so without this hidden field
+	// the request arrives with no `add-to-cart` at all: WooCommerce adds
+	// nothing, and the shopper is redirected to an empty checkout. Variable
+	// products already ship this field in
+	// variation-add-to-cart-button.php, so adding a second one there would post
+	// the value twice.
+	if ( $product->is_type( 'simple' ) ) {
+		printf(
+			'<input type="hidden" name="add-to-cart" value="%d" />',
+			(int) $product->get_id()
+		);
+	}
+
 	printf(
 		'<button type="submit" name="bhc_buy_now" value="1" class="bhc-button bhc-button--ghost bhc-buy-now">%s</button>',
 		esc_html__( 'Buy now', 'bhc-theme' )

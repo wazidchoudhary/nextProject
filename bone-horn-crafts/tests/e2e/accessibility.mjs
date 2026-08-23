@@ -53,7 +53,7 @@ for ( const [ label, width, height ] of VIEWPORTS ) {
 		await page.addScriptTag( { content: AXE_SOURCE } );
 
 		const results = await page.evaluate( async () => {
-			// eslint-disable-next-line no-undef
+			 
 			return await axe.run( document, {
 				runOnly: { type: 'tag', values: [ 'wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'best-practice' ] },
 			} );
@@ -81,7 +81,7 @@ for ( const [ label, width, height ] of VIEWPORTS ) {
 		} else {
 			console.log(
 				`PASS  ${ label }/${ name }` +
-				( minor.length ? `  (${ minor.length } minor: ${ minor.map( ( v ) => v.id ).join( ', ' ) })` : '' )
+				( minor.length ? `  (${ minor.length } minor: ${ minor.map( ( v ) => v.id ).join( ', ' ) })` : '' ),
 			);
 		}
 
@@ -103,7 +103,7 @@ if ( seen.size ) {
 console.log(
 	failed === 0
 		? `\nNo serious or critical violations across ${ total } page renders.`
-		: `\n${ failed } of ${ total } page renders have serious or critical violations.`
+		: `\n${ failed } of ${ total } page renders have serious or critical violations.`,
 );
 
 process.exit( failed === 0 ? 0 : 1 );

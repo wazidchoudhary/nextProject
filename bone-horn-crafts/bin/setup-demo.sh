@@ -262,6 +262,9 @@ cat <<EOM
 
   Serve it with the built-in PHP server:
 
-    php -S ${SITE_URL#http://} -t ${INSTALL_DIR} ${INSTALL_DIR}/router.php
+    PHP_CLI_SERVER_WORKERS=6 php -S ${SITE_URL#http://} -t ${INSTALL_DIR} ${INSTALL_DIR}/router.php
+
+  (The worker pool matters: a single-process server queues the browser test
+  suites behind themselves and they time out looking like real failures.)
 
 EOM

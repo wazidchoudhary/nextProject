@@ -286,6 +286,22 @@
 	color: var(--bhc-color-muted);
 }
 
+/* Sale saving. Sits inline after the was/now pair, and must not out-shout the
+   price itself — the discount is supporting information, not the headline. */
+.bhc-price__savings {
+	display: inline-block;
+	margin-left: 0.5rem;
+	padding: 0.125rem 0.4rem;
+	border-radius: 2px;
+	background-color: var(--bhc-color-sale-soft, #f3e3de);
+	color: var(--bhc-color-sale, #8a3f2c);
+	font-size: 0.75rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	.bhc-wishlist-toggle,
 	.bhc-card {

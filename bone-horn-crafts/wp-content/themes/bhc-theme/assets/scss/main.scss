@@ -11,12 +11,10 @@
 @use 'base/reset';
 @use 'base/base';
 @use 'base/typography';
-
 @use 'layout/container';
 @use 'layout/grid';
 @use 'layout/header' as layout-header;
 @use 'layout/footer' as layout-footer;
-
 @use 'components/buttons';
 @use 'components/forms';
 @use 'components/cards' as component-cards;
@@ -25,7 +23,6 @@
 @use 'components/product' as component-product;
 @use 'components/modal';
 @use 'components/woocommerce';
-
 @use 'pages/home';
 @use 'pages/shop';
 @use 'pages/product' as page-product;

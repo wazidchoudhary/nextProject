@@ -9,8 +9,6 @@
  * No jQuery, no polyfills, no dependency on WooCommerce's own scripts.
  */
 
-const strings = ( window.bhcTheme && window.bhcTheme.strings ) || {};
-
 /* -------------------------------------------------------------------------
  * Mobile navigation drawer
  * ---------------------------------------------------------------------- */
@@ -28,7 +26,7 @@ function initDrawer() {
 
 	function focusables() {
 		return Array.from(
-			drawer.querySelectorAll( 'a[href], button:not([disabled]), input, select, textarea' )
+			drawer.querySelectorAll( 'a[href], button:not([disabled]), input, select, textarea' ),
 		).filter( ( node ) => node.offsetParent !== null );
 	}
 
@@ -95,6 +93,43 @@ function initDrawer() {
 		} else if ( ! event.shiftKey && document.activeElement === last ) {
 			event.preventDefault();
 			first.focus();
+		}
+	} );
+}
+
+/* -------------------------------------------------------------------------
+ * Mobile search
+ * ---------------------------------------------------------------------- */
+
+function initMobileSearch() {
+	const toggle = document.querySelector( '[data-bhc-search-toggle]' );
+	const panel = document.querySelector( '[data-bhc-search-panel]' );
+
+	if ( ! toggle || ! panel ) {
+		return;
+	}
+
+	const field = panel.querySelector( 'input[type="search"]' );
+
+	function setOpen( open ) {
+		panel.hidden = ! open;
+		toggle.setAttribute( 'aria-expanded', open ? 'true' : 'false' );
+
+		if ( open && field ) {
+			field.focus();
+		}
+	}
+
+	toggle.addEventListener( 'click', () => {
+		setOpen( panel.hidden );
+	} );
+
+	// Escape closes and returns focus to the control that opened it, which is
+	// what a keyboard user expects and what screen readers announce correctly.
+	panel.addEventListener( 'keydown', ( event ) => {
+		if ( event.key === 'Escape' ) {
+			setOpen( false );
+			toggle.focus();
 		}
 	} );
 }
@@ -189,7 +224,7 @@ function initStickyCart() {
 				bar.setAttribute( 'aria-hidden', visible ? 'false' : 'true' );
 			} );
 		},
-		{ rootMargin: '0px 0px -100% 0px' }
+		{ rootMargin: '0px 0px -100% 0px' },
 	);
 
 	observer.observe( form );
@@ -283,12 +318,13 @@ function initHeaderState() {
 				ticking = true;
 			}
 		},
-		{ passive: true }
+		{ passive: true },
 	);
 }
 
 function boot() {
 	initDrawer();
+	initMobileSearch();
 	initGallery();
 	initStickyCart();
 	initTabs();

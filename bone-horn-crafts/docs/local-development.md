@@ -4,10 +4,14 @@
 
 ```bash
 bin/setup-demo.sh ~/wp-demo
-php -S localhost:8088 -t ~/wp-demo ~/wp-demo/router.php
+PHP_CLI_SERVER_WORKERS=6 php -S localhost:8088 -t ~/wp-demo ~/wp-demo/router.php
 ```
 
 <http://localhost:8088>, admin / admin at `/wp-admin`.
+
+PHP's built-in server runs a single process by default, so a browser suite that
+opens several pages at once queues behind itself and times out in ways that look
+like real failures. `PHP_CLI_SERVER_WORKERS` gives it a small pool.
 
 The script downloads WordPress and WooCommerce, configures a database, symlinks
 this repository's theme and plugin into the install, installs Composer and npm

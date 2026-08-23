@@ -10,7 +10,7 @@
 		"build:critical": "sass wp-content/themes/bhc-theme/assets/scss/critical.scss wp-content/themes/bhc-theme/assets/css/critical.css --style=compressed --no-source-map --load-path=wp-content/themes/bhc-theme/assets/scss",
 		"watch": "sass --watch wp-content/themes/bhc-theme/assets/scss/main.scss:wp-content/themes/bhc-theme/assets/css/main.css --load-path=wp-content/themes/bhc-theme/assets/scss",
 		"lint:css": "stylelint \"wp-content/themes/bhc-theme/assets/scss/**/*.scss\"",
-		"lint:js": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js",
+		"lint:js": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js tests tools",
 		"test:e2e": "node tests/e2e/purchase-flow.mjs",
 		"test:admin": "node tests/e2e/admin-screens.mjs",
 		"screenshots": "node tools/screenshots.mjs",
@@ -19,12 +19,18 @@
 		"test:unit": "wp-content/plugins/bhc-commerce-core/vendor/bin/phpunit --configuration wp-content/plugins/bhc-commerce-core/phpunit.xml.dist",
 		"lint": "npm run lint:css && npm run lint:js && npm run lint:php",
 		"test:vitals": "node tests/e2e/web-vitals.mjs",
-		"test:a11y": "node tests/e2e/accessibility.mjs"
+		"test:a11y": "node tests/e2e/accessibility.mjs",
+		"lint:css:fix": "stylelint \"wp-content/themes/bhc-theme/assets/scss/**/*.scss\" --fix",
+		"lint:js:fix": "eslint wp-content/themes/bhc-theme/assets/js wp-content/plugins/bhc-commerce-core/assets/js tests tools --fix"
 	},
 	"devDependencies": {
+		"@stylistic/eslint-plugin": "^2.13.0",
 		"axe-core": "^4.13.0",
+		"eslint": "^9.39.5",
 		"playwright": "^1.48.0",
-		"sass": "^1.77.0"
+		"sass": "^1.77.0",
+		"stylelint": "^16.26.1",
+		"stylelint-config-standard-scss": "^13.1.0"
 	},
 	"engines": {
 		"node": ">=18"

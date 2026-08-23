@@ -57,12 +57,30 @@ defined( 'ABSPATH' ) || exit;
 				<?php get_search_form( [ 'aria_label' => __( 'Search the catalogue', 'bhc-theme' ) ] ); ?>
 			</div>
 
-			<a class="bhc-icon-button" href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
+			<?php
+			// Mobile search. The brief's mobile bar is Logo | Search | Cart |
+			// Menu, and search behind the menu button is not a search
+			// affordance. This reveals a full-width search row under the header
+			// rather than reusing the drawer, so looking for something is not
+			// the same gesture as browsing the menu.
+			?>
+			<button
+				type="button"
+				class="bhc-icon-button mobile-search-toggle"
+				data-bhc-search-toggle
+				aria-expanded="false"
+				aria-controls="bhc-mobile-search"
+			>
+				<?php bhc_icon( 'search' ); ?>
+				<span class="screen-reader-text"><?php esc_html_e( 'Search', 'bhc-theme' ); ?></span>
+			</button>
+
+			<a class="bhc-icon-button bhc-icon-button--desktop" href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
 				<?php bhc_icon( 'account' ); ?>
 				<span class="screen-reader-text"><?php esc_html_e( 'Your account', 'bhc-theme' ); ?></span>
 			</a>
 
-			<a class="bhc-icon-button" href="<?php echo esc_url( bhc_wishlist_url() ); ?>">
+			<a class="bhc-icon-button bhc-icon-button--desktop" href="<?php echo esc_url( bhc_wishlist_url() ); ?>">
 				<?php bhc_icon( 'wishlist' ); ?>
 				<span class="screen-reader-text"><?php esc_html_e( 'Wishlist', 'bhc-theme' ); ?></span>
 				<span class="bhc-icon-button__count<?php echo bhc_wishlist_count() > 0 ? '' : ' is-empty'; ?>" data-bhc-wishlist-count><?php echo (int) bhc_wishlist_count(); ?></span>
@@ -84,6 +102,12 @@ defined( 'ABSPATH' ) || exit;
 				<?php bhc_icon( 'menu' ); ?>
 				<span class="screen-reader-text"><?php esc_html_e( 'Menu', 'bhc-theme' ); ?></span>
 			</button>
+		</div>
+	</div>
+
+	<div class="mobile-search" id="bhc-mobile-search" data-bhc-search-panel hidden>
+		<div class="container">
+			<?php get_search_form( [ 'aria_label' => __( 'Search the catalogue', 'bhc-theme' ) ] ); ?>
 		</div>
 	</div>
 </header>
@@ -113,6 +137,22 @@ defined( 'ABSPATH' ) || exit;
 			);
 			?>
 		</nav>
+
+		<ul class="mobile-drawer__account">
+			<li>
+				<a href="<?php echo esc_url( bhc_wc_page_url( 'myaccount' ) ); ?>">
+					<?php bhc_icon( 'account', 20 ); ?>
+					<?php esc_html_e( 'Your account', 'bhc-theme' ); ?>
+				</a>
+			</li>
+			<li>
+				<a href="<?php echo esc_url( bhc_wishlist_url() ); ?>">
+					<?php bhc_icon( 'wishlist', 20 ); ?>
+					<?php esc_html_e( 'Wishlist', 'bhc-theme' ); ?>
+					<span class="mobile-drawer__count" data-bhc-wishlist-count><?php echo (int) bhc_wishlist_count(); ?></span>
+				</a>
+			</li>
+		</ul>
 	</div>
 
 	<button type="button" class="mobile-drawer__backdrop" data-bhc-drawer-close tabindex="-1">
