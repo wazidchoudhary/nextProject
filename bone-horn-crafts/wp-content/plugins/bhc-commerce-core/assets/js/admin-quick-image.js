@@ -97,7 +97,30 @@
 				body,
 			} );
 
-			const payload = await response.json();
+			// Read as text first. admin-ajax answers a request with no
+			// registered handler with a bare "0", and an expired nonce with
+			// "-1" — neither is JSON, and parsing them straight to .json()
+			// throws, which used to surface as the generic failure message and
+			// hid a wiring bug behind what looked like a save problem.
+			const raw = await response.text();
+			let payload = null;
+
+			try {
+				payload = JSON.parse( raw );
+			} catch {
+				const trimmed = raw.trim();
+
+				showError(
+					button,
+					trimmed === '0'
+						? config.i18n.noHandler
+						: trimmed === '-1'
+							? config.i18n.expired
+							: `${ config.i18n.failed } (HTTP ${ response.status })`,
+				);
+
+				return;
+			}
 
 			if ( ! response.ok || ! payload.success ) {
 				// The endpoint names each failure — a permissions problem reads

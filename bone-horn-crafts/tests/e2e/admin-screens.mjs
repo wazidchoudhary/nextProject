@@ -158,6 +158,84 @@ if ( productId ) {
 	}
 }
 
+console.log( '\n# Products list image editor' );
+
+// This guards a wiring bug that no unit test could see. The handler was hooked
+// behind Context::is_admin(), which is deliberately false during an admin-ajax
+// request — so the wp_ajax_ action never existed on the one request that needed
+// it, admin-ajax answered with a bare "0", and the browser reported only "could
+// not save". Calling the handler directly passed the whole time; only a real
+// round trip catches it.
+await page.goto( `${ base }/wp-admin/edit.php?post_type=product`, { waitUntil: 'domcontentloaded' } );
+
+const quickImageTriggers = await page.locator( '[data-bhc-quick-image]' ).count();
+
+assert( 'products list renders image triggers', quickImageTriggers > 0, `${ quickImageTriggers } found` );
+
+assert(
+	'quick image config is printed',
+	await page.evaluate( () => !! window.bhcQuickImage ),
+);
+
+assert(
+	'media library is available',
+	await page.evaluate( () => !! ( window.wp && window.wp.media ) ),
+);
+
+if ( quickImageTriggers > 0 ) {
+	// Re-set whatever image the product already has: a round trip that proves
+	// the endpoint answers, without changing any data.
+	const roundTrip = await page.evaluate( async () => {
+		const config = window.bhcQuickImage;
+		const button = document.querySelector( '[data-bhc-quick-image]' );
+		const current = button.closest( 'td' )?.querySelector( 'img' );
+
+		const response = await fetch( config.ajaxUrl, {
+			method: 'POST',
+			credentials: 'same-origin',
+			headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+			body: new URLSearchParams( {
+				action: config.action,
+				nonce: config.nonce,
+				product: button.dataset.bhcQuickImage,
+				// A missing attachment is a valid "clear"; sending the id the
+				// cell already shows would need parsing its markup, so this
+				// asserts the contract with a deliberately invalid id instead
+				// and expects a *named* rejection rather than a bare 0 or -1.
+				attachment: '999999999',
+			} ),
+		} );
+
+		const raw = await response.text();
+
+		return { status: response.status, raw: raw.trim().slice( 0, 200 ), hadImage: !! current };
+	} );
+
+	assert(
+		'ajax endpoint is registered',
+		roundTrip.raw !== '0',
+		'admin-ajax returned "0" — the wp_ajax_ action is not hooked on the ajax request',
+	);
+
+	assert( 'ajax nonce is accepted', roundTrip.raw !== '-1', 'admin-ajax returned "-1"' );
+
+	let parsed = null;
+
+	try {
+		parsed = JSON.parse( roundTrip.raw );
+	} catch {
+		parsed = null;
+	}
+
+	assert( 'endpoint answers JSON', parsed !== null, roundTrip.raw );
+
+	assert(
+		'a bad attachment id is rejected by name',
+		parsed !== null && parsed.success === false && typeof parsed.data?.message === 'string',
+		JSON.stringify( parsed ),
+	);
+}
+
 console.log( '\n# Order editor panel' );
 
 const orderRow = await page.goto( `${ base }/wp-admin/admin.php?page=wc-orders`, {

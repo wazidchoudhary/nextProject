@@ -134,8 +134,18 @@ final class ProductServiceProvider extends AbstractServiceProvider {
 			}
 		);
 
+		// The list-table image editor answers an admin-ajax request, and
+		// Context::is_admin() is deliberately false there — it excludes ajax so
+		// that screen-only services do not load on every add-to-cart. So this
+		// has to be registered on both paths: hooking it behind is_admin()
+		// alone meant the wp_ajax_ action never existed on the request that
+		// needed it, and admin-ajax answered with a bare "0".
+		if ( $context->is_admin() || $context->is_ajax() ) {
+			$this->hook( $container, QuickImageColumn::class );
+		}
+
 		if ( $context->is_admin() ) {
-			$this->hook( $container, ProductDataPanel::class, QuickImageColumn::class );
+			$this->hook( $container, ProductDataPanel::class );
 
 			return;
 		}

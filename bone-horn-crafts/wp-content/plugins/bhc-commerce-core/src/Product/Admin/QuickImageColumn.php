@@ -105,6 +105,8 @@ final class QuickImageColumn implements HookableInterface {
 				'frameButton' => __( 'Use this image', 'bhc-commerce-core' ),
 				'saving'      => __( 'Saving…', 'bhc-commerce-core' ),
 				'failed'      => __( 'Could not save that image.', 'bhc-commerce-core' ),
+				'noHandler'   => __( 'The site did not recognise the save request. Reload the page; if it persists the plugin needs reactivating.', 'bhc-commerce-core' ),
+				'expired'     => __( 'Your session expired. Reload the page and try again.', 'bhc-commerce-core' ),
 			],
 		];
 	}
