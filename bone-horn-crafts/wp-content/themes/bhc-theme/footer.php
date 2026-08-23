@@ -71,12 +71,53 @@ defined( 'ABSPATH' ) || exit;
 				<?php esc_html_e( 'One email when a batch is cut. Bark-edge horn and rams horn usually sell out before the second email.', 'bhc-theme' ); ?>
 			</p>
 
-			<form class="bhc-newsletter__form" action="<?php echo esc_url( home_url( '/contact/' ) ); ?>" method="get">
-				<label class="screen-reader-text" for="footer-email"><?php esc_html_e( 'Email address', 'bhc-theme' ); ?></label>
-				<input type="email" id="footer-email" name="email" placeholder="<?php esc_attr_e( 'you@workshop.com', 'bhc-theme' ); ?>" required />
-				<button type="submit" class="bhc-button"><?php esc_html_e( 'Join', 'bhc-theme' ); ?></button>
-			</form>
+			<?php
+			// Posts to the newsletter plugin's REST endpoint, which stores the
+			// address and sends a confirmation. Without that plugin active the
+			// form is not rendered at all, rather than collecting addresses
+			// nothing will ever read.
+			if ( class_exists( \BoneHornCrafts\Newsletter\Plugin::class ) ) :
+				?>
+				<form class="bhc-newsletter__form" data-bhc-newsletter data-bhc-newsletter-source="footer" method="post" action="<?php echo esc_url( rest_url( 'bhc-newsletter/v1/subscribe' ) ); ?>">
+					<label class="screen-reader-text" for="footer-email"><?php esc_html_e( 'Email address', 'bhc-theme' ); ?></label>
+					<input type="email" id="footer-email" name="email" autocomplete="email" placeholder="<?php esc_attr_e( 'you@workshop.com', 'bhc-theme' ); ?>" required />
+					<button type="submit" class="bhc-button"><?php esc_html_e( 'Join', 'bhc-theme' ); ?></button>
+				</form>
+				<p class="footer-note"><?php esc_html_e( 'Confirm by email. One click to leave, any time.', 'bhc-theme' ); ?></p>
+			<?php endif; ?>
 		</div>
+
+		<div>
+			<h2 class="footer-column__title"><?php esc_html_e( 'Workshop', 'bhc-theme' ); ?></h2>
+
+			<address class="footer-contact">
+				<span class="footer-contact__line"><?php echo esc_html( bhc_contact( 'street' ) ); ?></span>
+				<span class="footer-contact__line"><?php echo esc_html( bhc_contact( 'locality' ) ); ?></span>
+				<span class="footer-contact__line"><?php echo esc_html( bhc_contact( 'region' ) ); ?></span>
+
+				<a class="footer-contact__link" href="tel:<?php echo esc_attr( bhc_contact( 'phone_href' ) ); ?>">
+					<?php echo esc_html( bhc_contact( 'phone' ) ); ?>
+				</a>
+
+				<a class="footer-contact__link" href="mailto:<?php echo esc_attr( bhc_contact( 'email' ) ); ?>">
+					<?php echo esc_html( bhc_contact( 'email' ) ); ?>
+				</a>
+			</address>
+		</div>
+	</div>
+
+	<div class="site-footer__legal">
+		<?php
+		wp_nav_menu(
+			[
+				'theme_location' => 'legal',
+				'container'      => false,
+				'menu_class'     => 'footer-legal-menu',
+				'depth'          => 1,
+				'fallback_cb'    => 'bhc_legal_menu_fallback',
+			]
+		);
+		?>
 	</div>
 
 	<div class="site-footer__bottom">

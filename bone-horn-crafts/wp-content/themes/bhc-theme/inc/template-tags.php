@@ -306,3 +306,95 @@ function bhc_reading_time( int $post_id = 0 ): string {
 	/* translators: %d: minutes. */
 	return sprintf( _n( '%d minute read', '%d minute read', $minutes, 'bhc-theme' ), $minutes );
 }
+
+/**
+ * Returns one piece of the workshop's contact detail.
+ *
+ * Held in one place because the same values appear in the footer, on the
+ * contact page and in the Organization schema, and three copies of an address
+ * is three chances for one of them to be a year out of date. Values come from
+ * the commerce plugin's settings when it is active, so an operator can change
+ * them without editing a template, and fall back to the registered address
+ * otherwise.
+ *
+ * @param string $part street, locality, region, postcode, phone, phone_href, email or country.
+ */
+function bhc_contact( string $part ): string {
+	static $defaults = [
+		'street'     => 'Khasra No. 535-536, Garima Garden',
+		'locality'   => 'Sahibabad, Ghaziabad',
+		'region'     => 'Uttar Pradesh 201005, India',
+		'postcode'   => '201005',
+		'country'    => 'IN',
+		'phone'      => '+91 87007 53517',
+		'phone_href' => '+918700753517',
+		'email'      => 'info@bonehorncrafts.com',
+	];
+
+	$value = $defaults[ $part ] ?? '';
+
+	$options = bhc_service( \BoneHornCrafts\Core\Support\Options::class );
+
+	if ( null !== $options ) {
+		$configured = match ( $part ) {
+			'email' => $options->string( 'organization_email' ),
+			'phone' => $options->string( 'organization_phone' ),
+			default => '',
+		};
+
+		if ( '' !== $configured ) {
+			$value = $configured;
+		}
+	}
+
+	// The tel: form must carry no spaces or punctuation, so it is derived from
+	// whatever the display number ends up being rather than stored twice.
+	if ( 'phone_href' === $part ) {
+		$display = bhc_contact( 'phone' );
+		$value   = (string) preg_replace( '/[^0-9+]/', '', $display );
+	}
+
+	/**
+	 * Filters a contact detail.
+	 *
+	 * @param string $value Resolved value.
+	 * @param string $part  Which part was requested.
+	 */
+	return (string) apply_filters( 'bhc_contact_detail', $value, $part );
+}
+
+/**
+ * Renders the legal links when no menu is assigned to that location.
+ *
+ * A store must be able to reach its privacy policy and terms from every page
+ * whether or not somebody remembered to build a menu, so the fallback is the
+ * pages themselves rather than an empty element.
+ */
+function bhc_legal_menu_fallback(): void {
+	$slugs = [
+		'privacy-policy'    => __( 'Privacy Policy', 'bhc-theme' ),
+		'terms-conditions'  => __( 'Terms & Conditions', 'bhc-theme' ),
+		'shipping-delivery' => __( 'Shipping & Delivery', 'bhc-theme' ),
+		'returns-refunds'   => __( 'Returns & Refunds', 'bhc-theme' ),
+	];
+
+	$items = [];
+
+	foreach ( $slugs as $slug => $label ) {
+		$page = get_page_by_path( $slug );
+
+		if ( $page instanceof WP_Post ) {
+			$items[] = sprintf(
+				'<li><a href="%s">%s</a></li>',
+				esc_url( (string) get_permalink( $page ) ),
+				esc_html( $label )
+			);
+		}
+	}
+
+	if ( [] === $items ) {
+		return;
+	}
+
+	printf( '<ul class="footer-legal-menu">%s</ul>', implode( '', $items ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Each item is escaped as it is built above.
+}

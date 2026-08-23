@@ -551,7 +551,13 @@ $t->group( 'Product search' );
  * @return array{status:int, cards:int, body:string}
  */
 $bhc_fetch_cards = static function ( string $url ): array {
-	$response = wp_remote_get( $url, [ 'timeout' => 25, 'redirection' => 0 ] );
+	$response = wp_remote_get(
+		$url,
+		[
+			'timeout'     => 25,
+			'redirection' => 0,
+		]
+	);
 
 	if ( is_wp_error( $response ) ) {
 		return [
@@ -632,10 +638,10 @@ $t->group( 'Customer accounts' );
 // that page look correct while the others stay broken.
 foreach (
 	[
-		'users_can_register'                               => '1',
-		'woocommerce_enable_myaccount_registration'        => 'yes',
+		'users_can_register'                         => '1',
+		'woocommerce_enable_myaccount_registration'  => 'yes',
 		'woocommerce_enable_signup_and_login_from_checkout' => 'yes',
-		'woocommerce_registration_generate_password'       => 'yes',
+		'woocommerce_registration_generate_password' => 'yes',
 	] as $account_option => $expected
 ) {
 	$t->assert(

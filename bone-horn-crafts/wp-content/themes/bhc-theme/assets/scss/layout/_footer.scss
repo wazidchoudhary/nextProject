@@ -30,13 +30,36 @@
 	display: grid;
 	gap: f.space('xl');
 
+	// Five columns now: brand, shop, help, newsletter, workshop address. At the
+	// medium breakpoint they wrap to two rows rather than being squeezed —
+	// four 200px columns of links is a worse footer than two comfortable rows.
 	@include m.from('md') {
-		grid-template-columns: 1.4fr 1fr 1fr;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	@include m.from('lg') {
-		grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+		grid-template-columns: 1.5fr 1fr 1fr 1.4fr 1.2fr;
 	}
+}
+
+// Legal links, between the columns and the copyright line. Separate from the
+// footer navigation menu because these have to be reachable from every page
+// whether or not anyone built a menu — see bhc_legal_menu_fallback().
+.site-footer__legal {
+	@include m.container(v.$container-wide);
+
+	margin-block-start: f.space('lg');
+}
+
+.footer-legal-menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: f.space('2xs') f.space('md');
+	font-size: v.$size-xs;
+	color: rgba(247, 242, 232, 0.6);
 }
 
 .site-footer__bottom {

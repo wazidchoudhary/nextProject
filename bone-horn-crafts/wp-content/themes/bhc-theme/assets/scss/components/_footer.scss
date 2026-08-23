@@ -41,3 +41,73 @@
 	list-style: none;
 	padding: 0;
 }
+
+// Workshop address.
+//
+// `<address>` is italic by default in every browser, which reads as an aside
+// rather than as the company's actual location; the grid gives each line its
+// own row without needing <br>, which screen readers announce as nothing.
+.footer-contact {
+	font-style: normal;
+	font-size: v.$size-sm;
+	display: grid;
+	gap: f.space('3xs');
+	max-width: 30ch;
+}
+
+.footer-contact__link {
+	color: v.$color-paper;
+	text-decoration: none;
+	width: fit-content;
+
+	&:hover,
+	&:focus-visible {
+		text-decoration: underline;
+	}
+}
+
+// Sits under the signup form: the confirmation-email requirement is the thing
+// people most often assume has gone wrong, so it is said before they submit.
+.footer-note {
+	font-size: v.$size-xs;
+	color: rgba(247, 242, 232, 0.6);
+	margin-block-start: f.space('3xs');
+}
+
+// Inline response from the newsletter script.
+.bhc-newsletter__status {
+	font-size: v.$size-xs;
+	margin-block-start: f.space('3xs');
+
+	&[data-tone='success'] {
+		color: v.$color-stock;
+	}
+
+	&[data-tone='error'] {
+		color: v.$color-sale;
+	}
+
+	&[data-tone='working'] {
+		color: rgba(247, 242, 232, 0.6);
+	}
+}
+
+// Confirmation / unsubscribe outcome banner, rendered at the top of the page.
+.bhc-newsletter-banner {
+	padding: f.space('2xs') f.space('sm');
+	text-align: center;
+	font-size: v.$size-sm;
+	color: v.$color-surface;
+
+	p {
+		margin: 0;
+	}
+
+	&--success {
+		background-color: v.$color-stock;
+	}
+
+	&--error {
+		background-color: v.$color-sale;
+	}
+}

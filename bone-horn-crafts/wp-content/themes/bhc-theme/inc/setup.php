@@ -62,6 +62,7 @@ function bhc_theme_setup(): void {
 			'primary' => __( 'Primary navigation', 'bhc-theme' ),
 			'footer'  => __( 'Footer navigation', 'bhc-theme' ),
 			'utility' => __( 'Utility navigation', 'bhc-theme' ),
+			'legal'   => __( 'Legal links', 'bhc-theme' ),
 		]
 	);
 

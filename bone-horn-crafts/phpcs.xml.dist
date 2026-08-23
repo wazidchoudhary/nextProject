@@ -3,6 +3,7 @@
 	<description>WordPress coding standards for the Bone Horn Crafts plugin and theme.</description>
 
 	<file>wp-content/plugins/bhc-commerce-core</file>
+	<file>wp-content/plugins/bhc-newsletter</file>
 	<file>wp-content/themes/bhc-theme</file>
 	<file>bin</file>
 
@@ -62,7 +63,14 @@
 		<properties>
 			<property name="text_domain" type="array">
 				<element value="bhc-commerce-core"/>
+				<element value="bhc-newsletter"/>
 				<element value="bhc-theme"/>
+
+				<!-- WooCommerce template overrides keep WooCommerce's own text
+				     domain on purpose: the strings are WooCommerce's, and
+				     re-domaining them would discard every translation the
+				     project already ships for them. -->
+				<element value="woocommerce"/>
 			</property>
 		</properties>
 	</rule>
