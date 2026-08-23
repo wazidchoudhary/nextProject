@@ -186,6 +186,22 @@ function renderProducts( products ) {
 		.join( '' );
 }
 
+/**
+ * Renders a result count in the visitor's language, with correct pluralisation.
+ *
+ * @param {number} total Number of results.
+ * @return {string} Localised count.
+ */
+function formatResultCount( total ) {
+	const count = Number( total ) || 0;
+
+	if ( 1 === count ) {
+		return strings.resultOne || '1 result';
+	}
+
+	return ( strings.resultMany || '%s results' ).replace( '%s', String( count ) );
+}
+
 function initFilters() {
 	const form = document.querySelector( '[data-bhc-filters]' );
 	const grid = document.querySelector( '[data-bhc-product-grid]' );
@@ -196,6 +212,31 @@ function initFilters() {
 
 	const status = form.querySelector( '[data-bhc-filter-status]' );
 	let controller = null;
+	let inFlight = 0;
+
+	/**
+	 * Marks the grid and panel as busy.
+	 *
+	 * The grid keeps the cards it already has while a request is in flight, so
+	 * the overlay covers content of the same height and nothing reflows — the
+	 * alternative, emptying the grid first, collapses the page to the header
+	 * and bounces it back a moment later.
+	 *
+	 * Counted rather than set to a boolean: a filter change while another
+	 * request is still running would otherwise clear the busy state as soon as
+	 * the first one settles, leaving the second running invisibly.
+	 *
+	 * @param {boolean} busy Whether a request is in flight.
+	 */
+	function setBusy( busy ) {
+		inFlight = Math.max( 0, inFlight + ( busy ? 1 : -1 ) );
+
+		const active = inFlight > 0;
+
+		grid.setAttribute( 'aria-busy', active ? 'true' : 'false' );
+		grid.classList.toggle( 'is-loading', active );
+		form.classList.toggle( 'is-loading', active );
+	}
 
 	async function apply( pushState = true ) {
 		const params = serialiseFilters( form );
@@ -210,21 +251,39 @@ function initFilters() {
 
 		controller = new AbortController();
 
-		const payload = await request( `catalog?${ params.toString() }`, {
-			signal: controller.signal,
-		} );
+		setBusy( true );
 
+		let payload = null;
+
+		try {
+			payload = await request( `catalog?${ params.toString() }`, {
+				signal: controller.signal,
+			} );
+		} finally {
+			setBusy( false );
+		}
+
+		// `request()` returns null for an abort as well as a genuine failure.
+		// Leaving the status on "Loading…" in either case is how a filter panel
+		// ends up permanently claiming to be working; say what happened
+		// instead.
 		if ( ! payload ) {
+			if ( status && 0 === inFlight ) {
+				status.textContent = strings.error || '';
+			}
+
 			return;
 		}
 
 		grid.innerHTML = renderProducts( payload.products || [] );
 
+		const summary = formatResultCount( payload.total );
+
 		if ( status ) {
-			status.textContent = `${ payload.total } results`;
+			status.textContent = summary;
 		}
 
-		announce( `${ payload.total } results` );
+		announce( summary );
 
 		if ( pushState ) {
 			const query = new URLSearchParams( payload.query || {} ).toString();

@@ -141,6 +141,14 @@ final class Assets implements HookableInterface {
 				'loading'     => __( 'Loading…', 'bhc-commerce-core' ),
 				'noResults'   => __( 'No material matches those filters yet.', 'bhc-commerce-core' ),
 				'addedToCart' => __( 'Added to your cart', 'bhc-commerce-core' ),
+
+				// Both forms cross to JavaScript rather than a pre-built
+				// string: the count is only known client side, and a language
+				// whose plural rules differ from English cannot be served by
+				// appending an "s" there.
+				'resultOne'   => __( '1 result', 'bhc-commerce-core' ),
+				/* translators: %s: number of results. */
+				'resultMany'  => __( '%s results', 'bhc-commerce-core' ),
 			],
 			'currency'  => [
 				'code'   => get_woocommerce_currency(),

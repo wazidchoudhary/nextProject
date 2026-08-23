@@ -7,6 +7,7 @@
 // rules — and no reflow surprises inside the WooCommerce templates.
 // -----------------------------------------------------------------------------
 
+@use '../abstracts/variables' as v;
 @use '../abstracts/functions' as f;
 @use '../abstracts/mixins' as m;
 
@@ -15,6 +16,11 @@
 	gap: f.space('md');
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 
+	// Anchors the loading overlay below. An absolutely positioned child of a
+	// grid container is taken out of flow, so the overlay never becomes a grid
+	// item and never disturbs the columns.
+	position: relative;
+
 	@include m.from('md') {
 		gap: f.space('lg');
 		grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -22,6 +28,34 @@
 
 	@include m.from('lg') {
 		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
+	// Filtering in progress.
+	//
+	// The cards already on screen stay put and are dimmed rather than removed,
+	// so the grid holds its height and the page does not collapse and rebound
+	// between one result set and the next. `aria-busy` on the same element
+	// tells assistive technology the region is updating; the visible spinner
+	// tells everyone else the click registered.
+	&.is-loading {
+		> * {
+			opacity: 0.35;
+			transition: opacity 120ms ease-out;
+		}
+
+		&::after {
+			content: '';
+			position: absolute;
+			inset-block-start: f.space('xl');
+			inset-inline-start: 50%;
+			inline-size: 2rem;
+			block-size: 2rem;
+			margin-inline-start: -1rem;
+			border: 2px solid v.$color-line-strong;
+			border-block-start-color: v.$color-accent;
+			border-radius: 50%;
+			animation: bhc-spin 700ms linear infinite;
+		}
 	}
 }
 
@@ -49,5 +83,37 @@
 	@include m.from('lg') {
 		grid-template-columns: 16rem minmax(0, 1fr);
 		gap: f.space('xl');
+	}
+}
+
+
+// Filter panel while a request is in flight. The controls stay operable — a
+// second change simply supersedes the first — but the panel reads as pending.
+.bhc-filters.is-loading .bhc-filters__status {
+	color: v.$color-ink-muted;
+}
+
+@keyframes bhc-spin {
+	to {
+		transform: rotate(1turn);
+	}
+}
+
+// A spinner that cannot be stilled is a motion trigger. Reduced motion gets a
+// pulse instead, which still says "working" without rotating.
+@media (prefers-reduced-motion: reduce) {
+	.bhc-grid.is-loading::after {
+		animation: bhc-pulse 1.4s ease-in-out infinite;
+	}
+
+	@keyframes bhc-pulse {
+		0%,
+		100% {
+			opacity: 1;
+		}
+
+		50% {
+			opacity: 0.35;
+		}
 	}
 }
