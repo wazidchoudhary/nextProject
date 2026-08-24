@@ -60,6 +60,7 @@ final class CommandRegistrar {
 		$this->register_contact_command();
 		$this->register_hero_command();
 		$this->register_autoload_command();
+		$this->register_live_command();
 
 		WP_CLI::add_command(
 			'bhc setup accounts',
@@ -95,6 +96,36 @@ final class CommandRegistrar {
 			[
 				'shortdesc' => 'Turn on customer registration on My Account and at checkout.',
 				'longdesc'  => "Three independent switches control whether people can create an account: WordPress's own users_can_register, WooCommerce's My Account registration setting, and its checkout signup setting. Setting one and testing that page makes the other two look fine, which is why a store can appear to offer accounts and not actually do so.\n\nApplied automatically when the plugin's schema installs. Run this to apply it to a store that predates that, or after deliberately changing one of the settings back.\n\n## EXAMPLES\n\n    wp bhc setup accounts",
+			]
+		);
+	}
+
+	/**
+	 * `wp bhc setup live`.
+	 */
+	private function register_live_command(): void {
+		$container = $this->container;
+
+		WP_CLI::add_command(
+			'bhc setup live',
+			static function ( array $args, array $assoc_args ) use ( $container ): void {
+				unset( $args, $assoc_args );
+
+				$visibility = $container->get( \BoneHornCrafts\Core\Store\StoreVisibility::class );
+
+				WP_CLI::log( '  ' . $visibility->describe() );
+
+				if ( ! $visibility->go_live() ) {
+					WP_CLI::success( 'The store is already live. Nothing to change.' );
+
+					return;
+				}
+
+				WP_CLI::success( 'Coming Soon cleared. Flush caches so the public pages rebuild: wp bhc cache flush' );
+			},
+			[
+				'shortdesc' => "Take the store out of WooCommerce's Coming Soon mode.",
+				'longdesc'  => "WooCommerce's onboarding leaves Coming Soon enabled, which hides the store from every logged-out visitor and from search engines while an administrator — being signed in — sees a normal storefront. Nothing in the admin reveals it, so a live store can sit unreachable indefinitely.\n\nThis only ever clears the flags. Turning Coming Soon back on is deliberate and belongs in WooCommerce > Settings > Site visibility, not in a deploy step.\n\n## EXAMPLES\n\n    wp bhc setup live",
 			]
 		);
 	}

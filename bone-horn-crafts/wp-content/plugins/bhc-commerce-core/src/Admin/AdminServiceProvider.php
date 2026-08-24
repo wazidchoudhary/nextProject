@@ -22,6 +22,7 @@ use BoneHornCrafts\Core\Jobs\Scheduler;
 use BoneHornCrafts\Core\Product\Admin\QuickImageColumn;
 use BoneHornCrafts\Core\Store\BusinessDetails;
 use BoneHornCrafts\Core\Store\PlaceholderContactRepair;
+use BoneHornCrafts\Core\Store\StoreVisibility;
 use BoneHornCrafts\Core\Order\OrderRepository;
 use BoneHornCrafts\Core\Plugin;
 use BoneHornCrafts\Core\Product\ProductRepository;
@@ -76,7 +77,8 @@ final class AdminServiceProvider extends AbstractServiceProvider {
 				$c->get( AffinityRepository::class ),
 				$c->get( ProductStatsRepository::class ),
 				$c->get( BusinessDetails::class ),
-				$c->get( PlaceholderContactRepair::class )
+				$c->get( PlaceholderContactRepair::class ),
+				$c->get( StoreVisibility::class )
 			)
 		);
 

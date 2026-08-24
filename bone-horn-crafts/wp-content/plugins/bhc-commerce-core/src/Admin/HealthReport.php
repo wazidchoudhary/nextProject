@@ -19,6 +19,7 @@ use BoneHornCrafts\Core\Database\Schema;
 use BoneHornCrafts\Core\Jobs\Scheduler;
 use BoneHornCrafts\Core\Store\BusinessDetails;
 use BoneHornCrafts\Core\Store\PlaceholderContactRepair;
+use BoneHornCrafts\Core\Store\StoreVisibility;
 use BoneHornCrafts\Core\Product\ProductRepository;
 use BoneHornCrafts\Core\Recommendations\AffinityRepository;
 use BoneHornCrafts\Core\Wishlist\WishlistRepository;
@@ -45,6 +46,7 @@ final class HealthReport {
 	 * @param ProductStatsRepository   $stats     Stats repository.
 	 * @param BusinessDetails          $business  Business details.
 	 * @param PlaceholderContactRepair $contact_repair Placeholder detection.
+	 * @param StoreVisibility          $visibility     Coming Soon detection.
 	 */
 	public function __construct(
 		private CacheManager $cache,
@@ -56,7 +58,8 @@ final class HealthReport {
 		private AffinityRepository $affinity,
 		private ProductStatsRepository $stats,
 		private BusinessDetails $business,
-		private PlaceholderContactRepair $contact_repair
+		private PlaceholderContactRepair $contact_repair,
+		private StoreVisibility $visibility
 	) {}
 
 	/**
@@ -96,6 +99,8 @@ final class HealthReport {
 			),
 			'store'       => [
 				'placeholder_contact' => $this->contact_repair->drift(),
+				'coming_soon'         => $this->visibility->is_coming_soon(),
+				'visibility'          => $this->visibility->describe(),
 			],
 			'jobs'        => [
 				'action_scheduler' => function_exists( 'as_schedule_recurring_action' ),
@@ -199,6 +204,18 @@ final class HealthReport {
 					),
 					$failed
 				),
+		];
+
+		// Coming Soon is checked before anything else because it makes every
+		// other check moot: a store nobody can reach does not need its schema
+		// validating. It is also the one fault an administrator cannot see,
+		// since being signed in exempts you from it.
+		$checks[] = [
+			'label'  => __( 'Store visibility', 'bhc-commerce-core' ),
+			'status' => $this->visibility->is_coming_soon() ? 'fail' : 'pass',
+			'detail' => $this->visibility->is_coming_soon()
+				? $this->visibility->describe() . ' ' . __( 'Take the store live with: wp bhc setup live', 'bhc-commerce-core' )
+				: $this->visibility->describe(),
 		];
 
 		// Placeholder contact details are published as the business telephone

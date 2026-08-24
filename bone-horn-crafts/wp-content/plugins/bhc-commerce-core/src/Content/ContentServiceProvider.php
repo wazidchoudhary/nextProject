@@ -41,6 +41,11 @@ final class ContentServiceProvider extends AbstractServiceProvider {
 		);
 
 		$container->singleton(
+			\BoneHornCrafts\Core\Store\StoreVisibility::class,
+			static fn (): \BoneHornCrafts\Core\Store\StoreVisibility => new \BoneHornCrafts\Core\Store\StoreVisibility()
+		);
+
+		$container->singleton(
 			PlaceholderContactRepair::class,
 			static fn ( Container $c ): PlaceholderContactRepair => new PlaceholderContactRepair( $c->get( Options::class ) )
 		);
